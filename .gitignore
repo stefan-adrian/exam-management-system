@@ -27,7 +27,6 @@ x64/
 x86/
 bld/
 [Bb]in/
-[Oo]bj/
 [Ll]og/
 
 # Visual Studio 2015/2017 cache/options directory
@@ -68,7 +67,7 @@ StyleCopReport.xml
 *_h.h
 *.ilk
 *.meta
-*.Debug
+*.obj
 *.iobj
 *.pch
 *.pdb
@@ -82,7 +81,6 @@ StyleCopReport.xml
 *.tlh
 *.tmp
 *.tmp_proj
-*_wpftmp.csproj
 *.log
 *.vspscc
 *.vssscc
