@@ -68,7 +68,7 @@ StyleCopReport.xml
 *_h.h
 *.ilk
 *.meta
-*.obj
+*.Debug
 *.iobj
 *.pch
 *.pdb
@@ -194,6 +194,9 @@ PublishScripts/
 # NuGet v3's project.json files produces more ignorable files
 *.nuget.props
 *.nuget.targets
+*.nuget.g.props
+*.nuget.g.targets
+
 
 # Microsoft Azure Build Output
 csx/
