@@ -27,6 +27,7 @@ x64/
 x86/
 bld/
 [Bb]in/
+[Oo]bj/
 [Ll]og/
 
 # Visual Studio 2015/2017 cache/options directory
@@ -81,6 +82,7 @@ StyleCopReport.xml
 *.tlh
 *.tmp
 *.tmp_proj
+*_wpftmp.csproj
 *.log
 *.vspscc
 *.vssscc
@@ -192,9 +194,6 @@ PublishScripts/
 # NuGet v3's project.json files produces more ignorable files
 *.nuget.props
 *.nuget.targets
-*.nuget.g.props
-*.nuget.g.targets
-
 
 # Microsoft Azure Build Output
 csx/
