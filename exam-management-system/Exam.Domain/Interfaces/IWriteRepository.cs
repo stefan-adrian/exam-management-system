@@ -8,10 +8,10 @@ namespace Exam.Domain.Interfaces
         Task AddNewAsync<TEntity>(TEntity entity)
             where TEntity : Entity;
 
-        Task UpdateAsync<TEntity>(TEntity entity)
+        void Update<TEntity>(TEntity entity)
             where TEntity : Entity;
 
-        Task DeleteAsync<TEntity>(TEntity entity)
+        void Delete<TEntity>(TEntity entity)
             where TEntity : Entity;
 
         Task SaveAsync();

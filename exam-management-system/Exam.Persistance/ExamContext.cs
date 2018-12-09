@@ -24,35 +24,21 @@ namespace Exam.Persistance
 
         internal DbSet<Grade> Grades { get; private set; }
 
-
         public IQueryable<TEntity> GetAll<TEntity>() where TEntity : Entity
-        {
-            throw new NotImplementedException();
-        }
+            => Set<TEntity>().AsNoTracking();
 
         public async Task<TEntity> GetByIdAsync<TEntity>(Guid id) where TEntity : Entity
-        {
-            throw new NotImplementedException();
-        }
+            => await Set<TEntity>().SingleOrDefaultAsync(e => e.Id == id);
 
         public async Task AddNewAsync<TEntity>(TEntity entity) where TEntity : Entity
-        {
-            throw new NotImplementedException();
-        }
+            => await Set<TEntity>().AddAsync(entity);
 
-        public async Task UpdateAsync<TEntity>(TEntity entity) where TEntity : Entity
-        {
-            throw new NotImplementedException();
-        }
+        public void Update<TEntity>(TEntity entity) where TEntity : Entity
+            => Set<TEntity>().Update(entity);
 
-        public async Task DeleteAsync<TEntity>(TEntity entity) where TEntity : Entity
-        {
-            throw new NotImplementedException();
-        }
+        public void Delete<TEntity>(TEntity entity) where TEntity : Entity
+            => Set<TEntity>().Remove(entity);
 
-        public async Task SaveAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public async Task SaveAsync() => await SaveChangesAsync();
     }
 }
