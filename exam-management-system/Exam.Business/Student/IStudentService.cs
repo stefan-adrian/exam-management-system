@@ -2,6 +2,6 @@
 {
     public interface IStudentService
     {
-
+        Domain.Entities.Student Create();
     }
 }

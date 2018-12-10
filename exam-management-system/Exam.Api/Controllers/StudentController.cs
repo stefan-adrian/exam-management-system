@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Collections.Generic;
+using Exam.Business.Student;
+using Exam.Domain.Entities;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Exam.Api.Controllers
 {
@@ -6,7 +9,17 @@ namespace Exam.Api.Controllers
     [ApiController]
     public class StudentController : Controller
     {
-        
+        private readonly IStudentService studentService;
 
+        public StudentController(IStudentService studentService)
+        {
+            this.studentService = studentService;
+        }
+
+        [HttpGet]
+        public ActionResult<Student> Get()
+        {
+            return studentService.Create();
+        }
     }
 }

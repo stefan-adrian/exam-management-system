@@ -22,7 +22,7 @@ namespace Exam.Domain.Entities
 
         public int YearOfStudy { get; private set; }
 
-        public ICollection<StudentCourse> StudentCourses { get; private set; }
+        public ICollection<StudentCourse> StudentCourses { get; set; }
 
         public List<Grade> Grades { get; private set; }
 
@@ -34,6 +34,7 @@ namespace Exam.Domain.Entities
             FirstName = firstName;
             LastName = lastName;
             YearOfStudy = yearOfStudy;
+            StudentCourses = new List<StudentCourse>();
         }
     }
 }
