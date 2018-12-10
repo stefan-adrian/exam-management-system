@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Exam.Business.Student;
+﻿using Exam.Business.Student;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Exam.Business

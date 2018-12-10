@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Exam.Domain.Entities
 {
@@ -15,9 +14,9 @@ namespace Exam.Domain.Entities
 
         public int Year { get; private set; }
 
-        public List<Student> Students { get; private set; }
-
         public Professor Professor { get; private set; }
+
+        public List<Student> Students { get; private set; }
 
         public List<Exam> Exams { get; private set; }
 

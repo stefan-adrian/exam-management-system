@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Exam.Domain.Entities
 {
@@ -11,17 +10,16 @@ namespace Exam.Domain.Entities
             // EF
         }
 
-        public DateTime ExamDate { get; private set; }
+        public DateTime Date { get; private set; }
 
         public Course Course { get; private set; }
 
-        public List<string> ClassRooms { get; private set; }
+        public List<ClassroomAllocation> ClassroomAllocation { get; private set; }
 
-        public Exam(DateTime examDate, Course course, List<string> classRooms) : base(Guid.NewGuid())
+        public Exam(DateTime date, Course course) : base(Guid.NewGuid())
         {
-            ExamDate = examDate;
+            Date = date;
             Course = course;
-            ClassRooms = classRooms;
         }
     }
 }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Exam.Domain.Interfaces;
+﻿using Exam.Domain.Interfaces;
 
 namespace Exam.Business.Student
 {
