@@ -16,7 +16,7 @@ namespace Exam.Domain.Entities
 
         public Professor Professor { get; private set; }
 
-        public List<Student> Students { get; private set; }
+        public ICollection<StudentCourse> StudentCourses { get; private set; }
 
         public List<Exam> Exams { get; private set; }
 

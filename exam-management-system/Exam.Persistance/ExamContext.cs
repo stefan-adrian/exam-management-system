@@ -25,6 +25,20 @@ namespace Exam.Persistance
 
         internal DbSet<Grade> Grades { get; private set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<StudentCourse>()
+                .HasKey(sc => new {sc.StudentId, sc.CourseId});
+            modelBuilder.Entity<StudentCourse>()
+                .HasOne(sc => sc.Student)
+                .WithMany(c => c.StudentCourses)
+                .HasForeignKey(sc => sc.StudentId);
+            modelBuilder.Entity<StudentCourse>()
+                .HasOne(sc => sc.Course)
+                .WithMany(c => c.StudentCourses)
+                .HasForeignKey(sc => sc.CourseId);
+        }
+
         public IQueryable<TEntity> GetAll<TEntity>() where TEntity : Entity
             => Set<TEntity>().AsNoTracking();
 
