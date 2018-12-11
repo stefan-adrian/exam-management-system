@@ -25,12 +25,12 @@ namespace Exam.Business.Professor
         public ProfessorDetailsDto map(Domain.Entities.Professor professor)
         {
             ProfessorDetailsDto professorDetailsDto = new ProfessorDetailsDto();
-            professorDetailsDto.Id = professorDetailsDto.Id;
-            professorDetailsDto.RegistrationNumber = professorDetailsDto.RegistrationNumber;
-            professorDetailsDto.Email = professorDetailsDto.Email;
-            professorDetailsDto.Password = professorDetailsDto.Password;
-            professorDetailsDto.FirstName = professorDetailsDto.FirstName;
-            professorDetailsDto.LastName = professorDetailsDto.LastName;
+            professorDetailsDto.Id = professor.Id;
+            professorDetailsDto.RegistrationNumber = professor.RegistrationNumber;
+            professorDetailsDto.Email = professor.Email;
+            professorDetailsDto.Password = professor.Password;
+            professorDetailsDto.FirstName = professor.FirstName;
+            professorDetailsDto.LastName = professor.LastName;
             return professorDetailsDto;
         }
 

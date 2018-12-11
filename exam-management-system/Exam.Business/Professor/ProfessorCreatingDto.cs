@@ -5,18 +5,18 @@ namespace Exam.Business.Professor
     public class ProfessorCreatingDto
     {
         [Required]
-        public string RegistrationNumber { get; private set; }
+        public string RegistrationNumber { get; set; }
 
         [Required]
-        public string Email { get; private set; }
+        public string Email { get; set; }
 
         [Required]
-        public string Password { get; private set; }
+        public string Password { get; set; }
 
         [Required]
-        public string FirstName { get; private set; }
+        public string FirstName { get; set; }
 
         [Required]
-        public string LastName { get; private set; }
+        public string LastName { get; set; }
     }
 }
