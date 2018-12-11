@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Exam.Business.Student;
+﻿using Exam.Business.Student;
 using Exam.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 

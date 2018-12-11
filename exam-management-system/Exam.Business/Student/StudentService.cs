@@ -18,7 +18,7 @@ namespace Exam.Business.Student
         public Domain.Entities.Student Create()
         {
             Professor professor=new Professor("6666666666","email","psd","name","name");
-            Course course=new Course("Curs3333333",3,professor);
+            Domain.Entities.Course course=new Domain.Entities.Course("Curs3333333",3,professor);
             Domain.Entities.Student student=new Domain.Entities.Student("0101010101","abc","abc","firstName","lastName",1);
             StudentCourse studentCourse=new StudentCourse();
             studentCourse.Student = student;
