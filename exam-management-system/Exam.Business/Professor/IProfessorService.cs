@@ -12,8 +12,8 @@ namespace Exam.Business.Professor
 
         Task<ProfessorDetailsDto> Create(ProfessorCreatingDto newProfessor);
 
-        Task<ProfessorDetailsDto> Update(ProfessorDetailsDto existingProfessor);
+        Task<ProfessorDetailsDto> Update(Guid existingProfessorId, ProfessorCreatingDto professorCreatingDto);
 
-        Task Delete(ProfessorDetailsDto existingProfessor);
+        Task Delete(Guid existingProfessorId);
     }
 }

@@ -40,5 +40,24 @@ namespace Exam.Api.Controllers
             var professor = await this.professorService.Create(professorCreatingDto);
             return CreatedAtRoute("FindProfessorById", new { professorId = professor.Id }, professor);
         }
+
+        [HttpPut("{professorId:guid}")]
+        public async Task<IActionResult> Update(Guid professorId, [Bind("RegistrationNumber, Email, Password, FirstName, LastName")] ProfessorCreatingDto professorCreatingDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var existingProfessor = await this.professorService.Update(professorId,professorCreatingDto);
+            return CreatedAtRoute("FindProfessorById", new { professorId = existingProfessor.Id }, existingProfessor);
+        }
+
+        [HttpDelete("{professorId:guid}")]
+        public async Task<IActionResult> Delete(Guid professorId)
+        {
+            await this.professorService.Delete(professorId);
+            return Ok();
+        }
     }
 }
