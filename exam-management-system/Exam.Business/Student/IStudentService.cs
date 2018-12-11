@@ -1,7 +1,17 @@
-﻿namespace Exam.Business.Student
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Exam.Business.Student
 {
     public interface IStudentService
     {
-        Domain.Entities.Student Create();
+        Task<List<StudentDetailsDto>> GetAll();
+
+        Task<StudentDetailsDto> GetById(Guid id);
+
+        Task<StudentDetailsDto> Create(StudentCreationDto studentCreationDto);
+
+        Task Delete(Guid id);
     }
 }
