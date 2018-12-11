@@ -1,39 +1,62 @@
-﻿using Exam.Domain.Entities;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Exam.Domain.Entities;
 using Exam.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Exam.Business.Student
 {
     public class StudentService : IStudentService
     {
         private readonly IReadRepository readRepository;
-
         private readonly IWriteRepository writeRepository;
+        private readonly IStudentMapper studentMapper;
 
-        public StudentService(IReadRepository readRepository, IWriteRepository writeRepository)
+        public StudentService(IReadRepository readRepository, IWriteRepository writeRepository, IStudentMapper studentMapper)
         {
-            this.writeRepository = writeRepository;
             this.readRepository = readRepository;
+            this.writeRepository = writeRepository;
+            this.studentMapper = studentMapper;
         }
 
-        public Domain.Entities.Student Create()
+        public async Task<List<StudentDetailsDto>> GetAll()
         {
-            Professor professor=new Professor("6666666666","email","psd","name","name");
-            Course course=new Course("Curs3333333",3,professor);
-            Domain.Entities.Student student=new Domain.Entities.Student("0101010101","abc","abc","firstName","lastName",1);
-            StudentCourse studentCourse=new StudentCourse();
-            studentCourse.Student = student;
-            studentCourse.Course = course;
-            studentCourse.StudentId = student.Id;
-            studentCourse.CourseId = course.Id;
-            student.StudentCourses.Add(studentCourse);
-            course.StudentCourses.Add(studentCourse);
+            return await readRepository.GetAll<Domain.Entities.Student>()
+                .Select(student => studentMapper.Map(student)).ToListAsync();
+        }
 
-            writeRepository.AddNewAsync(professor);
-            writeRepository.AddNewAsync(student);
-            writeRepository.AddNewAsync(course);
+        public async Task<StudentDetailsDto> GetById(Guid id)
+        {
+            var student = await readRepository.GetByIdAsync<Domain.Entities.Student>(id);
+            return studentMapper.Map(student);
+        }
 
-            writeRepository.SaveAsync();
-            return student;
+
+        public async Task<StudentDetailsDto> Create(StudentCreationDto studentCreationDto)
+        {
+            Domain.Entities.Student student = studentMapper.Map(studentCreationDto);
+            await writeRepository.AddNewAsync(student);
+            await writeRepository.SaveAsync();
+            return studentMapper.Map(student);
+        }
+
+        public async Task<StudentDetailsDto> Update(Guid id, StudentCreationDto studentCreationDto)
+        {
+            StudentDetailsDto studentDetailsDto = studentMapper.Map(id, studentCreationDto);
+            var student = readRepository.GetByIdAsync<Domain.Entities.Student>(id).Result;
+            writeRepository.Update(studentMapper.map(studentDetailsDto, student));
+            await writeRepository.SaveAsync();
+            return studentDetailsDto;
+        }
+
+
+        public async Task Delete(Guid id)
+        {
+            var student = readRepository.GetByIdAsync<Domain.Entities.Student>(id).Result;
+            writeRepository.Delete(student);
+            await writeRepository.SaveAsync();
         }
     }
 }

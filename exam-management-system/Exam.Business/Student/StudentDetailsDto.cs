@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Exam.Business.Student
 {
-    public class StudentDto
+    public class StudentDetailsDto
     {
         public Guid Id { get; set; }
 
@@ -17,9 +19,5 @@ namespace Exam.Business.Student
         public int YearOfStudy { get; set; }
 
         public string Password { get; set; }
-
-        //        public List<Course> Courses { get; set; }
-
-        //        public List<Grade> Grades { get; set; }
     }
 }

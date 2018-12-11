@@ -9,6 +9,7 @@ namespace Exam.Business
         public static IServiceCollection AddBusiness(this IServiceCollection services)
         {
             services.AddScoped<IStudentService, StudentService>();
+            services.AddScoped<IStudentMapper, StudentMapper>();
             services.AddScoped<IProfessorService, ProfessorService>();
             services.AddScoped<IProfessorMapper, ProfessorMapper>();
 
