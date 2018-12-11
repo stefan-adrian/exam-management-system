@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Exam.Business.Course
 {
@@ -8,5 +9,8 @@ namespace Exam.Business.Course
         Domain.Entities.Course Create();
         IEnumerable<CourseDto> GetAll();
         CourseDto GetById(Guid id);
+        Task<CourseDto> Update(Guid existingCourseId, CourseCreatingDto courseCreatingDto);
+
+        Task Delete(Guid existingCourseId);
     }
 }
