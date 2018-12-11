@@ -7,11 +7,11 @@ namespace Exam.Api.Controllers
 {
     [Route("api/courses")]
     [ApiController]
-    public class CourseController : ControllerBase
+    public class CoursesController : ControllerBase
     {
         private readonly ICourseService courseService;
 
-        public CourseController(ICourseService courseService)
+        public CoursesController(ICourseService courseService)
         {
             this.courseService = courseService;
         }
@@ -24,14 +24,14 @@ namespace Exam.Api.Controllers
         }
 
 
-        [HttpGet("{id:guid}")]
-        public async Task<IActionResult> FindCourseById(Guid id)
+        [HttpGet("{courseId:guid}", Name = "FindCourseById")]
+        public async Task<IActionResult> FindCourseById(Guid courseId)
         {
-            if (id == null)
+            if (courseId == null)
             {
                 return NotFound();
             }
-            var course = await this.courseService.GetById(id);
+            var course = await this.courseService.GetById(courseId);
             if (course == null)
             {
                 return NotFound();
@@ -40,7 +40,7 @@ namespace Exam.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("Name, Year")] CourseCreatingDto courseCreatingDto)
+        public async Task<IActionResult> Create([FromBody] CourseCreatingDto courseCreatingDto)
         {
             if (!ModelState.IsValid)
             {
@@ -51,7 +51,7 @@ namespace Exam.Api.Controllers
         }
 
         [HttpPut("{courseId:guid}")]
-        public async Task<IActionResult> Update(Guid courseId, [Bind("Name, Year")] CourseCreatingDto courseCreatingDto)
+        public async Task<IActionResult> Update(Guid courseId, [FromBody] CourseCreatingDto courseCreatingDto)
         {
             if (!ModelState.IsValid)
             {

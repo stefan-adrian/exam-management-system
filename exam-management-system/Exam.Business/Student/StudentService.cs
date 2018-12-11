@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Exam.Domain.Entities;
 using Exam.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 

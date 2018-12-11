@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Exam.Business.Student;
-using Exam.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Exam.Api.Controllers

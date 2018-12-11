@@ -31,7 +31,7 @@ namespace Exam.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("RegistrationNumber, Email, Password, FirstName, LastName")] ProfessorCreatingDto professorCreatingDto)
+        public async Task<IActionResult> Create([FromBody] ProfessorCreatingDto professorCreatingDto)
         {
             if (!ModelState.IsValid)
             {
@@ -42,7 +42,7 @@ namespace Exam.Api.Controllers
         }
 
         [HttpPut("{professorId:guid}")]
-        public async Task<IActionResult> Update(Guid professorId, [Bind("RegistrationNumber, Email, Password, FirstName, LastName")] ProfessorCreatingDto professorCreatingDto)
+        public async Task<IActionResult> Update(Guid professorId, [FromBody] ProfessorCreatingDto professorCreatingDto)
         {
             if (!ModelState.IsValid)
             {

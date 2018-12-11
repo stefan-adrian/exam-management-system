@@ -12,13 +12,6 @@ namespace Exam.Business.Course
             autoMapper = new MapperConfiguration(cfg => { cfg.CreateMap<CourseDto, Domain.Entities.Course>(); }).CreateMapper();
         }
 
-        public Domain.Entities.Course Map(CourseDto courseDto)
-        {
-            Domain.Entities.Course course = new Domain.Entities.Course(courseDto.Name,courseDto.Year);
-            course.SetPropertyValue("Id",courseDto.Id);
-            return course;
-        }
-
         public CourseDto Map(Domain.Entities.Course course)
         {
             return new CourseDto(course.Id,course.Name,course.Year);

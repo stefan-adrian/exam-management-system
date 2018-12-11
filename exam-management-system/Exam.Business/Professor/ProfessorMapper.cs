@@ -12,7 +12,7 @@ namespace Exam.Business.Professor
             autoMapper = new MapperConfiguration(cfg => { cfg.CreateMap<ProfessorDetailsDto, Domain.Entities.Professor>(); }).CreateMapper();
         }
 
-        public ProfessorDetailsDto map(Domain.Entities.Professor professor)
+        public ProfessorDetailsDto Map(Domain.Entities.Professor professor)
         {
             ProfessorDetailsDto professorDetailsDto = new ProfessorDetailsDto();
             professorDetailsDto.Id = professor.Id;
@@ -24,7 +24,7 @@ namespace Exam.Business.Professor
             return professorDetailsDto;
         }
 
-        public ProfessorDetailsDto map(Guid professorId, ProfessorCreatingDto professorCreatingDto)
+        public ProfessorDetailsDto Map(Guid professorId, ProfessorCreatingDto professorCreatingDto)
         {
             ProfessorDetailsDto professorDetailsDto = new ProfessorDetailsDto();
             professorDetailsDto.Id = professorId;
@@ -36,7 +36,7 @@ namespace Exam.Business.Professor
             return professorDetailsDto;
         }
 
-        public Domain.Entities.Professor map(ProfessorCreatingDto professorCreatingDto)
+        public Domain.Entities.Professor Map(ProfessorCreatingDto professorCreatingDto)
         {
             Domain.Entities.Professor professor = new Domain.Entities.Professor(
                 professorCreatingDto.RegistrationNumber,
@@ -47,7 +47,7 @@ namespace Exam.Business.Professor
             return professor;
         }
 
-        public Domain.Entities.Professor map(ProfessorDetailsDto professorDetails, Domain.Entities.Professor professor)
+        public Domain.Entities.Professor Map(ProfessorDetailsDto professorDetails, Domain.Entities.Professor professor)
         {
             this.autoMapper.Map(professorDetails, professor);
             return professor;

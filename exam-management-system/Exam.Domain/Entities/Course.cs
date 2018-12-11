@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
 
 namespace Exam.Domain.Entities
 {
@@ -33,26 +32,6 @@ namespace Exam.Domain.Entities
         {
             Name = name;
             Year = year;
-        }
-
-        public void SetPropertyValue(string propertyName, object val)
-        {
-            Type objType = this.GetType();
-            PropertyInfo propertyInfo = GetFieldInfo(objType, propertyName);
-            if(propertyInfo.CanWrite)
-                propertyInfo.SetValue(this, val);
-        }
-
-        private PropertyInfo GetFieldInfo(Type type, string propertyName)
-        {
-            PropertyInfo propertyInfo;
-            // for searching fields in upper classes (in case of inheritance)
-            do
-            {
-                propertyInfo = type.GetProperty(propertyName);
-                type = type.BaseType;
-            } while (propertyInfo == null && type != null);
-            return propertyInfo;
         }
     }
 }
