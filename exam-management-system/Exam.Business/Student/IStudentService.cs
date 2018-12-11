@@ -12,6 +12,8 @@ namespace Exam.Business.Student
 
         Task<StudentDetailsDto> Create(StudentCreationDto studentCreationDto);
 
+        Task<StudentDetailsDto> Update(Guid id, StudentCreationDto studentCreationDto);
+
         Task Delete(Guid id);
     }
 }

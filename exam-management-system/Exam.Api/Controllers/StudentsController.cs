@@ -45,6 +45,17 @@ namespace Exam.Api.Controllers
             return CreatedAtRoute("FindStudentById", new { id = student.Id }, student);
         }
 
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> Update(Guid id, [FromBody] StudentCreationDto studentCreationDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var student = await studentService.Update(id, studentCreationDto);
+            return CreatedAtRoute("FindStudentById", new { studentId = student.Id }, student);
+        }
+
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
