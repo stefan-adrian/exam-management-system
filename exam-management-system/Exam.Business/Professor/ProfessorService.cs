@@ -13,10 +13,10 @@ namespace Exam.Business.Professor
 
         private readonly IWriteRepository writeRepository;
 
-        private readonly ProfessorMapper professorMapper;
+        private readonly IProfessorMapper professorMapper;
 
         public ProfessorService(IReadRepository readRepository, IWriteRepository writeRepository,
-            ProfessorMapper professorMapper)
+            IProfessorMapper professorMapper)
         {
             this.writeRepository = writeRepository;
             this.readRepository = readRepository;
