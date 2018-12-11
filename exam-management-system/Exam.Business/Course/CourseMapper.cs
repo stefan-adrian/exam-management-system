@@ -46,4 +46,3 @@ namespace Exam.Business.Course
     }
 
 }
-}
