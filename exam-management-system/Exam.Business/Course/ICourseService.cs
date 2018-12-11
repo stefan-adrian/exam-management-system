@@ -6,11 +6,10 @@ namespace Exam.Business.Course
 {
     public interface ICourseService
     {
-        Domain.Entities.Course Create();
-        IEnumerable<CourseDto> GetAll();
-        CourseDto GetById(Guid id);
+        Task<List<CourseDto>> GetAll();
+        Task<CourseDto> GetById(Guid id);
+        Task<CourseDto> Create(CourseCreatingDto newCourse);
         Task<CourseDto> Update(Guid existingCourseId, CourseCreatingDto courseCreatingDto);
-
         Task Delete(Guid existingCourseId);
     }
 }

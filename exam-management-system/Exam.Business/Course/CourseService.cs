@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Exam.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Exam.Business.Course
 {
@@ -20,35 +22,45 @@ namespace Exam.Business.Course
             this.courseMapper = courseMapper;
         }
 
-        public CourseDto GetById(Guid id)
+        public async Task<List<CourseDto>> GetAll()
         {
-            System.Threading.Tasks.Task<Domain.Entities.Course> course = readRepository.GetByIdAsync<Domain.Entities.Course>(id);
-            Domain.Entities.Course course1 = course.Result;
-            return courseMapper.Map(course1);
+            return await GetAllCourseDtos().ToListAsync();
         }
 
-
-        Domain.Entities.Course ICourseService.Create()
+        public async Task<CourseDto> GetById(Guid id)
         {
-            CourseDto courseDto = new CourseDto(Guid.NewGuid(), "Information Security",3);
-            
-            Domain.Entities.Course course = courseMapper.Map(courseDto);
+            var course = await this.readRepository.GetByIdAsync<Domain.Entities.Course>(id);
+            return this.courseMapper.Map(course);
+        }     
 
-            writeRepository.AddNewAsync(course);
-            writeRepository.SaveAsync();
-
-            return course;
+        public async Task<CourseDto> Create(CourseCreatingDto newCourse)
+        {
+            Domain.Entities.Course course = this.courseMapper.Map(newCourse);
+            await this.writeRepository.AddNewAsync(course);
+            await this.writeRepository.SaveAsync();
+            return this.courseMapper.Map(course);
         }
 
-        IEnumerable<CourseDto> ICourseService.GetAll()
-        {
-            List<CourseDto> courseDtos = new List<CourseDto>();
-            IEnumerable<Domain.Entities.Course> courses = readRepository.GetAll<Domain.Entities.Course>().ToList();
-            foreach (var course in courses)
-            {
-                courseDtos.Add(courseMapper.Map(course));
-            }
-            return courseDtos;
+        public async Task<CourseDto> Update(Guid existingCourseId, CourseCreatingDto courseCreatingDto)
+        {   CourseDto courseDto = this.courseMapper.Map(existingCourseId, courseCreatingDto);
+            var course = this.readRepository.GetByIdAsync<Domain.Entities.Course>(existingCourseId).Result;
+            this.writeRepository.Update(this.courseMapper.Map(courseDto, course));
+            await this.writeRepository.SaveAsync();
+            return courseDto;
         }
+
+        public async Task Delete(Guid existingCourseId)
+        {
+            var course = this.readRepository.GetByIdAsync<Domain.Entities.Course>(existingCourseId).Result;
+            this.writeRepository.Delete(course);
+            await this.writeRepository.SaveAsync();
+        }
+
+        private IQueryable<CourseDto> GetAllCourseDtos()
+        {
+            return this.readRepository.GetAll<Domain.Entities.Course>()
+                .Select(course => this.courseMapper.Map(course));
+        }
+
     }
 }
