@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Exam.Business.Professor
@@ -12,5 +11,9 @@ namespace Exam.Business.Professor
         Task<ProfessorDetailsDto> GetById(Guid id);
 
         Task<ProfessorDetailsDto> Create(ProfessorCreatingDto newProfessor);
+
+        Task<ProfessorDetailsDto> Update(ProfessorDetailsDto existingProfessor);
+
+        Task Delete(ProfessorDetailsDto existingProfessor);
     }
 }

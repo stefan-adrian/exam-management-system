@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Exam.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -24,28 +23,44 @@ namespace Exam.Business.Professor
             this.professorMapper = professorMapper;
         }
 
-        public Task<List<ProfessorDetailsDto>> GetAll()
+        public async Task<List<ProfessorDetailsDto>> GetAll()
         {
-            return GetAllProfessorDetailsDtos().ToListAsync();
+            return await GetAllProfessorDetailsDtos().ToListAsync();
         }
 
-        public Task<ProfessorDetailsDto> GetById(Guid id)
+        public async Task<ProfessorDetailsDto> GetById(Guid id)
         {
-            return GetAllProfessorDetailsDtos().SingleOrDefaultAsync(professor => professor.Id == id);
-        }
-
-        public async Task<ProfessorDetailsDto> Create(ProfessorCreatingDto newProfessor)
-        {
-            Domain.Entities.Professor professor = professorMapper.map(newProfessor);
-            await this.writeRepository.AddNewAsync(professor);
-            await this.writeRepository.SaveAsync();
-            return professorMapper.map(professor);
+            var professor = await this.readRepository.GetByIdAsync<Domain.Entities.Professor>(id);
+            return this.professorMapper.map(professor);
         }
 
         private IQueryable<ProfessorDetailsDto> GetAllProfessorDetailsDtos()
         {
             return this.readRepository.GetAll<Domain.Entities.Professor>()
-                .Select(professor => professorMapper.map(professor));
+                .Select(professor => this.professorMapper.map(professor));
+        }
+
+        public async Task<ProfessorDetailsDto> Create(ProfessorCreatingDto newProfessor)
+        {
+            Domain.Entities.Professor professor = this.professorMapper.map(newProfessor);
+            await this.writeRepository.AddNewAsync(professor);
+            await this.writeRepository.SaveAsync();
+            return this.professorMapper.map(professor);
+        }
+
+        public async Task<ProfessorDetailsDto> Update(ProfessorDetailsDto existingProfessor)
+        {
+            var professor = this.readRepository.GetByIdAsync<Domain.Entities.Professor>(existingProfessor.Id).Result;
+            this.writeRepository.Update(this.professorMapper.map(existingProfessor, professor));
+            await this.writeRepository.SaveAsync();
+            return existingProfessor;
+        }
+
+        public async Task Delete(ProfessorDetailsDto existingProfessor)
+        {
+            var professor = this.readRepository.GetByIdAsync<Domain.Entities.Professor>(existingProfessor.Id).Result;
+            this.writeRepository.Delete(professor);
+            await this.writeRepository.SaveAsync();
         }
     }
 }
