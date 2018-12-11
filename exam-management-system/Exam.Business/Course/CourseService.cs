@@ -20,6 +20,14 @@ namespace Exam.Business.Course
             this.courseMapper = courseMapper;
         }
 
+        public CourseDto GetById(Guid id)
+        {
+            System.Threading.Tasks.Task<Domain.Entities.Course> course = readRepository.GetByIdAsync<Domain.Entities.Course>(id);
+            Domain.Entities.Course course1 = course.Result;
+            return courseMapper.Map(course1);
+        }
+
+
         Domain.Entities.Course ICourseService.Create()
         {
             CourseDto courseDto = new CourseDto(Guid.NewGuid(), "Information Security",3);
@@ -40,7 +48,6 @@ namespace Exam.Business.Course
             {
                 courseDtos.Add(courseMapper.Map(course));
             }
-
             return courseDtos;
         }
     }

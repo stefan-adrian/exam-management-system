@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Threading.Tasks;
 using Exam.Business.Course;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,12 +16,27 @@ namespace Exam.Api.Controllers
             this.courseService = courseService;
         }
 
-
-
         [HttpGet]
-        public IEnumerable<CourseDto> GetAll()
+        public async Task<IActionResult> GetAllCourses()
         {
-            return courseService.GetAll();
+            var courses = courseService.GetAll();
+            return Ok(courses);
+        }
+
+
+        [HttpGet("{id:guid}")]
+        public async Task<IActionResult> FindCourseById(Guid id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var course = courseService.GetById(id);
+            if (course == null)
+            {
+                return NotFound();
+            }
+            return Ok(course);
         }
     }
 }

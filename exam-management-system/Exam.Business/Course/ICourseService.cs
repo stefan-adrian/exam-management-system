@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Exam.Business.Course
 {
@@ -6,5 +7,6 @@ namespace Exam.Business.Course
     {
         Domain.Entities.Course Create();
         IEnumerable<CourseDto> GetAll();
+        CourseDto GetById(Guid id);
     }
 }
