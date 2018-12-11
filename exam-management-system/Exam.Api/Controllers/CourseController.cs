@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Exam.Business.Course;
-using Exam.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Exam.Api.Controllers
@@ -19,5 +15,12 @@ namespace Exam.Api.Controllers
             this.courseService = courseService;
         }
 
+
+
+        [HttpGet]
+        public IEnumerable<CourseDto> GetAll()
+        {
+            return courseService.GetAll();
+        }
     }
 }

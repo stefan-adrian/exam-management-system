@@ -10,6 +10,7 @@ namespace Exam.Business
         {
             services.AddScoped<IStudentService, StudentService>();
             services.AddScoped<ICourseService, CourseService>();
+            services.AddScoped<ICourseMapper, CourseMapper>();
 
             return services;
         }
