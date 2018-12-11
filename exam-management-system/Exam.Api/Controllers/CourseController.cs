@@ -7,7 +7,7 @@ namespace Exam.Api.Controllers
 {
     [Route("api/courses")]
     [ApiController]
-    public class CourseController : Controller
+    public class CourseController : ControllerBase
     {
         private readonly ICourseService courseService;
 
