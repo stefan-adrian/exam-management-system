@@ -44,7 +44,7 @@ namespace Exam.Api
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Booking API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Exam API");
             });
 
             app.UseCors(options =>
