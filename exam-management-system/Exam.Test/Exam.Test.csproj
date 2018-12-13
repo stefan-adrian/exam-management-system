@@ -14,12 +14,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Exam.Api.Test\" />
-    <Folder Include="Exam.Business.Test\Exam.Business.Mappers.Test\" />
-    <Folder Include="Exam.Business.Test\Exam.Business.Services.Test\" />
-    <Folder Include="Exam.Domain.Test\" />
-    <Folder Include="Exam.Persistance.Test\" />
-    <Folder Include="Exam.TestUtils\" />
+    <Folder Include="Api\" />
+    <Folder Include="Business\Mappers\" />
+    <Folder Include="Business\Services\" />
+    <Folder Include="Domain\" />
+    <Folder Include="Persistance\" />
+    <Folder Include="TestUtils\" />
   </ItemGroup>
 
 </Project>
