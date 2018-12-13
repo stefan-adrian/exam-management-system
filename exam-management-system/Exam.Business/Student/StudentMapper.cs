@@ -25,27 +25,31 @@ namespace Exam.Business.Student
 
         public StudentDetailsDto Map(Domain.Entities.Student student)
         {
-            StudentDetailsDto studentDetailsDto = new StudentDetailsDto();
-            studentDetailsDto.Id = student.Id;
-            studentDetailsDto.FirstName = student.FirstName;
-            studentDetailsDto.LastName = student.LastName;
-            studentDetailsDto.Email = student.Email;
-            studentDetailsDto.RegistrationNumber = student.RegistrationNumber;
-            studentDetailsDto.YearOfStudy = student.YearOfStudy;
-            studentDetailsDto.Password = student.Password;
+            StudentDetailsDto studentDetailsDto = new StudentDetailsDto
+            {
+                Id = student.Id,
+                FirstName = student.FirstName,
+                LastName = student.LastName,
+                Email = student.Email,
+                RegistrationNumber = student.RegistrationNumber,
+                YearOfStudy = student.YearOfStudy,
+                Password = student.Password
+            };
             return studentDetailsDto;
         }
 
         public StudentDetailsDto Map(Guid id,StudentCreationDto studentCreationDto)
         {
-            StudentDetailsDto studentDetailsDto = new StudentDetailsDto();
-            studentDetailsDto.Id = id;
-            studentDetailsDto.FirstName = studentCreationDto.FirstName;
-            studentDetailsDto.LastName = studentCreationDto.LastName;
-            studentDetailsDto.Email = studentCreationDto.Email;
-            studentDetailsDto.RegistrationNumber = studentCreationDto.RegistrationNumber;
-            studentDetailsDto.YearOfStudy = studentCreationDto.YearOfStudy;
-            studentDetailsDto.Password = studentCreationDto.Password;
+            StudentDetailsDto studentDetailsDto = new StudentDetailsDto
+            {
+                Id = id,
+                FirstName = studentCreationDto.FirstName,
+                LastName = studentCreationDto.LastName,
+                Email = studentCreationDto.Email,
+                RegistrationNumber = studentCreationDto.RegistrationNumber,
+                YearOfStudy = studentCreationDto.YearOfStudy,
+                Password = studentCreationDto.Password
+            };
             return studentDetailsDto;
         }
 
