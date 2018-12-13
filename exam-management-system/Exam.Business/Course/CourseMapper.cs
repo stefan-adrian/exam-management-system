@@ -19,9 +19,11 @@ namespace Exam.Business.Course
 
         public CourseDto Map(Guid courseId, CourseCreatingDto courseCreatingDto)
         {
-            CourseDto courseDto = new CourseDto(courseId, courseCreatingDto.Name, courseCreatingDto.Year);
-            courseDto.Id = courseId;
-            
+            CourseDto courseDto = new CourseDto(courseId, courseCreatingDto.Name, courseCreatingDto.Year)
+            {
+                Id = courseId
+            };
+
             return courseDto;
         }
 

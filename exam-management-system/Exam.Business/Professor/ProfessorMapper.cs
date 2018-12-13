@@ -14,25 +14,29 @@ namespace Exam.Business.Professor
 
         public ProfessorDetailsDto Map(Domain.Entities.Professor professor)
         {
-            ProfessorDetailsDto professorDetailsDto = new ProfessorDetailsDto();
-            professorDetailsDto.Id = professor.Id;
-            professorDetailsDto.RegistrationNumber = professor.RegistrationNumber;
-            professorDetailsDto.Email = professor.Email;
-            professorDetailsDto.Password = professor.Password;
-            professorDetailsDto.FirstName = professor.FirstName;
-            professorDetailsDto.LastName = professor.LastName;
+            ProfessorDetailsDto professorDetailsDto = new ProfessorDetailsDto
+            {
+                Id = professor.Id,
+                RegistrationNumber = professor.RegistrationNumber,
+                Email = professor.Email,
+                Password = professor.Password,
+                FirstName = professor.FirstName,
+                LastName = professor.LastName
+            };
             return professorDetailsDto;
         }
 
         public ProfessorDetailsDto Map(Guid professorId, ProfessorCreatingDto professorCreatingDto)
         {
-            ProfessorDetailsDto professorDetailsDto = new ProfessorDetailsDto();
-            professorDetailsDto.Id = professorId;
-            professorDetailsDto.RegistrationNumber = professorCreatingDto.RegistrationNumber;
-            professorDetailsDto.Email = professorCreatingDto.Email;
-            professorDetailsDto.Password = professorCreatingDto.Password;
-            professorDetailsDto.FirstName = professorCreatingDto.FirstName;
-            professorDetailsDto.LastName = professorCreatingDto.LastName;
+            ProfessorDetailsDto professorDetailsDto = new ProfessorDetailsDto
+            {
+                Id = professorId,
+                RegistrationNumber = professorCreatingDto.RegistrationNumber,
+                Email = professorCreatingDto.Email,
+                Password = professorCreatingDto.Password,
+                FirstName = professorCreatingDto.FirstName,
+                LastName = professorCreatingDto.LastName
+            };
             return professorDetailsDto;
         }
 
