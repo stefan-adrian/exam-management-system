@@ -7,13 +7,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="5.5.3" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="1.3.2" />
     <PackageReference Include="MSTest.TestFramework" Version="1.3.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Exam.Business.Test\Exam.Business.Test.Mappers\" />
+    <Folder Include="Exam.Api.Test\" />
+    <Folder Include="Exam.Business.Test\Exam.Business.Mappers.Test\" />
+    <Folder Include="Exam.Business.Test\Exam.Business.Services.Test\" />
+    <Folder Include="Exam.Domain.Test\" />
+    <Folder Include="Exam.Persistance.Test\" />
+    <Folder Include="Exam.TestUtils\" />
   </ItemGroup>
 
 </Project>
