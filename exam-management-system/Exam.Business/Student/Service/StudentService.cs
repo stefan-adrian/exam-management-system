@@ -15,9 +15,9 @@ namespace Exam.Business.Student
 
         public StudentService(IReadRepository readRepository, IWriteRepository writeRepository, IStudentMapper studentMapper)
         {
-            this.readRepository = readRepository;
-            this.writeRepository = writeRepository;
-            this.studentMapper = studentMapper;
+            this.writeRepository = writeRepository ?? throw new ArgumentNullException();
+            this.readRepository = readRepository ?? throw new ArgumentNullException();
+            this.studentMapper = studentMapper ?? throw new ArgumentNullException();
         }
 
         public async Task<List<StudentDetailsDto>> GetAll()
@@ -45,7 +45,7 @@ namespace Exam.Business.Student
         {
             StudentDetailsDto studentDetailsDto = studentMapper.Map(id, studentCreationDto);
             var student = readRepository.GetByIdAsync<Domain.Entities.Student>(id).Result;
-            writeRepository.Update(studentMapper.map(studentDetailsDto, student));
+            writeRepository.Update(studentMapper.Map(studentDetailsDto, student));
             await writeRepository.SaveAsync();
             return studentDetailsDto;
         }

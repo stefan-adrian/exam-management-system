@@ -17,10 +17,14 @@
 
   <ItemGroup>
     <Folder Include="Api\" />
-    <Folder Include="Business\Mappers\" />
+    <Folder Include="Business\Mapper\" />
+    <Folder Include="Business\Service\" />
     <Folder Include="Domain\" />
     <Folder Include="Persistance\" />
-    <Folder Include="TestUtils\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Exam.Api\Exam.Api.csproj" />
   </ItemGroup>
 
   <ItemGroup>

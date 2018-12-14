@@ -53,7 +53,7 @@ namespace Exam.Business.Student
             return studentDetailsDto;
         }
 
-        public Domain.Entities.Student map(StudentDetailsDto studentDetails, Domain.Entities.Student student)
+        public Domain.Entities.Student Map(StudentDetailsDto studentDetails, Domain.Entities.Student student)
         {
             autoMapper.Map(studentDetails, student);
             return student;
