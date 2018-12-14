@@ -1,5 +1,4 @@
-﻿using System;
-using Exam.Business.Course;
+﻿using Exam.Business.Course;
 using Exam.Domain.Entities;
 using Exam.Test.TestUtils;
 using FluentAssertions;
@@ -57,12 +56,11 @@ namespace Exam.Test.Business.Mappers
         public void Map_ShouldReturnCourse_WhenArgumentsAreCourseDetailsDtoAndCourse()
         {
             // Arrange
-            this._courseDetailsDto = CourseTestUtils.GetCourseDetailsDto(new Guid());
-            var oldGuid = this._course.Id;
+            var course = CourseTestUtils.GetCourse();
             // Act
-            var result = this._courseMapper.Map(this._courseDetailsDto, this._course);
+            var result = this._courseMapper.Map(this._courseDetailsDto, course);
             // Assert
-            result.Id.Should().NotBe(oldGuid);
+            result.Should().BeEquivalentTo(this._course);
         }
 
         [TestMethod]
