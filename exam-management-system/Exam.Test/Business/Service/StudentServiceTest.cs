@@ -18,6 +18,7 @@ namespace Exam.Test.Business.Service
     {
         private Domain.Entities.Student _student1, _student2;
         private StudentDetailsDto _studentDto1, _studentDto2;
+        private StudentCreationDto _studentCreationDto;
 
         // mocks
         private Mock<IReadRepository> _mockReadRepository;
@@ -33,6 +34,7 @@ namespace Exam.Test.Business.Service
             this._student2 = StudentTestUtils.GetStudent();
             this._studentDto1 = StudentTestUtils.GetStudentDetailsDto(_student1.Id);
             this._studentDto2 = StudentTestUtils.GetStudentDetailsDto(_student2.Id);
+            this._studentCreationDto = StudentTestUtils.GetStudentCreationDto();
             this._mockReadRepository = new Mock<IReadRepository>();
             this._mockWriteRepository = new Mock<IWriteRepository>();
             this._mockStudentMapper = new Mock<IStudentMapper>();
@@ -64,6 +66,22 @@ namespace Exam.Test.Business.Service
             _mockStudentMapper.Setup(student => student.Map(_student1)).Returns(_studentDto1);
             // Act
             StudentDetailsDto actualStudent = await _studentService.GetById(_student1.Id);
+            // Assert
+            actualStudent.Should().BeEquivalentTo(_studentDto1);
+        }
+
+        [TestMethod]
+        public async Task Create_ShouldReturnInstanceOfStudentDetailsDto()
+        {
+            // Arrange
+            var studentService = new StudentService(_mockReadRepository.Object, _mockWriteRepository.Object, _mockStudentMapper.Object);
+            _mockStudentMapper.Setup(student => student.Map(_student1)).Returns(_studentDto1);
+            _mockStudentMapper.Setup(student => student.Map(_studentCreationDto)).Returns(_student1);
+            _mockWriteRepository.Setup(repo => repo.AddNewAsync<Student>(_student1)).Returns(() => Task.FromResult(_student1));
+
+            // Act
+            StudentDetailsDto actualStudent = await studentService.Create(_studentCreationDto);
+
             // Assert
             actualStudent.Should().BeEquivalentTo(_studentDto1);
         }
