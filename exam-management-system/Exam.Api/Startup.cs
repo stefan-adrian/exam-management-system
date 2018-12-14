@@ -34,7 +34,7 @@ namespace Exam.Api
                 {
                     validators.RegisterValidatorsFromAssemblyContaining<StudentCreationDtoValidator>();
                     validators.RegisterValidatorsFromAssemblyContaining<ProfessorCreatingDtoValidator>();
-                    validators.RegisterValidatorsFromAssemblyContaining<CourseCretingDtoValidator>();
+                    validators.RegisterValidatorsFromAssemblyContaining<CourseCreatingDtoValidator>();
                 });
             services.AddCors();
 
