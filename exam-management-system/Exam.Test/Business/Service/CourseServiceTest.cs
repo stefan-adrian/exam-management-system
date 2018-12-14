@@ -9,6 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using FluentAssertions;
 using MockQueryable.NSubstitute;
+
 namespace Exam.Test.Business.Service
 {
     [TestClass]

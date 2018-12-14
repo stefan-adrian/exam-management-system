@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Exam.Business.Professor;
-using Exam.Business.Student;
 using Exam.Domain.Entities;
 using Exam.Domain.Interfaces;
 using Exam.Test.TestUtils;
