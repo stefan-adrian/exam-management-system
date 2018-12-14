@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Exam.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/professors")]
     [ApiController]
     public class ProfessorsController : ControllerBase
     {
@@ -13,7 +13,7 @@ namespace Exam.Api.Controllers
 
         public ProfessorsController(IProfessorService professorService)
         {
-            this.professorService = professorService;
+            this.professorService = professorService ?? throw new ArgumentNullException();
         }
 
         [HttpGet]
@@ -50,7 +50,7 @@ namespace Exam.Api.Controllers
             }
 
             var existingProfessor = await this.professorService.Update(professorId,professorCreatingDto);
-            return CreatedAtRoute("FindProfessorById", new { professorId = existingProfessor.Id }, existingProfessor);
+            return NoContent();
         }
 
         [HttpDelete("{professorId:guid}")]
