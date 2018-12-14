@@ -39,8 +39,8 @@ namespace Exam.Test.Business.Service
         public async Task GetAll_ShouldReturnAllStudents()
         {
             // Arrange
-            var expectedStudentsDtoList = new List<StudentDetailsDto> {_studentDto1, _studentDto2};
-            var expectedStudentsList = new List<Student> {_student1, _student2};
+            var expectedStudentsDtoList = new List<StudentDetailsDto> { _studentDto1, _studentDto2 };
+            var expectedStudentsList = new List<Student> { _student1, _student2 };
             var expectedStudents = expectedStudentsList.AsQueryable();
             var studentService = new StudentService(_mockReadRepository.Object, _mockWriteRepository.Object, _mockStudentMapper.Object);
             _mockReadRepository.Setup(repo => repo.GetAll<Student>()).Returns(expectedStudents);
@@ -52,6 +52,21 @@ namespace Exam.Test.Business.Service
 
             // Assert
             actualStudentsDtoList.Should().BeEquivalentTo(expectedStudentsDtoList);
+        }
+
+        [TestMethod]
+        public async Task GetById_ShouldReturnInstanceOfStudentDetailsDto()
+        {
+            // Arrange
+            var studentService = new StudentService(_mockReadRepository.Object, _mockWriteRepository.Object, _mockStudentMapper.Object);
+            _mockReadRepository.Setup(repo => repo.GetByIdAsync<Student>(_student1.Id)).ReturnsAsync(_student1);
+            _mockStudentMapper.Setup(student => student.Map(_student1)).Returns(_studentDto1);
+
+            // Act
+            StudentDetailsDto actualStudent = await studentService.GetById(_student1.Id);
+
+            // Assert
+            actualStudent.Should().BeEquivalentTo(_studentDto1);
         }
     }
 }
