@@ -62,7 +62,7 @@ namespace Exam.Test.Business.Service
         {
             // Arrange
             _mockReadRepository.Setup(repo => repo.GetByIdAsync<Student>(_student1.Id)).ReturnsAsync(_student1);
-            _mockStudentMapper.Setup(student => student.Map(_student1)).Returns(_studentDto1);
+            _mockStudentMapper.Setup(mapper => mapper.Map(_student1)).Returns(_studentDto1);
             // Act
             StudentDetailsDto actualStudent = await _studentService.GetById(_student1.Id);
             // Assert
@@ -73,8 +73,8 @@ namespace Exam.Test.Business.Service
         public async Task Create_ShouldReturnInstanceOfStudentDetailsDto()
         {
             // Arrange
-            _mockStudentMapper.Setup(student => student.Map(_student1)).Returns(_studentDto1);
-            _mockStudentMapper.Setup(student => student.Map(_studentCreationDto)).Returns(_student1);
+            _mockStudentMapper.Setup(mapper => mapper.Map(_student1)).Returns(_studentDto1);
+            _mockStudentMapper.Setup(mapper => mapper.Map(_studentCreationDto)).Returns(_student1);
             _mockWriteRepository.Setup(repo => repo.AddNewAsync<Student>(_student1)).Returns(() => Task.FromResult(_student1));
             // Act
             StudentDetailsDto actualStudent = await _studentService.Create(_studentCreationDto);
@@ -86,7 +86,7 @@ namespace Exam.Test.Business.Service
         public async Task Update_ShouldReturnInstanceOfStudentDetailsDto()
         {
             // Arrange
-            _mockStudentMapper.Setup(student => student.Map(_student1.Id,_studentCreationDto)).Returns(_studentDto1);
+            _mockStudentMapper.Setup(mapper => mapper.Map(_student1.Id,_studentCreationDto)).Returns(_studentDto1);
             _mockReadRepository.Setup(repo => repo.GetByIdAsync<Student>(_student1.Id)).ReturnsAsync(_student1);
             // Act
             StudentDetailsDto actualStudent = await _studentService.Update(_student1.Id, _studentCreationDto);
