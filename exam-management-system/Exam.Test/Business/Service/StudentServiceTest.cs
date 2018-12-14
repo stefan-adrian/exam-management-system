@@ -10,8 +10,6 @@ using Moq;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using MockQueryable.NSubstitute;
-using Nito.AsyncEx;
-
 
 namespace Exam.Test.Business.Service
 {
@@ -19,7 +17,6 @@ namespace Exam.Test.Business.Service
     public class StudentServiceTest
     {
         private Domain.Entities.Student _student1, _student2;
-
         private StudentDetailsDto _studentDto1, _studentDto2;
 
         // mocks
@@ -60,17 +57,13 @@ namespace Exam.Test.Business.Service
         }
 
         [TestMethod]
-        public async Task GetById_ShouldReturnAllStudents()
+        public async Task GetById_ShouldReturnInstanceOfStudentDetailsDto()
         {
             // Arrange
-            var studentService = new StudentService(_mockReadRepository.Object, _mockWriteRepository.Object,
-                _mockStudentMapper.Object);
             _mockReadRepository.Setup(repo => repo.GetByIdAsync<Student>(_student1.Id)).ReturnsAsync(_student1);
             _mockStudentMapper.Setup(student => student.Map(_student1)).Returns(_studentDto1);
-
             // Act
-            StudentDetailsDto actualStudent = await studentService.GetById(_student1.Id);
-
+            StudentDetailsDto actualStudent = await _studentService.GetById(_student1.Id);
             // Assert
             actualStudent.Should().BeEquivalentTo(_studentDto1);
         }
