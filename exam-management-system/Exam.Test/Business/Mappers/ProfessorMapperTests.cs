@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Exam.Test.Business.Mappers
 {
     [TestClass]
-    public class ProfessorMapperTest
+    public class ProfessorMapperTests
     {
         private Professor professor;
         private ProfessorDetailsDto professorDetailsDto;

@@ -45,7 +45,7 @@ namespace Exam.Business.Student
         {
             StudentDetailsDto studentDetailsDto = studentMapper.Map(id, studentCreationDto);
             var student = readRepository.GetByIdAsync<Domain.Entities.Student>(id).Result;
-            writeRepository.Update(studentMapper.map(studentDetailsDto, student));
+            writeRepository.Update(studentMapper.Map(studentDetailsDto, student));
             await writeRepository.SaveAsync();
             return studentDetailsDto;
         }
