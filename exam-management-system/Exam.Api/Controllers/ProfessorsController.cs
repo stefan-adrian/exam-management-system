@@ -50,7 +50,7 @@ namespace Exam.Api.Controllers
             }
 
             var existingProfessor = await this.professorService.Update(professorId,professorCreatingDto);
-            return CreatedAtRoute("FindProfessorById", new { professorId = existingProfessor.Id }, existingProfessor);
+            return NoContent();
         }
 
         [HttpDelete("{professorId:guid}")]

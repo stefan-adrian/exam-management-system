@@ -51,7 +51,7 @@ namespace Exam.Api.Controllers
                 return BadRequest(ModelState);
             }
             var student = await studentService.Update(id, studentCreationDto);
-            return CreatedAtRoute("FindStudentById", new { studentId = student.Id }, student);
+            return NoContent();
         }
 
         [HttpDelete("{id:guid}")]
