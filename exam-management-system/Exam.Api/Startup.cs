@@ -1,5 +1,9 @@
 ﻿using Exam.Business;
+using Exam.Business.Professor;
+using Exam.Business.Professor.Validator;
+using Exam.Business.Student.Validator;
 using Exam.Persistance;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -24,7 +28,12 @@ namespace Exam.Api
                 .AddBusiness()
                 .AddPersistance(Configuration.GetConnectionString("Exam"));
 
-            services.AddMvc();
+            services.AddMvc()
+                .AddFluentValidation(validators =>
+                {
+                    validators.RegisterValidatorsFromAssemblyContaining<StudentCreationDtoValidator>();
+                    validators.RegisterValidatorsFromAssemblyContaining<ProfessorCreatingDtoValidator>();
+                });
             services.AddCors();
 
             services.AddSwaggerGen(c =>
