@@ -8,7 +8,6 @@ using Exam.Test.TestUtils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
 using MockQueryable.NSubstitute;
 
 namespace Exam.Test.Business.Service
@@ -74,12 +73,11 @@ namespace Exam.Test.Business.Service
         public async Task Create_ShouldReturnInstanceOfStudentDetailsDto()
         {
             // Arrange
-            var studentService = new StudentService(_mockReadRepository.Object, _mockWriteRepository.Object, _mockStudentMapper.Object);
             _mockStudentMapper.Setup(student => student.Map(_student1)).Returns(_studentDto1);
             _mockStudentMapper.Setup(student => student.Map(_studentCreationDto)).Returns(_student1);
             _mockWriteRepository.Setup(repo => repo.AddNewAsync<Student>(_student1)).Returns(() => Task.FromResult(_student1));
             // Act
-            StudentDetailsDto actualStudent = await studentService.Create(_studentCreationDto);
+            StudentDetailsDto actualStudent = await _studentService.Create(_studentCreationDto);
             // Assert
             actualStudent.Should().BeEquivalentTo(_studentDto1);
         }
@@ -88,15 +86,24 @@ namespace Exam.Test.Business.Service
         public async Task Update_ShouldReturnInstanceOfStudentDetailsDto()
         {
             // Arrange
-            var studentService = new StudentService(_mockReadRepository.Object, _mockWriteRepository.Object, _mockStudentMapper.Object);
             _mockStudentMapper.Setup(student => student.Map(_student1.Id,_studentCreationDto)).Returns(_studentDto1);
             _mockReadRepository.Setup(repo => repo.GetByIdAsync<Student>(_student1.Id)).ReturnsAsync(_student1);
-            //_mockStudentMapper.Setup(student => student.Map(_studentCreationDto)).Returns(_student1);
-            //_mockWriteRepository.Setup(repo => repo.AddNewAsync<Student>(_student1)).Returns(() => Task.FromResult(_student1));
             // Act
-            StudentDetailsDto actualStudent = await studentService.Update(_student1.Id, _studentCreationDto);
+            StudentDetailsDto actualStudent = await _studentService.Update(_student1.Id, _studentCreationDto);
             // Assert
             actualStudent.Should().BeEquivalentTo(_studentDto1);
+        }
+
+        [TestMethod]
+        public void Delete_ShouldRemoveAStudent()
+        {
+            // Arrange
+            _mockReadRepository.Setup(repo => repo.GetByIdAsync<Student>(_student1.Id)).ReturnsAsync(_student1);
+            // Act
+            Task.Run(async () =>
+            {
+                await _studentService.Delete(_student1.Id);
+            }).GetAwaiter().GetResult();
         }
     }
 }
