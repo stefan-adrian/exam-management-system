@@ -15,9 +15,9 @@ namespace Exam.Business.Student
 
         public StudentService(IReadRepository readRepository, IWriteRepository writeRepository, IStudentMapper studentMapper)
         {
-            this.readRepository = readRepository;
-            this.writeRepository = writeRepository;
-            this.studentMapper = studentMapper;
+            this.writeRepository = writeRepository ?? throw new ArgumentNullException();
+            this.readRepository = readRepository ?? throw new ArgumentNullException();
+            this.studentMapper = studentMapper ?? throw new ArgumentNullException();
         }
 
         public async Task<List<StudentDetailsDto>> GetAll()

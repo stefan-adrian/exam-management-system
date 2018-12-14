@@ -18,9 +18,9 @@ namespace Exam.Business.Professor
         public ProfessorService(IReadRepository readRepository, IWriteRepository writeRepository,
             IProfessorMapper professorMapper)
         {
-            this.writeRepository = writeRepository;
-            this.readRepository = readRepository;
-            this.professorMapper = professorMapper;
+            this.writeRepository = writeRepository ?? throw new ArgumentNullException();
+            this.readRepository = readRepository ?? throw new ArgumentNullException();
+            this.professorMapper = professorMapper ?? throw new ArgumentNullException();
         }
 
         public async Task<List<ProfessorDetailsDto>> GetAll()
