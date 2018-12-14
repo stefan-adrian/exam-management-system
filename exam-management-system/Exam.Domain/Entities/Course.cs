@@ -22,15 +22,29 @@ namespace Exam.Domain.Entities
 
         public Course(string name, int year, Professor professor) : base(Guid.NewGuid())
         {
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentException("Name of course must not be null", "name");
             Name = name;
+
+            if (year < 1 || year > 6)
+                throw new ArgumentException("Not a valid year", "year");
             Year = year;
+
+            if (professor == null)
+                throw new ArgumentException("A course must be assigned to a professor", "professor");
             Professor = professor;
+
             StudentCourses=new List<StudentCourse>();
         }
 
         public Course(string name, int year) : base(Guid.NewGuid())
         {
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentException("Name of course must not be null", "name");
             Name = name;
+
+            if(year < 1 || year > 6) 
+                throw new ArgumentException("Not a valid year", "year");
             Year = year;
         }
     }
