@@ -74,12 +74,12 @@ namespace Exam.Test.Business.Mappers
             var result = this.studentMapper.Map(this.studentDetailsDto, this.student);
             // Assert
             result.Should().Match<Student>((obj) =>
-                obj.Email == this.student.Email &&
-                obj.FirstName == this.student.FirstName &&
-                obj.LastName == this.student.LastName &&
-                obj.Password == this.student.Password &&
-                obj.RegistrationNumber == this.student.RegistrationNumber &&
-                obj.YearOfStudy == this.student.YearOfStudy);
+                obj.Email == this.studentDetailsDto.Email &&
+                obj.FirstName == this.studentDetailsDto.FirstName &&
+                obj.LastName == this.studentDetailsDto.LastName &&
+                obj.Password == this.studentDetailsDto.Password &&
+                obj.RegistrationNumber == this.studentDetailsDto.RegistrationNumber &&
+                obj.YearOfStudy == this.studentDetailsDto.YearOfStudy);
         }
     }
 }
