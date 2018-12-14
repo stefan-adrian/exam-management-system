@@ -24,4 +24,9 @@
     <ProjectReference Include="..\Exam.Api\Exam.Api.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Exam.Business\Exam.Business.csproj" />
+    <ProjectReference Include="..\Exam.Domain\Exam.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
