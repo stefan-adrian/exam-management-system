@@ -9,81 +9,71 @@ namespace Exam.Test.Business.Mappers
     [TestClass]
     public class ProfessorMapperTests
     {
-        private Professor professor;
-        private ProfessorDetailsDto professorDetailsDto;
-        private ProfessorCreatingDto professorCreatingDto;
-        private IProfessorMapper professorMapper;
+        private Professor _professor;
+        private ProfessorDetailsDto _professorDetailsDto;
+        private ProfessorCreatingDto _professorCreatingDto;
+        private IProfessorMapper _professorMapper;
 
         [TestInitialize]
         public void Setup()
         {
-            this.professor = ProfessorTestUtils.GetProfessor();
-            this.professorDetailsDto = ProfessorTestUtils.GetProfessorDetailsDto(professor.Id);
-            this.professorCreatingDto = ProfessorTestUtils.GetProfessorCreatingDto();
-            this.professorMapper = new ProfessorMapper();
+            this._professor = ProfessorTestUtils.GetProfessor();
+            this._professorDetailsDto = ProfessorTestUtils.GetProfessorDetailsDto(_professor.Id);
+            this._professorCreatingDto = ProfessorTestUtils.GetProfessorCreatingDto();
+            this._professorMapper = new ProfessorMapper();
         }
 
         [TestCleanup]
         public void Cleanup()
         {
-            this.professor = null;
-            this.professorDetailsDto = null;
-            this.professorCreatingDto = null;
-            this.professorMapper = null;
+            this._professor = null;
+            this._professorDetailsDto = null;
+            this._professorCreatingDto = null;
+            this._professorMapper = null;
         }
 
         [TestMethod]
-        public void Given_Professor_When_CallMap_Then_ShouldReturnProfessorDetailsDto()
-        {
-            // Arrange
-
+        public void Map_ShouldReturnProfessorDetailsDto_WhenArgumentIsProfessor()
+        { 
             // Act
-            var result = professorMapper.Map(this.professor);
+            var result = _professorMapper.Map(this._professor);
             // Assert
-            result.Should().BeEquivalentTo(this.professorDetailsDto);
+            result.Should().BeEquivalentTo(this._professorDetailsDto);
         }
 
         [TestMethod]
-        public void Given_ProfessorCreatingDtoAndId_When_CallMap_Then_ShouldReturnProfessorDetails()
+        public void Map_ShouldReturnProfessorsDetails_WhenArgumentsAreProfessorCreatingDtoAndId()
         {
-            // Arrange
-
             // Act
-            var result = this.professorMapper.Map(this.professor.Id, this.professorCreatingDto);
+            var result = this._professorMapper.Map(this._professor.Id, this._professorCreatingDto);
             // Assert
-            result.Should().BeEquivalentTo(this.professorDetailsDto);
+            result.Should().BeEquivalentTo(this._professorDetailsDto);
         }
 
         [TestMethod]
-        public void Given_ProfessorCreatingDto_When_CallMap_Then_ShouldReturnProfessor()
+        public void Map_ShouldReturnProfessor_WhenArgumentIsProfessorCreatingDto()
         {
-            // Arrange
-
             // Act
-            var result = this.professorMapper.Map(this.professorCreatingDto);
+            var result = this._professorMapper.Map(this._professorCreatingDto);
             // Assert
             result.Should().Match<Professor>((obj) =>
-                obj.RegistrationNumber == this.professor.RegistrationNumber &&
-                obj.Email == this.professor.Email &&
-                obj.FirstName == this.professor.FirstName &&
-                obj.LastName == this.professor.LastName &&
-                obj.Password == this.professor.Password);
+                obj.RegistrationNumber == this._professor.RegistrationNumber &&
+                obj.Email == this._professor.Email &&
+                obj.FirstName == this._professor.FirstName &&
+                obj.LastName == this._professor.LastName &&
+                obj.Password == this._professor.Password);
         }
 
         [TestMethod]
-        public void Given_ProfessorDetailsDtoAndProfessor_When_CallMap_Then_ShouldReturnProfessor()
+        public void Map_ShouldReturnProfessor_WhenArgumentsAreProfessorDetailsDtoAndProfessor()
         {
             // Arrange
-            this.professorDetailsDto.Email = "newEmail";
+            this._professorDetailsDto.Email = "newEmail";
             // Act
-            var result = this.professorMapper.Map(this.professorDetailsDto, this.professor);
+            var result = this._professorMapper.Map(this._professorDetailsDto, this._professor);
             // Assert
             result.Should().Match<Professor>((obj) =>
-                obj.RegistrationNumber == this.professorDetailsDto.RegistrationNumber &&
-                obj.Email == this.professorDetailsDto.Email &&
-                obj.FirstName == this.professorDetailsDto.FirstName &&
-                obj.LastName == this.professorDetailsDto.LastName &&
-                obj.Password == this.professorDetailsDto.Password);
+                obj.Email == this._professorDetailsDto.Email);
         }
     }
 }
