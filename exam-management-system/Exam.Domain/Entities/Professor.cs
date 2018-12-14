@@ -38,6 +38,7 @@ namespace Exam.Domain.Entities
 
             if (string.IsNullOrEmpty(lastName))
                 throw new ArgumentException("LastName must not be null", "lastName");
+            LastName = lastName;
         }
     }
 }
