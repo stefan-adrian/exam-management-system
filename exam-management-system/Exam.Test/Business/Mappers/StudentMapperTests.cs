@@ -1,4 +1,5 @@
-﻿using Exam.Business.Student;
+﻿using System;
+using Exam.Business.Student;
 using Exam.Domain.Entities;
 using Exam.Test.TestUtils;
 using FluentAssertions;
@@ -69,12 +70,12 @@ namespace Exam.Test.Business.Mappers
         public void Map_ShouldReturnStudent_WhenArgumentsAreStudentDetailsDtoAndStudent()
         {
             // Arrange
-            this._studentDetailsDto.FirstName = "firstNameChanged";
+            this._studentDetailsDto = StudentTestUtils.GetStudentDetailsDto(new Guid());
+            var oldGuid = this._student.Id;
             // Act
             var result = this._studentMapper.Map(this._studentDetailsDto, this._student);
             // Assert
-            result.Should().Match<Student>((obj) =>
-                obj.FirstName == this._studentDetailsDto.FirstName);
+            result.Id.Should().NotBe(oldGuid);
         }
     }
 }

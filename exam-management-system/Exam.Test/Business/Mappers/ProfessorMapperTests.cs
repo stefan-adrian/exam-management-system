@@ -1,4 +1,5 @@
-﻿using Exam.Business.Professor;
+﻿using System;
+using Exam.Business.Professor;
 using Exam.Domain.Entities;
 using Exam.Test.TestUtils;
 using FluentAssertions;
@@ -68,12 +69,12 @@ namespace Exam.Test.Business.Mappers
         public void Map_ShouldReturnProfessor_WhenArgumentsAreProfessorDetailsDtoAndProfessor()
         {
             // Arrange
-            this._professorDetailsDto.Email = "newEmail";
+            this._professorDetailsDto = ProfessorTestUtils.GetProfessorDetailsDto(new Guid());
+            var oldGuid = this._professor.Id;
             // Act
             var result = this._professorMapper.Map(this._professorDetailsDto, this._professor);
             // Assert
-            result.Should().Match<Professor>((obj) =>
-                obj.Email == this._professorDetailsDto.Email);
+            result.Id.Should().NotBe(oldGuid);
         }
     }
 }
