@@ -59,7 +59,7 @@ namespace Exam.Api.Controllers
             }
 
             var existingCourse = await this.courseService.Update(courseId, courseCreatingDto);
-            return CreatedAtRoute("FindCourseById", new { courseId = existingCourse.Id }, existingCourse);
+            return NoContent();
         }
 
         [HttpDelete("{courseId:guid}")]
