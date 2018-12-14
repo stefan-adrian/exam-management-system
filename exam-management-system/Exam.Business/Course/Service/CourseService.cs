@@ -17,9 +17,9 @@ namespace Exam.Business.Course
 
         public CourseService(IReadRepository readRepository, IWriteRepository writeRepository,ICourseMapper courseMapper)
         {
-            this.writeRepository = writeRepository;
-            this.readRepository = readRepository;
-            this.courseMapper = courseMapper;
+            this.writeRepository = writeRepository ?? throw new ArgumentNullException();
+            this.readRepository = readRepository ?? throw new ArgumentNullException();
+            this.courseMapper = courseMapper ?? throw new ArgumentNullException();
         }
 
         public async Task<List<CourseDto>> GetAll()
@@ -31,7 +31,7 @@ namespace Exam.Business.Course
         {
             var course = await this.readRepository.GetByIdAsync<Domain.Entities.Course>(id);
             return this.courseMapper.Map(course);
-        }     
+        }  
 
         public async Task<CourseDto> Create(CourseCreatingDto newCourse)
         {
