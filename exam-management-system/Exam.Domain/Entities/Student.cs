@@ -28,9 +28,12 @@ namespace Exam.Domain.Entities
 
         public Student(string registrationNumber, string email, string password, string firstName, string lastName, int yearOfStudy) : base(Guid.NewGuid())
         {
-            if(string.IsNullOrWhiteSpace(registrationNumber))
+            if (string.IsNullOrWhiteSpace(registrationNumber))
+            {
                 throw new ArgumentException("Registration Number must not be null or have white spaces",
                     "registrationNumber");
+            }
+
             RegistrationNumber = registrationNumber;
 
             if(string.IsNullOrEmpty(email))
