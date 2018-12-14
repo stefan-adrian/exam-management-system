@@ -13,7 +13,7 @@ namespace Exam.Api.Controllers
 
         public StudentsController(IStudentService studentService)
         {
-            this.studentService = studentService;
+            this.studentService = studentService ?? throw new ArgumentNullException();
         }
 
         [HttpGet]
