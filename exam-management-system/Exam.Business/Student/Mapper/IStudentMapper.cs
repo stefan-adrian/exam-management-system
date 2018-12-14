@@ -10,6 +10,6 @@ namespace Exam.Business.Student
 
         StudentDetailsDto Map(Guid id, StudentCreationDto studentCreationDto);
 
-        Domain.Entities.Student map(StudentDetailsDto studentDetails, Domain.Entities.Student student);
+        Domain.Entities.Student Map(StudentDetailsDto studentDetails, Domain.Entities.Student student);
     }
 }
