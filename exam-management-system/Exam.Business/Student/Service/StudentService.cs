@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Exam.Business.Student.Exception;
 using Exam.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,6 +30,10 @@ namespace Exam.Business.Student
         public async Task<StudentDetailsDto> GetById(Guid id)
         {
             var student = await readRepository.GetByIdAsync<Domain.Entities.Student>(id);
+            if (student == null)
+            {
+                throw new StudentNotFoundException(id);
+            }
             return studentMapper.Map(student);
         }
 
@@ -45,6 +50,10 @@ namespace Exam.Business.Student
         {
             StudentDetailsDto studentDetailsDto = studentMapper.Map(id, studentCreationDto);
             var student = readRepository.GetByIdAsync<Domain.Entities.Student>(id).Result;
+            if (student == null)
+            {
+                throw new StudentNotFoundException(id);
+            }
             writeRepository.Update(studentMapper.Map(studentDetailsDto, student));
             await writeRepository.SaveAsync();
             return studentDetailsDto;
@@ -54,6 +63,10 @@ namespace Exam.Business.Student
         public async Task Delete(Guid id)
         {
             var student = readRepository.GetByIdAsync<Domain.Entities.Student>(id).Result;
+            if (student == null)
+            {
+                throw new StudentNotFoundException(id);
+            }
             writeRepository.Delete(student);
             await writeRepository.SaveAsync();
         }

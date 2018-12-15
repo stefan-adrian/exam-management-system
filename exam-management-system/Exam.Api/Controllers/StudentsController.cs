@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Exam.Business.Student;
+using Exam.Business.Student.Exception;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Exam.Api.Controllers
@@ -26,8 +27,15 @@ namespace Exam.Api.Controllers
         [HttpGet("{id:guid}", Name = "FindStudentById")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var student = await studentService.GetById(id);
-            return Ok(student);
+            try
+            {
+                var student = await studentService.GetById(id);
+                return Ok(student);
+            }
+            catch (StudentNotFoundException studentNotFoundException)
+            {
+                return NotFound(studentNotFoundException.Message);
+            }
         }
 
         [HttpPost]
@@ -37,7 +45,7 @@ namespace Exam.Api.Controllers
             {
                 return BadRequest(ModelState);
             }
-
+            
             var student = await studentService.Create(studentCreationDto);
 
             return CreatedAtRoute("FindStudentById", new { id = student.Id }, student);
@@ -50,15 +58,30 @@ namespace Exam.Api.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var student = await studentService.Update(id, studentCreationDto);
-            return NoContent();
+
+            try
+            {
+                var student = await studentService.Update(id, studentCreationDto);
+                return NoContent();
+            }
+            catch (StudentNotFoundException studentNotFoundException)
+            {
+                return NotFound(studentNotFoundException.Message);
+            }
         }
 
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            await studentService.Delete(id);
-            return Ok();
+            try
+            {
+                await studentService.Delete(id);
+                return Ok();
+            }
+            catch (StudentNotFoundException studentNotFoundException)
+            {
+                return NotFound(studentNotFoundException.Message);
+            }
         }
     }
 }
