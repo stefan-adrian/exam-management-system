@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Exam.Business.Professor;
+using Exam.Business.Professor.Exception;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Exam.Api.Controllers
@@ -26,8 +27,15 @@ namespace Exam.Api.Controllers
         [HttpGet("{professorId:guid}", Name = "FindProfessorById")]
         public async Task<IActionResult> GetById(Guid professorId)
         {
-            var professor = await this.professorService.GetById(professorId);
-            return Ok(professor);
+            try
+            {
+                var professor = await this.professorService.GetById(professorId);
+                return Ok(professor);
+            }
+            catch (ProfessorNotFoundException professorNotFoundException)
+            {
+                return NotFound(professorNotFoundException.Message);
+            }
         }
 
         [HttpPost]
@@ -49,15 +57,29 @@ namespace Exam.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var existingProfessor = await this.professorService.Update(professorId,professorCreatingDto);
-            return NoContent();
+            try
+            {
+                var existingProfessor = await this.professorService.Update(professorId, professorCreatingDto);
+                return NoContent();
+            }
+            catch (ProfessorNotFoundException professorNotFoundException)
+            {
+                return NotFound(professorNotFoundException.Message);
+            }
         }
 
         [HttpDelete("{professorId:guid}")]
         public async Task<IActionResult> Delete(Guid professorId)
         {
-            await this.professorService.Delete(professorId);
-            return Ok();
+            try
+            {
+                await this.professorService.Delete(professorId);
+                return Ok();
+            }
+            catch (ProfessorNotFoundException professorNotFoundException)
+            {
+                return NotFound(professorNotFoundException.Message);
+            }
         }
     }
 }
