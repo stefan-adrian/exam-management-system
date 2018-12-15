@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Exam.Business.Course;
+using Exam.Business.Course.Exception;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Exam.Api.Controllers
@@ -27,16 +28,15 @@ namespace Exam.Api.Controllers
         [HttpGet("{courseId:guid}", Name = "FindCourseById")]
         public async Task<IActionResult> FindCourseById(Guid courseId)
         {
-            if (courseId == null)
+            try
             {
-                return NotFound();
+                var course = await this.courseService.GetById(courseId);
+                return Ok(course);
             }
-            var course = await this.courseService.GetById(courseId);
-            if (course == null)
+            catch (CourseNotFoundException courseNotFoundException)
             {
-                return NotFound();
+                return NotFound(courseNotFoundException.Message);
             }
-            return Ok(course);
         }
 
         [HttpPost]
@@ -58,15 +58,29 @@ namespace Exam.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var existingCourse = await this.courseService.Update(courseId, courseCreatingDto);
-            return NoContent();
+            try
+            {
+                var existingCourse = await this.courseService.Update(courseId, courseCreatingDto);
+                return NoContent();
+            }
+            catch (CourseNotFoundException courseNotFoundException)
+            {
+                return NotFound(courseNotFoundException.Message);
+            }
         }
 
         [HttpDelete("{courseId:guid}")]
         public async Task<IActionResult> Delete(Guid courseId)
         {
-            await this.courseService.Delete(courseId);
-            return Ok();
+            try
+            {
+                await this.courseService.Delete(courseId);
+                return Ok();
+            }
+            catch (CourseNotFoundException courseNotFoundException)
+            {
+                return NotFound(courseNotFoundException.Message);
+            }
         }
     }
 }

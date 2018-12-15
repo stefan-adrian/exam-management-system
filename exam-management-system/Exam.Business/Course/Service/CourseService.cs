@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Exam.Business.Course.Exception;
 using Exam.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,6 +31,10 @@ namespace Exam.Business.Course
         public async Task<CourseDto> GetById(Guid id)
         {
             var course = await this.readRepository.GetByIdAsync<Domain.Entities.Course>(id);
+            if (course == null)
+            {
+                throw new CourseNotFoundException(id);
+            }
             return this.courseMapper.Map(course);
         }  
 
@@ -42,8 +47,13 @@ namespace Exam.Business.Course
         }
 
         public async Task<CourseDto> Update(Guid existingCourseId, CourseCreatingDto courseCreatingDto)
-        {   CourseDto courseDto = this.courseMapper.Map(existingCourseId, courseCreatingDto);
+        {
+            CourseDto courseDto = this.courseMapper.Map(existingCourseId, courseCreatingDto);
             var course = this.readRepository.GetByIdAsync<Domain.Entities.Course>(existingCourseId).Result;
+            if (course == null)
+            {
+                throw new CourseNotFoundException(existingCourseId);
+            }
             this.writeRepository.Update(this.courseMapper.Map(courseDto, course));
             await this.writeRepository.SaveAsync();
             return courseDto;
@@ -52,6 +62,10 @@ namespace Exam.Business.Course
         public async Task Delete(Guid existingCourseId)
         {
             var course = this.readRepository.GetByIdAsync<Domain.Entities.Course>(existingCourseId).Result;
+            if (course == null)
+            {
+                throw new CourseNotFoundException(existingCourseId);
+            }
             this.writeRepository.Delete(course);
             await this.writeRepository.SaveAsync();
         }
