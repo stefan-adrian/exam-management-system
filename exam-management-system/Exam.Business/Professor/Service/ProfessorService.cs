@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Exam.Business.Professor.Exception;
 using Exam.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,6 +32,10 @@ namespace Exam.Business.Professor
         public async Task<ProfessorDetailsDto> GetById(Guid id)
         {
             var professor = await this.readRepository.GetByIdAsync<Domain.Entities.Professor>(id);
+            if (professor == null)
+            {
+                throw new ProfessorNotFoundException(id);
+            }
             return this.professorMapper.Map(professor);
         }
 
@@ -52,6 +57,10 @@ namespace Exam.Business.Professor
         {
             ProfessorDetailsDto professorDetailsDto = this.professorMapper.Map(existingProfessorId, professorCreatingDto);
             var professor = this.readRepository.GetByIdAsync<Domain.Entities.Professor>(existingProfessorId).Result;
+            if (professor == null)
+            {
+                throw new ProfessorNotFoundException(existingProfessorId);
+            }
             this.writeRepository.Update(this.professorMapper.Map(professorDetailsDto, professor));
             await this.writeRepository.SaveAsync();
             return professorDetailsDto;
@@ -60,6 +69,10 @@ namespace Exam.Business.Professor
         public async Task Delete(Guid existingProfessorId)
         {
             var professor = this.readRepository.GetByIdAsync<Domain.Entities.Professor>(existingProfessorId).Result;
+            if (professor == null)
+            {
+                throw new ProfessorNotFoundException(existingProfessorId);
+            }
             this.writeRepository.Delete(professor);
             await this.writeRepository.SaveAsync();
         }
