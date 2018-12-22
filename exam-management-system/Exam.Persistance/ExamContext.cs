@@ -12,7 +12,7 @@ namespace Exam.Persistance
         public ExamContext(DbContextOptions<ExamContext> options) : base(options)
         {
             Database.EnsureCreated();
-            Database.Migrate();
+            //Database.Migrate();
         }
 
         internal DbSet<Student> Students { get; private set; }
