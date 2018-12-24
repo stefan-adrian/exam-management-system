@@ -6,9 +6,27 @@ namespace Exam.Test.TestUtils
 {
     public class ProfessorTestUtils
     {
+        private static Professor professor1 = null;
+        private static Professor professor2 = null;
+
         public static Professor GetProfessor()
         {
-            return new Professor("registrationNumber","email@email.ro","password","FirstName","LastName");
+            if (professor1 == null)
+            {
+                professor1 = new Professor("registrationNumber", "email@email.ro", "password", "FirstName", "LastName");
+            }
+
+            return professor1;
+        }
+
+        public static Professor GetProfessor2()
+        {
+            if (professor2 == null)
+            {
+                professor2 = new Professor("registrationNumber", "email@email.ro", "password", "FirstName", "LastName");
+            }
+
+            return professor2;
         }
 
         public static ProfessorDetailsDto GetProfessorDetailsDto(Guid id)

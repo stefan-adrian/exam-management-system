@@ -9,55 +9,57 @@ using Exam.Domain.Entities;
 using Exam.Test.TestUtils;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using Xunit;
 
 namespace Exam.Test.Integration
 {
-
+    [TestClass]
     public class StudentControllerTest : IClassFixture<CustomWebApplicationFactory<Startup>>
     {
-        private readonly HttpClient _client;
-        private readonly Student _student1;
-        private readonly Student _student2;
-        private readonly StudentDetailsDto _studentDetailsDto1;
-        private readonly StudentDetailsDto _studentDetailsDto2;
-        private readonly StudentCreationDto _studentCreationDto;
+        private HttpClient client;
+        private Student student1;
+        private Student student2;
+        private StudentDetailsDto studentDetailsDto1;
+        private StudentDetailsDto studentDetailsDto2;
+        private StudentCreationDto studentCreationDto;
 
-        public StudentControllerTest(CustomWebApplicationFactory<Startup> factory)
+        [TestInitialize]
+        public void Setup()
         {
-            _client = factory.CreateClient();
-            _student1 = StudentTestUtils.GetStudent();
-            _student2 = StudentTestUtils.GetStudent2();
-            _studentDetailsDto1 = StudentTestUtils.GetStudentDetailsDto(_student1.Id);
-            _studentDetailsDto2 = StudentTestUtils.GetStudentDetailsDto(_student2.Id);
-            _studentCreationDto = StudentTestUtils.GetStudentCreationDto();
+            client = new CustomWebApplicationFactory<Startup>().CreateClient();
+            student1 = StudentTestUtils.GetStudent();
+            student2 = StudentTestUtils.GetStudent2();
+            studentDetailsDto1 = StudentTestUtils.GetStudentDetailsDto(student1.Id);
+            studentDetailsDto2 = StudentTestUtils.GetStudentDetailsDto(student2.Id);
+            studentCreationDto = StudentTestUtils.GetStudentCreationDto();
         }
 
-        [Fact]
-        public async Task GetStudentById()
+        [TestMethod]
+        public async Task GetStudentById_ShouldReturnStudentWithGivenId()
         {
 
             //Act
-            var response = await _client.GetAsync("api/students/" + _student1.Id);
+            var response = await client.GetAsync("api/students/" + student1.Id);
 
             //Assert
             response.EnsureSuccessStatusCode();
             var responseString = await response.Content.ReadAsStringAsync();
-            StudentDetailsDto studentsDetailsDtoReturned = JsonConvert.DeserializeObject<StudentDetailsDto>(responseString);
-            studentsDetailsDtoReturned.Should().BeEquivalentTo(_studentDetailsDto1);
+            StudentDetailsDto studentDetailsDtoReturned = JsonConvert.DeserializeObject<StudentDetailsDto>(responseString);
+            studentDetailsDtoReturned.Should().BeEquivalentTo(studentDetailsDto1);
         }
 
-        [Fact]
-        public async Task GetAllStudents()
+        [TestMethod]
+        public async Task GetAllStudents_ShouldReturnAllStudents()
         {
             //Arrange
             List<StudentDetailsDto> studentDetailsDtos = new List<StudentDetailsDto>();
-            studentDetailsDtos.Add(_studentDetailsDto1);
-            studentDetailsDtos.Add(_studentDetailsDto2);
+            studentDetailsDtos.Add(studentDetailsDto1);
+            studentDetailsDtos.Add(studentDetailsDto2);
 
             //Act
-            var response = await _client.GetAsync("api/students");
+            var response = await client.GetAsync("api/students");
 
             //Assert
             response.EnsureSuccessStatusCode();
@@ -66,43 +68,43 @@ namespace Exam.Test.Integration
             studentsDetailsDtosReturned.Should().BeEquivalentTo(studentDetailsDtos);
         }
 
-        [Fact]
-        public async Task PostStudentById()
+        [TestMethod]
+        public async Task PostStudent_ShouldReturnStudentCreatedFromGivenBody()
         {
             //Arrange
-            var contents = new StringContent(JsonConvert.SerializeObject(_studentCreationDto), Encoding.UTF8, "application/json");
+            var contents = new StringContent(JsonConvert.SerializeObject(studentCreationDto), Encoding.UTF8, "application/json");
 
             //Act
-            var response = await _client.PostAsync("api/students", contents);
+            var response = await client.PostAsync("api/students", contents);
 
             //Assert
             response.EnsureSuccessStatusCode();
             var responseString = await response.Content.ReadAsStringAsync();
             StudentDetailsDto studentsDetailsDtoReturned = JsonConvert.DeserializeObject<StudentDetailsDto>(responseString);
-            studentsDetailsDtoReturned.Should().BeEquivalentTo(_studentCreationDto, options =>
+            studentsDetailsDtoReturned.Should().BeEquivalentTo(studentCreationDto, options =>
                  options.ExcludingMissingMembers());
 
         }
 
-        [Fact]
-        public async Task PutStudentById()
+        [TestMethod]
+        public async Task PutStudentById_ShouldHaveSuccessStatusCode()
         {
             //Arrange
-            var contents = new StringContent(JsonConvert.SerializeObject(_studentCreationDto), Encoding.UTF8, "application/json");
+            var contents = new StringContent(JsonConvert.SerializeObject(studentCreationDto), Encoding.UTF8, "application/json");
 
             //Act
-            var response = await _client.PutAsync("api/students/" + _student1.Id, contents);
+            var response = await client.PutAsync("api/students/" + student1.Id, contents);
 
             //Assert
             response.EnsureSuccessStatusCode();
 
         }
 
-        [Fact]
-        public async Task DeleteStudentById()
+        [TestMethod]
+        public async Task DeleteStudentById_ShouldHaveSuccessStatusCode()
         {
             //Act
-            var response = await _client.DeleteAsync("api/students/" + _student1.Id);
+            var response = await client.DeleteAsync("api/students/" + student1.Id);
 
             //Assert
             response.EnsureSuccessStatusCode();

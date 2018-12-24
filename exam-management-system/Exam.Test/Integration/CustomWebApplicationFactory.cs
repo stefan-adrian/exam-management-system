@@ -45,7 +45,7 @@ namespace Exam.Test.Integration
 
 
                     // Seed the database with some specific test data.
-                    await SeedData.PopulateTestDatabaseAsync(appDb);
+                    await DatabasePopulationData.PopulateTestDatabaseAsync(appDb);
 
                 }
             });
