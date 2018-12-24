@@ -83,13 +83,13 @@ namespace Exam.Test.Business.Service
         }
 
         [TestMethod]
-        public async Task GetById_ShouldReturnInstanceOfProfessorDetailsDto()
+        public async Task GetProfessorDetailsDtoById_ShouldReturnInstanceOfProfessorDetailsDto()
         {
             // Arrange
             _mockReadRepository.Setup(repo => repo.GetByIdAsync<Professor>(_professor1.Id)).ReturnsAsync(_professor1);
             _mockProfessorMapper.Setup(mapper => mapper.Map(_professor1)).Returns(_professorDetailsDto1);
             // Act
-            ProfessorDetailsDto actualProfessor = await _professorService.GetById(_professor1.Id);
+            ProfessorDetailsDto actualProfessor = await _professorService.GetProfessorDetialsDtoById(_professor1.Id);
             // Assert
             actualProfessor.Should().BeEquivalentTo(_professorDetailsDto1);
         }

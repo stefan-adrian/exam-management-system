@@ -83,7 +83,7 @@ namespace Exam.Test.Business.Service
             _mockCourseMapper.Setup(mapper => mapper.Map(_courseCreatingDto)).Returns(_course1);
             _mockWriteRepository.Setup(repo => repo.AddNewAsync<Course>(_course1)).Returns(() => Task.FromResult(_course1));
             _mockProfessorService.Setup(professorService =>
-              professorService.GetProfessorById(professor.Id)).Returns(()=>Task.FromResult(professor));
+              professorService.GetProfessorById(professor.Id)).Returns(() => Task.FromResult(professor));
             // Act
             CourseDto actualCourse = await _courseService.Create(professor.Id, _courseCreatingDto);
             // Assert

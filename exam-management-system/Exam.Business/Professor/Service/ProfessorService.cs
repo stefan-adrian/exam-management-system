@@ -40,7 +40,7 @@ namespace Exam.Business.Professor
             return professor;
         }
 
-        public async Task<ProfessorDetailsDto> GetById(Guid id)
+        public async Task<ProfessorDetailsDto> GetProfessorDetialsDtoById(Guid id)
         {
             var professor = await GetProfessorById(id);
             return this.professorMapper.Map(professor);
