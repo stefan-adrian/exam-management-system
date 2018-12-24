@@ -6,9 +6,27 @@ namespace Exam.Test.TestUtils
 {
     public class CourseTestUtils
     {
+        private static Course course1 = null;
+        private static Course course2 = null;
+
         public static Course GetCourse()
         {
-            return new Course("course", 1);
+            if (course1 == null)
+            {
+                course1 = new Course("course", 1);
+            }
+
+            return course1;
+        }
+
+        public static Course GetCourse2()
+        {
+            if (course2 == null)
+            {
+                course2 = new Course("course", 1);
+            }
+
+            return course2;
         }
 
         public static CourseDto GetCourseDetailsDto(Guid id)

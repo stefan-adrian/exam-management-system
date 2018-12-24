@@ -6,9 +6,27 @@ namespace Exam.Test.TestUtils
 {
     public class StudentTestUtils
     {
+        private static Student student1 = null;
+        private static Student student2 = null;
+
         public static Student GetStudent()
         {
-            return new Student("registrationNumber","email@email.ro","password","FirstName","LastName", 1);
+            if (student1 == null)
+            {
+                student1 = new Student("registrationNumber", "email@email.ro", "password", "FirstName", "LastName", 1);
+            }
+
+            return student1;
+        }
+
+        public static Student GetStudent2()
+        {
+            if (student2 == null)
+            {
+                student2 = new Student("registrationNumber", "email@email.ro", "password", "FirstName", "LastName", 1);
+            }
+
+            return student2;
         }
 
         public static StudentDetailsDto GetStudentDetailsDto(Guid id)
