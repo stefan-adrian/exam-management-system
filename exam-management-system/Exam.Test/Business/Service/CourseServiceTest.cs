@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Exam.Business.Course;
+using Exam.Business.Professor;
 using Exam.Domain.Entities;
 using Exam.Domain.Interfaces;
 using Exam.Test.TestUtils;
@@ -9,6 +11,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using FluentAssertions;
 using MockQueryable.NSubstitute;
+using NSubstitute;
 
 namespace Exam.Test.Business.Service
 {
@@ -23,6 +26,7 @@ namespace Exam.Test.Business.Service
         private Mock<IReadRepository> _mockReadRepository;
         private Mock<IWriteRepository> _mockWriteRepository;
         private Mock<ICourseMapper> _mockCourseMapper;
+        private Mock<IProfessorService> _mockProfessorService;
         // injectMocks
         private CourseService _courseService;
 
@@ -37,8 +41,9 @@ namespace Exam.Test.Business.Service
             this._mockReadRepository = new Mock<IReadRepository>();
             this._mockWriteRepository = new Mock<IWriteRepository>();
             this._mockCourseMapper = new Mock<ICourseMapper>();
+            _mockProfessorService = new Mock<IProfessorService>();
             _courseService = new CourseService(_mockReadRepository.Object, _mockWriteRepository.Object,
-                _mockCourseMapper.Object);
+                _mockCourseMapper.Object, _mockProfessorService.Object);
         }
 
         [TestMethod]
@@ -73,11 +78,14 @@ namespace Exam.Test.Business.Service
         public async Task Create_ShouldReturnInstanceOfCourseDetailsDto()
         {
             // Arrange
+            Professor professor = ProfessorTestUtils.GetProfessor();
+            _mockProfessorService.Setup(professorService =>
+                professorService.GetProfessorById(professor.Id).Returns(professor));
             _mockCourseMapper.Setup(mapper => mapper.Map(_course1)).Returns(_courseDto1);
             _mockCourseMapper.Setup(mapper => mapper.Map(_courseCreatingDto)).Returns(_course1);
             _mockWriteRepository.Setup(repo => repo.AddNewAsync<Course>(_course1)).Returns(() => Task.FromResult(_course1));
             // Act
-            CourseDto actualCourse = await _courseService.Create(_courseCreatingDto);
+            CourseDto actualCourse = await _courseService.Create(professor.Id, _courseCreatingDto);
             // Assert
             actualCourse.Should().BeEquivalentTo(_courseDto1);
         }

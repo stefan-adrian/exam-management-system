@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Exam.Business.Professor;
+using Exam.Business.Professor.Exception;
 using Exam.Domain.Entities;
 using Exam.Domain.Interfaces;
 using Exam.Test.TestUtils;
@@ -55,6 +57,29 @@ namespace Exam.Test.Business.Service
             var actualProfessorDtoList = await _professorService.GetAll();
             // Assert
             actualProfessorDtoList.Should().BeEquivalentTo(expectedProfessorsDtoList);
+        }
+
+        [TestMethod]
+        public async Task GetProfessorById_ShouldReturnInstanceOfProfessor()
+        {
+            // Arrange
+            _mockReadRepository.Setup(repo => repo.GetByIdAsync<Professor>(_professor1.Id)).ReturnsAsync(_professor1);
+            // Act
+            Professor actualProfessor = await _professorService.GetProfessorById(_professor1.Id);
+            // Assert
+            actualProfessor.Should().BeEquivalentTo(_professor1);
+        }
+
+        [TestMethod]
+        public void GetProfessorById_ShouldThrowProfessorNotFoundException()
+        {
+            // Arrange
+            Guid mockGuid = new Guid();
+            _mockReadRepository.Setup(repo => repo.GetByIdAsync<Professor>(_professor1.Id)).Throws(new ProfessorNotFoundException(mockGuid));
+            // Act
+            Func<Task> act = async () => await _professorService.GetProfessorById(mockGuid);
+            // Assert
+            act.Should().Throw<ProfessorNotFoundException>();
         }
 
         [TestMethod]

@@ -75,7 +75,7 @@ namespace Exam.Test.Integration
             var contents = new StringContent(JsonConvert.SerializeObject(courseCreationDto), Encoding.UTF8, "application/json");
 
             //Act
-            var response = await client.PostAsync("api/courses", contents);
+            var response = await client.PostAsync("api/professors/" + ProfessorTestUtils.GetProfessor().Id + "/courses", contents);
 
             //Assert
             response.EnsureSuccessStatusCode();
