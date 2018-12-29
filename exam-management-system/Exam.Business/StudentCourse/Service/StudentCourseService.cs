@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Exam.Business.Course;
 using Exam.Business.Course.Exception;
 using Exam.Business.Student.Exception;
 using Exam.Business.StudentCourse.Exception;
 using Exam.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Exam.Business.StudentCourse.Service
 {
@@ -12,12 +16,14 @@ namespace Exam.Business.StudentCourse.Service
         private readonly IReadRepository readRepository;
         private readonly IWriteRepository writeRepository;
         private readonly IStudentCourseMapper studentCourseMapper;
+        private readonly ICourseMapper courseMapper;
 
-        public StudentCourseService(IReadRepository readRepository, IWriteRepository writeRepository, IStudentCourseMapper studentCourseMapper)
+        public StudentCourseService(IReadRepository readRepository, IWriteRepository writeRepository, IStudentCourseMapper studentCourseMapper, ICourseMapper courseMapper)
         {
             this.readRepository = readRepository ?? throw new ArgumentNullException();
             this.writeRepository = writeRepository ?? throw new ArgumentNullException();
             this.studentCourseMapper = studentCourseMapper ?? throw new ArgumentNullException();
+            this.courseMapper = courseMapper ?? throw new ArgumentNullException();
         }
 
         public async Task<StudentCourseDetailsDto> AddCourse(Guid id, StudentCourseCreationDto studentCourseCreationDto)
@@ -43,6 +49,25 @@ namespace Exam.Business.StudentCourse.Service
             await this.writeRepository.AddNewAsync(studentCourse);
             await this.writeRepository.SaveAsync();
             return this.studentCourseMapper.Map(studentCourse);
+        }
+
+        public async Task<List<CourseDto>> GetCourses(Guid id)
+        {
+            List<CourseDto> courses = new List<CourseDto>();
+
+            var student = await this.readRepository.GetAll<Domain.Entities.Student>().Where(s => s.Id == id)
+                .Include(s => s.StudentCourses).ThenInclude(sc => sc.Course).FirstOrDefaultAsync();
+            if (student == null)
+            {
+                throw new StudentNotFoundException(id);
+            }
+
+            foreach (var studentCourse in student.StudentCourses)
+            {
+                courses.Add(this.courseMapper.Map(studentCourse.Course));
+            }
+
+            return courses;
         }
     }
 }

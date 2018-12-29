@@ -90,6 +90,20 @@ namespace Exam.Api.Controllers
             }
         }
 
+        [HttpGet("{id:guid}/courses")]
+        public async Task<IActionResult> GetCourses(Guid id)
+        {
+            try
+            {
+                var courses = await this.studentCourseService.GetCourses(id);
+                return Ok(courses);
+            }
+            catch (StudentNotFoundException studentNotFoundException)
+            {
+                return NotFound(studentNotFoundException.Message);
+            }
+        }
+
         [HttpPut("{id:guid}/courses")]
         public async Task<IActionResult> AddCourse(Guid id,
             [FromBody] StudentCourseCreationDto studentCourseCreationDto)
