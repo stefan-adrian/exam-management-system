@@ -4,6 +4,7 @@ using Exam.Business.Course.Exception;
 using Exam.Business.Student;
 using Exam.Business.Student.Exception;
 using Exam.Business.StudentCourse;
+using Exam.Business.StudentCourse.Exception;
 using Exam.Business.StudentCourse.Service;
 using Microsoft.AspNetCore.Mvc;
 
@@ -103,9 +104,14 @@ namespace Exam.Api.Controllers
                 await this.studentCourseService.AddCourse(id, studentCourseCreationDto);
                 return NoContent();
             }
-            catch(Exception e) when (e is StudentNotFoundException || e is CourseNotFoundException)
+            catch (Exception exception) when (exception is StudentNotFoundException ||
+                                              exception is CourseNotFoundException)
             {
-                return NotFound(e.Message);
+                return NotFound(exception.Message);
+            }
+            catch (StudentCannotApplyException exception)
+            {
+                return BadRequest(exception.Message);
             }
         }
     }

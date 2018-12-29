@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Exam.Business.Course.Exception;
 using Exam.Business.Student.Exception;
+using Exam.Business.StudentCourse.Exception;
 using Exam.Domain.Interfaces;
 
 namespace Exam.Business.StudentCourse.Service
@@ -35,7 +36,7 @@ namespace Exam.Business.StudentCourse.Service
 
             if (student.YearOfStudy < course.Year)
             {
-                throw new ArgumentOutOfRangeException();
+                throw new StudentCannotApplyException(id, studentCourseCreationDto.CourseId);
             }
 
             var studentCourse = this.studentCourseMapper.Map(id, studentCourseCreationDto);
