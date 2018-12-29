@@ -1,4 +1,5 @@
-﻿using Exam.Business;
+﻿using System.Buffers;
+using Exam.Business;
 using Exam.Business.Course.Validator;
 using Exam.Business.Professor;
 using Exam.Business.Professor.Validator;
@@ -7,8 +8,10 @@ using Exam.Persistance;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace Exam.Api
@@ -29,7 +32,14 @@ namespace Exam.Api
                 .AddBusiness()
                 .AddPersistance(Configuration.GetConnectionString("Exam"));
 
-            services.AddMvc()
+            services.AddMvc(options =>
+                {
+                    options.OutputFormatters.Clear();
+                    options.OutputFormatters.Add(new JsonOutputFormatter(new JsonSerializerSettings()
+                    {
+                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                    }, ArrayPool<char>.Shared));
+                })
                 .AddFluentValidation(validators =>
                 {
                     validators.RegisterValidatorsFromAssemblyContaining<StudentCreationDtoValidator>();

@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Exam.Business.Course.Exception;
 using Exam.Business.Student;
 using Exam.Business.Student.Exception;
+using Exam.Business.StudentCourse;
+using Exam.Business.StudentCourse.Service;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Exam.Api.Controllers
@@ -11,10 +14,12 @@ namespace Exam.Api.Controllers
     public class StudentsController : ControllerBase
     {
         private readonly IStudentService studentService;
+        private readonly IStudentCourseService studentCourseService;
 
-        public StudentsController(IStudentService studentService)
+        public StudentsController(IStudentService studentService, IStudentCourseService studentCourseService)
         {
             this.studentService = studentService ?? throw new ArgumentNullException();
+            this.studentCourseService = studentCourseService ?? throw new ArgumentNullException();
         }
 
         [HttpGet]
@@ -81,6 +86,26 @@ namespace Exam.Api.Controllers
             catch (StudentNotFoundException studentNotFoundException)
             {
                 return NotFound(studentNotFoundException.Message);
+            }
+        }
+
+        [HttpPut("{id:guid}/courses")]
+        public async Task<IActionResult> AddCourse(Guid id,
+            [FromBody] StudentCourseCreationDto studentCourseCreationDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                await this.studentCourseService.AddCourse(id, studentCourseCreationDto);
+                return NoContent();
+            }
+            catch(Exception e) when (e is StudentNotFoundException || e is CourseNotFoundException)
+            {
+                return NotFound(e.Message);
             }
         }
     }

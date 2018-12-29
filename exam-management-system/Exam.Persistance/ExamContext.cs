@@ -12,7 +12,7 @@ namespace Exam.Persistance
         public ExamContext(DbContextOptions<ExamContext> options) : base(options)
         {
             Database.EnsureCreated();
-            //Database.Migrate();
+//            Database.Migrate();
         }
 
         internal DbSet<Student> Students { get; private set; }
@@ -24,6 +24,8 @@ namespace Exam.Persistance
         internal DbSet<Domain.Entities.Exam> Exams { get; private set; }
 
         internal DbSet<Grade> Grades { get; private set; }
+
+        internal DbSet<StudentCourse> StudentCourse { get; private set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
