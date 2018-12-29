@@ -49,6 +49,8 @@ namespace Exam.Domain.Entities
                 throw new ArgumentException("LastName must not be null", "lastName");
             }
             LastName = lastName;
+
+            Courses = new List<Course>();
         }
     }
 }

@@ -29,13 +29,20 @@ namespace Exam.Business.Professor
             return await GetAllProfessorDetailsDtos().ToListAsync();
         }
 
-        public async Task<ProfessorDetailsDto> GetById(Guid id)
+        public async Task<Domain.Entities.Professor> GetProfessorById(Guid id)
         {
             var professor = await this.readRepository.GetByIdAsync<Domain.Entities.Professor>(id);
             if (professor == null)
             {
                 throw new ProfessorNotFoundException(id);
             }
+
+            return professor;
+        }
+
+        public async Task<ProfessorDetailsDto> GetProfessorDetialsDtoById(Guid id)
+        {
+            var professor = await GetProfessorById(id);
             return this.professorMapper.Map(professor);
         }
 

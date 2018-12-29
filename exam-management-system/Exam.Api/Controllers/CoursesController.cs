@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Exam.Api.Controllers
 {
-    [Route("api/courses")]
+    [Route("api")]
     [ApiController]
     public class CoursesController : ControllerBase
     {
@@ -17,7 +17,7 @@ namespace Exam.Api.Controllers
             this.courseService = courseService ?? throw new ArgumentNullException();
         }
 
-        [HttpGet]
+        [HttpGet("courses")]
         public async Task<IActionResult> GetAllCourses()
         {
             var courses = await courseService.GetAll();
@@ -25,7 +25,7 @@ namespace Exam.Api.Controllers
         }
 
 
-        [HttpGet("{courseId:guid}", Name = "FindCourseById")]
+        [HttpGet("courses/{courseId:guid}", Name = "FindCourseById")]
         public async Task<IActionResult> FindCourseById(Guid courseId)
         {
             try
@@ -39,18 +39,18 @@ namespace Exam.Api.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CourseCreatingDto courseCreatingDto)
+        [HttpPost("professors/{professorId:guid}/courses")]
+        public async Task<IActionResult> Create(Guid professorId, [FromBody] CourseCreatingDto courseCreatingDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var course = await this.courseService.Create(courseCreatingDto);
+            var course = await this.courseService.Create(professorId, courseCreatingDto);
             return CreatedAtRoute("FindCourseById", new { courseId = course.Id }, course);
         }
 
-        [HttpPut("{courseId:guid}")]
+        [HttpPut("courses/{courseId:guid}")]
         public async Task<IActionResult> Update(Guid courseId, [FromBody] CourseCreatingDto courseCreatingDto)
         {
             if (!ModelState.IsValid)
@@ -69,7 +69,7 @@ namespace Exam.Api.Controllers
             }
         }
 
-        [HttpDelete("{courseId:guid}")]
+        [HttpDelete("courses/{courseId:guid}")]
         public async Task<IActionResult> Delete(Guid courseId)
         {
             try

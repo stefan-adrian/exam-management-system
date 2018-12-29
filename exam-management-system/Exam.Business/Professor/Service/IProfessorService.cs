@@ -8,7 +8,9 @@ namespace Exam.Business.Professor
     {
         Task<List<ProfessorDetailsDto>> GetAll();
 
-        Task<ProfessorDetailsDto> GetById(Guid id);
+        Task<Domain.Entities.Professor> GetProfessorById(Guid id);
+
+        Task<ProfessorDetailsDto> GetProfessorDetialsDtoById(Guid id);
 
         Task<ProfessorDetailsDto> Create(ProfessorCreatingDto newProfessor);
 

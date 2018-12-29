@@ -29,7 +29,7 @@ namespace Exam.Api.Controllers
         {
             try
             {
-                var professor = await this.professorService.GetById(professorId);
+                var professor = await this.professorService.GetProfessorDetialsDtoById(professorId);
                 return Ok(professor);
             }
             catch (ProfessorNotFoundException professorNotFoundException)

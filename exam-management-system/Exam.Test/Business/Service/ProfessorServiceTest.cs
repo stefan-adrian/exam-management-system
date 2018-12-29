@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Exam.Business.Professor;
+using Exam.Business.Professor.Exception;
 using Exam.Domain.Entities;
 using Exam.Domain.Interfaces;
 using Exam.Test.TestUtils;
@@ -58,13 +60,36 @@ namespace Exam.Test.Business.Service
         }
 
         [TestMethod]
-        public async Task GetById_ShouldReturnInstanceOfProfessorDetailsDto()
+        public async Task GetProfessorById_ShouldReturnInstanceOfProfessor()
+        {
+            // Arrange
+            _mockReadRepository.Setup(repo => repo.GetByIdAsync<Professor>(_professor1.Id)).ReturnsAsync(_professor1);
+            // Act
+            Professor actualProfessor = await _professorService.GetProfessorById(_professor1.Id);
+            // Assert
+            actualProfessor.Should().BeEquivalentTo(_professor1);
+        }
+
+        [TestMethod]
+        public void GetProfessorById_ShouldThrowProfessorNotFoundException()
+        {
+            // Arrange
+            Guid mockGuid = new Guid();
+            _mockReadRepository.Setup(repo => repo.GetByIdAsync<Professor>(_professor1.Id)).Throws(new ProfessorNotFoundException(mockGuid));
+            // Act
+            Func<Task> act = async () => await _professorService.GetProfessorById(mockGuid);
+            // Assert
+            act.Should().Throw<ProfessorNotFoundException>();
+        }
+
+        [TestMethod]
+        public async Task GetProfessorDetailsDtoById_ShouldReturnInstanceOfProfessorDetailsDto()
         {
             // Arrange
             _mockReadRepository.Setup(repo => repo.GetByIdAsync<Professor>(_professor1.Id)).ReturnsAsync(_professor1);
             _mockProfessorMapper.Setup(mapper => mapper.Map(_professor1)).Returns(_professorDetailsDto1);
             // Act
-            ProfessorDetailsDto actualProfessor = await _professorService.GetById(_professor1.Id);
+            ProfessorDetailsDto actualProfessor = await _professorService.GetProfessorDetialsDtoById(_professor1.Id);
             // Assert
             actualProfessor.Should().BeEquivalentTo(_professorDetailsDto1);
         }
