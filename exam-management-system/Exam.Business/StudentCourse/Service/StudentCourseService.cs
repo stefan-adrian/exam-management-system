@@ -45,6 +45,12 @@ namespace Exam.Business.StudentCourse.Service
                 throw new StudentCannotApplyException(id, studentCourseCreationDto.CourseId);
             }
 
+            var appliedCourses = await this.GetCourses(id);
+            if (appliedCourses.Any(c => c.Id == course.Id))
+            {
+                throw new StudentAlreadyAppliedException(id, studentCourseCreationDto.CourseId);
+            }
+
             var studentCourse = this.studentCourseMapper.Map(id, studentCourseCreationDto);
             await this.writeRepository.AddNewAsync(studentCourse);
             await this.writeRepository.SaveAsync();

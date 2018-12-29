@@ -123,7 +123,7 @@ namespace Exam.Api.Controllers
             {
                 return NotFound(exception.Message);
             }
-            catch (StudentCannotApplyException exception)
+            catch (Exception exception) when (exception is StudentCannotApplyException || exception is StudentAlreadyAppliedException)
             {
                 return BadRequest(exception.Message);
             }
