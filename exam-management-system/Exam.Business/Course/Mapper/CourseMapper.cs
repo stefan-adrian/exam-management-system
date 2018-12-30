@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using AutoMapper;
 
 namespace Exam.Business.Course
@@ -37,6 +38,17 @@ namespace Exam.Business.Course
         {
             this.autoMapper.Map(courseDto, course);
             return course;
+        }
+
+        public List<CourseDto> Map(List<Domain.Entities.StudentCourse> studentCourses)
+        {
+            List<CourseDto> courses = new List<CourseDto>();
+            foreach (var sc in studentCourses)
+            {
+                courses.Add(Map(sc.Course));
+            }
+
+            return courses;
         }
     }
 

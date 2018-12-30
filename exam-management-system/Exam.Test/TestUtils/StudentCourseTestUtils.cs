@@ -9,6 +9,11 @@ namespace Exam.Test.TestUtils
         private static StudentCourse studentCourse1 = null;
         private static StudentCourse studentCourse2 = null;
 
+        public static StudentCourse GetStudentCourse(Guid studentId, Guid courseId)
+        {
+            return new StudentCourse(studentId, courseId);
+        }
+
         public static StudentCourse GetStudentCourse()
         {
             if (studentCourse1 == null)

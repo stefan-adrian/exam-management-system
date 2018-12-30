@@ -1,9 +1,9 @@
 ﻿using System.Buffers;
 using Exam.Business;
 using Exam.Business.Course.Validator;
-using Exam.Business.Professor;
 using Exam.Business.Professor.Validator;
 using Exam.Business.Student.Validator;
+using Exam.Business.StudentCourse;
 using Exam.Persistance;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
@@ -45,6 +45,7 @@ namespace Exam.Api
                     validators.RegisterValidatorsFromAssemblyContaining<StudentCreationDtoValidator>();
                     validators.RegisterValidatorsFromAssemblyContaining<ProfessorCreatingDtoValidator>();
                     validators.RegisterValidatorsFromAssemblyContaining<CourseCreatingDtoValidator>();
+                    validators.RegisterValidatorsFromAssemblyContaining<StudentCourseCreationDtoValidator>();
                 });
             services.AddCors();
 

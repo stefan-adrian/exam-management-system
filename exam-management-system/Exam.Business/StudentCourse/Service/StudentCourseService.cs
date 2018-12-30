@@ -28,7 +28,8 @@ namespace Exam.Business.StudentCourse.Service
 
         public async Task<StudentCourseDetailsDto> AddCourse(Guid id, StudentCourseCreationDto studentCourseCreationDto)
         {
-            var student = await this.readRepository.GetByIdAsync<Domain.Entities.Student>(id);
+            var student = await this.readRepository.GetAll<Domain.Entities.Student>().Where(s => s.Id == id)
+                .Include(s => s.StudentCourses).ThenInclude(sc => sc.Course).FirstOrDefaultAsync();
             if (student == null)
             {
                 throw new StudentNotFoundException(id);
@@ -45,8 +46,8 @@ namespace Exam.Business.StudentCourse.Service
                 throw new StudentCannotApplyException(id, studentCourseCreationDto.CourseId);
             }
 
-            var appliedCourses = await this.GetCourses(id);
-            if (appliedCourses.Any(c => c.Id == course.Id))
+            var appliedCourses = student.StudentCourses;
+            if (appliedCourses.Any(c => c.CourseId == course.Id))
             {
                 throw new StudentAlreadyAppliedException(id, studentCourseCreationDto.CourseId);
             }
@@ -59,8 +60,6 @@ namespace Exam.Business.StudentCourse.Service
 
         public async Task<List<CourseDto>> GetCourses(Guid id)
         {
-            List<CourseDto> courses = new List<CourseDto>();
-
             var student = await this.readRepository.GetAll<Domain.Entities.Student>().Where(s => s.Id == id)
                 .Include(s => s.StudentCourses).ThenInclude(sc => sc.Course).FirstOrDefaultAsync();
             if (student == null)
@@ -68,12 +67,7 @@ namespace Exam.Business.StudentCourse.Service
                 throw new StudentNotFoundException(id);
             }
 
-            foreach (var studentCourse in student.StudentCourses)
-            {
-                courses.Add(this.courseMapper.Map(studentCourse.Course));
-            }
-
-            return courses;
+            return this.courseMapper.Map(student.StudentCourses.ToList());
         }
     }
 }
