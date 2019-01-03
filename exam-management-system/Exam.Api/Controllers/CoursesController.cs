@@ -24,6 +24,12 @@ namespace Exam.Api.Controllers
             return Ok(courses);
         }
 
+        [HttpGet("professors/{professorId:guid}/courses")]
+        public async Task<IActionResult> GetAllProfessorCourses(Guid professorId)
+        {
+            var courses = await courseService.GetAllForProfessor(professorId);
+            return Ok(courses);
+        }
 
         [HttpGet("courses/{courseId:guid}", Name = "FindCourseById")]
         public async Task<IActionResult> FindCourseById(Guid courseId)
