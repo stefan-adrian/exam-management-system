@@ -63,6 +63,25 @@ namespace Exam.Test.Business.Service
         }
 
         [TestMethod]
+        public async Task GetAllForProfessor_ShouldReturnAllCourses()
+        {
+            //Arrange
+            Professor professor = ProfessorTestUtils.GetProfessor();
+            var expectedCoursesDtoList = new List<CourseDto> { _courseDto1, _courseDto2 };
+            var courseList = new List<Course> { _course1, _course2 };
+            _mockProfessorService.Setup(professorService =>
+                professorService.GetProfessorById(professor.Id)).Returns(() => Task.FromResult(professor));
+            var mockCoursesQueryable = courseList.AsQueryable().Where(course => course.Professor == professor).BuildMock();
+            _mockReadRepository.Setup(repo => repo.GetAll<Course>()).Returns(mockCoursesQueryable);
+            _mockCourseMapper.Setup(course => course.Map(_course1)).Returns(_courseDto1);
+            _mockCourseMapper.Setup(course => course.Map(_course2)).Returns(_courseDto2);
+            //Act
+            var actualCoursesDtoList = await _courseService.GetAllForProfessor(professor.Id);
+            //Assert
+            actualCoursesDtoList.Should().BeEquivalentTo(expectedCoursesDtoList);
+        }
+
+        [TestMethod]
         public async Task GetById_ShouldReturnInstanceOfCourseDetailsDto()
         {
             // Arrange
