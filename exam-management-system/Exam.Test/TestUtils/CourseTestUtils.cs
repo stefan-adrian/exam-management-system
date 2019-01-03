@@ -23,7 +23,7 @@ namespace Exam.Test.TestUtils
         {
             if (course2 == null)
             {
-                course2 = new Course("course", 1);
+                course2 = new Course("course", 1,ProfessorTestUtils.GetProfessor());
             }
 
             return course2;

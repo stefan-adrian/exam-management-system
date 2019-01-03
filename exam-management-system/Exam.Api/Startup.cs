@@ -1,6 +1,5 @@
 ﻿using Exam.Business;
 using Exam.Business.Course.Validator;
-using Exam.Business.Professor;
 using Exam.Business.Professor.Validator;
 using Exam.Business.Student.Validator;
 using Exam.Persistance;
