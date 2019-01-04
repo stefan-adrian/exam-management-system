@@ -65,7 +65,7 @@ namespace Exam.Test.Business.Service
             _mockStudentMapper.Setup(mapper => mapper.Map(_student1)).Returns(_studentDto1);
             // Act
             StudentDetailsDto actualStudent = await _studentService.GetDetailsDtoById(_student1.Id);
-            // Assert
+            // AssertB
             actualStudent.Should().BeEquivalentTo(_studentDto1);
         }
 
