@@ -141,6 +141,23 @@ namespace Exam.Test.Business.Service
         }
 
         [TestMethod]
+        [ExpectedException(typeof(StudentCannotApplyException))]
+        public async Task AddCourse_ShouldThrowStudentCannotApplyException_WhenStudentYearIsSmallerThanCourseYear()
+        {
+            // Arrange
+            var expectedStudents = new List<Student> { _student };
+            var mockStudentQueryable = expectedStudents.AsQueryable().BuildMock();
+            _mockReadRepository.Setup(repo => repo.GetAll<Student>()).Returns(mockStudentQueryable);
+            _mockReadRepository.Setup(repo => repo.GetByIdAsync<Course>(_course.Id))
+                .ReturnsAsync(new Course("new name", 3));
+
+            // Act
+            var actualStudentCourse =
+                await _studentCourseService.AddCourse(_student.Id, _studentCourseCreationDto);
+            // Assert
+        }
+
+        [TestMethod]
         public async Task GetCourses_ShouldReturnAllCoursesThatStudentHasApplied()
         {
             // Arrange
