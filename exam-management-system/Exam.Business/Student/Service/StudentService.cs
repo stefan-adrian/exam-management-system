@@ -37,13 +37,9 @@ namespace Exam.Business.Student
             return student;
         }
 
-        public async Task<StudentDetailsDto> GetById(Guid id)
+        public async Task<StudentDetailsDto> GetDetailsDtoById(Guid id)
         {
-            var student = await readRepository.GetByIdAsync<Domain.Entities.Student>(id);
-            if (student == null)
-            {
-                throw new StudentNotFoundException(id);
-            }
+            var student = await GetStudentById(id);
             return studentMapper.Map(student);
         }
 

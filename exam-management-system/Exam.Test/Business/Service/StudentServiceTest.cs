@@ -45,8 +45,8 @@ namespace Exam.Test.Business.Service
         public async Task GetAll_ShouldReturnAllStudents()
         {
             // Arrange
-            var expectedStudentsDtoList = new List<StudentDetailsDto> {_studentDto1, _studentDto2};
-            var studentsList = new List<Student> {_student1, _student2};
+            var expectedStudentsDtoList = new List<StudentDetailsDto> { _studentDto1, _studentDto2 };
+            var studentsList = new List<Student> { _student1, _student2 };
             var mockStudentsQueryable = studentsList.AsQueryable().BuildMock();
             _mockReadRepository.Setup(repo => repo.GetAll<Student>()).Returns(mockStudentsQueryable);
             _mockStudentMapper.Setup(student => student.Map(_student1)).Returns(_studentDto1);
@@ -58,13 +58,13 @@ namespace Exam.Test.Business.Service
         }
 
         [TestMethod]
-        public async Task GetById_ShouldReturnInstanceOfStudentDetailsDto()
+        public async Task GetDetailsDtoById_ShouldReturnInstanceOfStudentDetailsDto()
         {
             // Arrange
             _mockReadRepository.Setup(repo => repo.GetByIdAsync<Student>(_student1.Id)).ReturnsAsync(_student1);
             _mockStudentMapper.Setup(mapper => mapper.Map(_student1)).Returns(_studentDto1);
             // Act
-            StudentDetailsDto actualStudent = await _studentService.GetById(_student1.Id);
+            StudentDetailsDto actualStudent = await _studentService.GetDetailsDtoById(_student1.Id);
             // Assert
             actualStudent.Should().BeEquivalentTo(_studentDto1);
         }
@@ -86,7 +86,7 @@ namespace Exam.Test.Business.Service
         public async Task Update_ShouldReturnInstanceOfStudentDetailsDto()
         {
             // Arrange
-            _mockStudentMapper.Setup(mapper => mapper.Map(_student1.Id,_studentCreationDto)).Returns(_studentDto1);
+            _mockStudentMapper.Setup(mapper => mapper.Map(_student1.Id, _studentCreationDto)).Returns(_studentDto1);
             _mockReadRepository.Setup(repo => repo.GetByIdAsync<Student>(_student1.Id)).ReturnsAsync(_student1);
             // Act
             StudentDetailsDto actualStudent = await _studentService.Update(_student1.Id, _studentCreationDto);
