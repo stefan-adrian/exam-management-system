@@ -9,6 +9,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using FluentAssertions;
 using MockQueryable.NSubstitute;
+using System;
+using Exam.Business.Student.Exception;
 
 namespace Exam.Test.Business.Service
 {
@@ -55,6 +57,29 @@ namespace Exam.Test.Business.Service
             var actualStudentsDtoList = await _studentService.GetAll();
             // Assert
             actualStudentsDtoList.Should().BeEquivalentTo(expectedStudentsDtoList);
+        }
+
+        [TestMethod]
+        public async Task GetStudentById_ShouldReturnInstanceOfStudent()
+        {
+            // Arrange
+            _mockReadRepository.Setup(repo => repo.GetByIdAsync<Student>(_student1.Id)).ReturnsAsync(_student1);
+            // Act
+            Student actualStudent = await _studentService.GetStudentById(_student1.Id);
+            // Assert
+            actualStudent.Should().BeEquivalentTo(_student1);
+        }
+
+        [TestMethod]
+        public void GetStudentById_ShouldThrowStudentNotFoundException()
+        {
+            // Arrange
+            Guid mockGuid = new Guid();
+            _mockReadRepository.Setup(repo => repo.GetByIdAsync<Student>(_student1.Id)).Throws(new StudentNotFoundException(mockGuid));
+            // Act
+            Func<Task> act = async () => await _studentService.GetStudentById(mockGuid);
+            // Assert
+            act.Should().Throw<StudentNotFoundException>();
         }
 
         [TestMethod]
