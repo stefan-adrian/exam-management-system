@@ -1,7 +1,6 @@
 ﻿using Exam.Api;
 using Exam.Business.Course;
 using Exam.Domain.Entities;
-using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
@@ -10,7 +9,6 @@ using Xunit;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using FluentAssertions;
-using System.Transactions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Exam.Test.Integration
@@ -61,6 +59,22 @@ namespace Exam.Test.Integration
             //Act
             var response = await client.GetAsync("api/courses");
 
+            //Assert
+            response.EnsureSuccessStatusCode();
+            var responseString = await response.Content.ReadAsStringAsync();
+            List<CourseDto> coursesDetailsDtosReturned = JsonConvert.DeserializeObject<List<CourseDto>>(responseString);
+            coursesDetailsDtosReturned.Should().BeEquivalentTo(courseDetailsDtos);
+        }
+
+        [TestMethod]
+        public async Task GetAllProfessorCourses_ShouldReturnAllCourses()
+        {
+            //Arrange
+            List<CourseDto> courseDetailsDtos = new List<CourseDto>();
+            courseDetailsDtos.Add(courseDetailsDto1);
+            courseDetailsDtos.Add(courseDetailsDto2);
+            //Act
+            var response = await client.GetAsync("api/professors/" + ProfessorTestUtils.GetProfessor().Id + "/courses");
             //Assert
             response.EnsureSuccessStatusCode();
             var responseString = await response.Content.ReadAsStringAsync();

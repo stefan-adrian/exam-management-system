@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Exam.Domain.Entities;
-using Exam.Persistance;
+﻿using Exam.Persistance;
 using Exam.Test.TestUtils;
 
 namespace Exam.Test.Integration
