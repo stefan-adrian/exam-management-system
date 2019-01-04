@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Exam.Domain.Entities;
+﻿using Exam.Domain.Entities;
 using Exam.Persistance;
 using Exam.Test.TestUtils;
 
@@ -11,12 +8,15 @@ namespace Exam.Test.Integration
     {
         public static async System.Threading.Tasks.Task PopulateTestDatabaseAsync(ExamContext examContext)
         {
-            await examContext.AddNewAsync(StudentTestUtils.GetStudent());
+            Student student = StudentTestUtils.GetStudent();
+            Course course = CourseTestUtils.GetCourse();
+            await examContext.AddNewAsync(student);
             await examContext.AddNewAsync(StudentTestUtils.GetStudent2());
-            await examContext.AddNewAsync(CourseTestUtils.GetCourse());
+            await examContext.AddNewAsync(course);
             await examContext.AddNewAsync(CourseTestUtils.GetCourse2());
             await examContext.AddNewAsync(ProfessorTestUtils.GetProfessor());
             await examContext.AddNewAsync(ProfessorTestUtils.GetProfessor2());
+            await examContext.AddNewAsync(StudentCourseTestUtils.GetStudentCourse(student.Id, course.Id));
             await examContext.SaveAsync();
         }
     }
