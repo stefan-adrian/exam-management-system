@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Text;
-using System.Transactions;
 
 namespace Exam.Business.Student.Exception
 {
