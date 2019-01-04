@@ -8,10 +8,20 @@ namespace Exam.Test.TestUtils
     {
         private static StudentCourse studentCourse1 = null;
         private static StudentCourse studentCourse2 = null;
+        private static StudentCourse studentCourse = null;
 
         public static StudentCourse GetStudentCourse(Guid studentId, Guid courseId)
         {
-            return new StudentCourse(studentId, courseId);
+            if (studentCourse == null)
+            {
+                studentCourse = new StudentCourse(studentId, courseId);
+            }
+            else if (studentCourse.StudentId != studentId || studentCourse.CourseId != courseId)
+            {
+                studentCourse = new StudentCourse(studentId, courseId);
+            }
+
+            return studentCourse;
         }
 
         public static StudentCourse GetStudentCourse()

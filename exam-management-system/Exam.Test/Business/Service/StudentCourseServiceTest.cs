@@ -22,7 +22,6 @@ namespace Exam.Test.Business.Service
     public class StudentCourseServiceTest
     {
         private StudentCourse _studentCourse1, _studentCourse2;
-        private StudentCourseDetailsDto _studentCourseDto1, _studentCourseDto2;
         private StudentCourseCreationDto _studentCourseCreationDto;
         private Student _student;
         private Course _course;
@@ -40,18 +39,12 @@ namespace Exam.Test.Business.Service
         public void Setup()
         {
             this._student = StudentTestUtils.GetStudent();
-            this._course = CourseTestUtils.GetCourse();
+            this._course = CourseTestUtils.GetCourse2();
             this._courseDto = CourseTestUtils.GetCourseDetailsDto(_course.Id);
             this._studentCourse1 = StudentCourseTestUtils.GetStudentCourse(_student.Id, _course.Id);
             this._studentCourse2 = StudentCourseTestUtils.GetStudentCourse2();
             this._studentCourseCreationDto =
                 StudentCourseTestUtils.GetStudentCourseCreationDto(this._studentCourse1.CourseId);
-            this._studentCourseDto1 =
-                StudentCourseTestUtils.GetStudentCourseDetailsDto(this._studentCourse1.StudentId,
-                    this._studentCourse1.CourseId);
-            this._studentCourseDto2 =
-                StudentCourseTestUtils.GetStudentCourseDetailsDto(this._studentCourse2.StudentId,
-                    this._studentCourse2.CourseId);
             this._mockReadRepository = new Mock<IReadRepository>();
             this._mockWriteRepository = new Mock<IWriteRepository>();
             this._mockStudentCourseMapper = new Mock<IStudentCourseMapper>();
@@ -62,10 +55,11 @@ namespace Exam.Test.Business.Service
         [TestCleanup]
         public void Cleanup()
         {
+            this._student = null;
+            this._course = null;
+            this._courseDto = null;
             this._studentCourse1 = null;
             this._studentCourse2 = null;
-            this._studentCourseDto1 = null;
-            this._studentCourseDto2 = null;
             this._studentCourseCreationDto = null;
             this._mockReadRepository = null;
             this._mockWriteRepository = null;
