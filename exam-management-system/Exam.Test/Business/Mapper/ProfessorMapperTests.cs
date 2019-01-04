@@ -4,7 +4,7 @@ using Exam.Test.TestUtils;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Exam.Test.Business.Mappers
+namespace Exam.Test.Business.Mapper
 {
     [TestClass]
     public class ProfessorMapperTests

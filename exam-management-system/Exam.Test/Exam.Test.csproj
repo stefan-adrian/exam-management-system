@@ -23,7 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Business\Mapper\" />
     <Folder Include="Business\Service\" />
     <Folder Include="Domain\" />
     <Folder Include="Persistance\" />

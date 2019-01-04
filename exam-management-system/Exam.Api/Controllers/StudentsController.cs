@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Exam.Business.Course.Exception;
 using Exam.Business.Student;
 using Exam.Business.Student.Exception;
+using Exam.Business.StudentCourse;
+using Exam.Business.StudentCourse.Exception;
+using Exam.Business.StudentCourse.Service;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Exam.Api.Controllers
@@ -11,10 +15,12 @@ namespace Exam.Api.Controllers
     public class StudentsController : ControllerBase
     {
         private readonly IStudentService studentService;
+        private readonly IStudentCourseService studentCourseService;
 
-        public StudentsController(IStudentService studentService)
+        public StudentsController(IStudentService studentService, IStudentCourseService studentCourseService)
         {
             this.studentService = studentService ?? throw new ArgumentNullException();
+            this.studentCourseService = studentCourseService ?? throw new ArgumentNullException();
         }
 
         [HttpGet]
@@ -81,6 +87,45 @@ namespace Exam.Api.Controllers
             catch (StudentNotFoundException studentNotFoundException)
             {
                 return NotFound(studentNotFoundException.Message);
+            }
+        }
+
+        [HttpGet("{id:guid}/courses")]
+        public async Task<IActionResult> GetCourses(Guid id)
+        {
+            try
+            {
+                var courses = await this.studentCourseService.GetCourses(id);
+                return Ok(courses);
+            }
+            catch (StudentNotFoundException studentNotFoundException)
+            {
+                return NotFound(studentNotFoundException.Message);
+            }
+        }
+
+        [HttpPut("{id:guid}/courses")]
+        public async Task<IActionResult> AddCourse(Guid id,
+            [FromBody] StudentCourseCreationDto studentCourseCreationDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                await this.studentCourseService.AddCourse(id, studentCourseCreationDto);
+                return NoContent();
+            }
+            catch (Exception exception) when (exception is StudentNotFoundException ||
+                                              exception is CourseNotFoundException)
+            {
+                return NotFound(exception.Message);
+            }
+            catch (Exception exception) when (exception is StudentCannotApplyException || exception is StudentAlreadyAppliedException)
+            {
+                return BadRequest(exception.Message);
             }
         }
     }

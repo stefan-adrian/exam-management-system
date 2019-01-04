@@ -1,6 +1,8 @@
 ﻿using Exam.Business.Professor;
 using Exam.Business.Course;
 using Exam.Business.Student;
+using Exam.Business.StudentCourse;
+using Exam.Business.StudentCourse.Service;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Exam.Business
@@ -15,6 +17,8 @@ namespace Exam.Business
             services.AddScoped<IProfessorMapper, ProfessorMapper>();
             services.AddScoped<ICourseService, CourseService>();
             services.AddScoped<ICourseMapper, CourseMapper>();
+            services.AddScoped<IStudentCourseService, StudentCourseService>();
+            services.AddScoped<IStudentCourseMapper, StudentCourseMapper>();
 
             return services;
         }

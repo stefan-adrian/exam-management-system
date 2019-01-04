@@ -2,14 +2,25 @@
 
 namespace Exam.Domain.Entities
 {
-    public class StudentCourse
+    public class StudentCourse : Entity
     {
-        public Guid StudentId { get; set; }
+        private StudentCourse()
+        {
+            // EF
+        }
 
-        public Student Student { get; set; }
+        public Guid StudentId { get; private set; }
 
-        public Guid CourseId { get; set; }
+        public Student Student { get; private set; }
 
-        public Course Course { get; set; }
+        public Guid CourseId { get; private set; }
+
+        public Course Course { get; private set; }
+
+        public StudentCourse(Guid studentId, Guid courseId) : base(Guid.NewGuid())
+        {
+            this.StudentId = studentId;
+            this.CourseId = courseId;
+        }
     }
 }
