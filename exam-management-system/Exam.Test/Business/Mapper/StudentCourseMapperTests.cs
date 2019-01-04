@@ -46,14 +46,5 @@ namespace Exam.Test.Business.Mapper
                 obj.StudentId == this._studentCourse.StudentId);
         }
 
-        [TestMethod]
-        public void Map_ShouldReturnStudentCourseDetailsDto_WhenArgumentIsStudentCourse()
-        {
-            // Act
-            var result = this._studentCourseMapper.Map(this._studentCourse);
-            // Assert
-            result.Should().BeEquivalentTo(this._studentCourseDetailsDto);
-        }
-
     }
 }

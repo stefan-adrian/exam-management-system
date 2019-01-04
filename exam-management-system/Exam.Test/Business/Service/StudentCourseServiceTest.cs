@@ -10,11 +10,11 @@ using Exam.Business.StudentCourse.Service;
 using Exam.Domain.Entities;
 using Exam.Domain.Interfaces;
 using Exam.Test.TestUtils;
-using FluentAssertions;
 using FluentAssertions.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MockQueryable.NSubstitute;
 using Moq;
+using NSubstitute;
 
 namespace Exam.Test.Business.Service
 {
@@ -75,7 +75,7 @@ namespace Exam.Test.Business.Service
         }
 
         [TestMethod]
-        public async Task AddCourse_ShouldReturnInstanceOfStudentCourseDetailsDto()
+        public async Task AddCourse_ShouldNotThrowAnyException()
         {
             // Arrange
             var expectedStudents = new List<Student> {_student};
@@ -84,13 +84,10 @@ namespace Exam.Test.Business.Service
             _mockReadRepository.Setup(repo => repo.GetByIdAsync<Course>(_course.Id))
                 .ReturnsAsync(_course);
             _mockStudentCourseMapper.Setup(mapper => mapper.Map(_student.Id, _studentCourseCreationDto)).Returns(_studentCourse1);
-            _mockStudentCourseMapper.Setup(mapper => mapper.Map(_studentCourse1)).Returns(_studentCourseDto1);
             _mockWriteRepository.Setup(repo =>repo.AddNewAsync<StudentCourse>(_studentCourse1)).Returns(() => Task.FromResult(_studentCourse1));
             // Act
-            var actualStudentCourse =
-                await _studentCourseService.AddCourse(_student.Id, _studentCourseCreationDto);
+            await _studentCourseService.AddCourse(_student.Id, _studentCourseCreationDto);
             // Assert
-            actualStudentCourse.Should().BeEquivalentTo(_studentCourseDto1);
         }
 
         [TestMethod]
@@ -102,7 +99,7 @@ namespace Exam.Test.Business.Service
             var mockStudentQueryable = expectedStudents.AsQueryable().BuildMock();
             _mockReadRepository.Setup(repo => repo.GetAll<Student>()).Returns(mockStudentQueryable);
             // Act
-            var actualStudentCourse = await _studentCourseService.AddCourse(_student.Id, _studentCourseCreationDto);
+            await _studentCourseService.AddCourse(_student.Id, _studentCourseCreationDto);
             // Assert
         }
 
@@ -118,7 +115,7 @@ namespace Exam.Test.Business.Service
             _mockReadRepository.Setup(repo => repo.GetByIdAsync<Course>(_course.Id))
                 .ReturnsAsync(nullCourse);
             // Act
-            var actualStudentCourse = await _studentCourseService.AddCourse(_student.Id, _studentCourseCreationDto);
+            await _studentCourseService.AddCourse(_student.Id, _studentCourseCreationDto);
             // Assert
         }
 
@@ -133,10 +130,8 @@ namespace Exam.Test.Business.Service
             _mockReadRepository.Setup(repo => repo.GetByIdAsync<Course>(_course.Id))
                 .ReturnsAsync(_course);
             _mockStudentCourseMapper.Setup(mapper => mapper.Map(_student.Id, _studentCourseCreationDto)).Throws(new StudentAlreadyAppliedException(_student.Id, _course.Id));
-
             // Act
-            var actualStudentCourse =
-                await _studentCourseService.AddCourse(_student.Id, _studentCourseCreationDto);
+            await _studentCourseService.AddCourse(_student.Id, _studentCourseCreationDto);
             // Assert
         }
 
@@ -150,10 +145,8 @@ namespace Exam.Test.Business.Service
             _mockReadRepository.Setup(repo => repo.GetAll<Student>()).Returns(mockStudentQueryable);
             _mockReadRepository.Setup(repo => repo.GetByIdAsync<Course>(_course.Id))
                 .ReturnsAsync(new Course("new name", 3));
-
             // Act
-            var actualStudentCourse =
-                await _studentCourseService.AddCourse(_student.Id, _studentCourseCreationDto);
+            await _studentCourseService.AddCourse(_student.Id, _studentCourseCreationDto);
             // Assert
         }
 
@@ -181,7 +174,7 @@ namespace Exam.Test.Business.Service
             var mockStudentsQueryable = expectedStudents.AsQueryable().BuildMock();
             _mockReadRepository.Setup(repo => repo.GetAll<Student>()).Returns(mockStudentsQueryable);
             // Act
-            var result = await this._studentCourseService.GetCourses(_student.Id);
+            await this._studentCourseService.GetCourses(_student.Id);
             // Assert
         }
     }

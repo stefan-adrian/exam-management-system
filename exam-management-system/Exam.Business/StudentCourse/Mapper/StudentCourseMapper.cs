@@ -8,17 +8,5 @@ namespace Exam.Business.StudentCourse
         {
             return new Domain.Entities.StudentCourse(studentId, studentCourseCreationDto.CourseId);
         }
-
-        public StudentCourseDetailsDto Map(Domain.Entities.StudentCourse studentCourse)
-        {
-            StudentCourseDetailsDto studentCourseDetailsDto = new StudentCourseDetailsDto
-            {
-                StudentId = studentCourse.StudentId,
-                Student = studentCourse.Student,
-                CourseId = studentCourse.CourseId,
-                Course = studentCourse.Course
-            };
-            return studentCourseDetailsDto;
-        }
     }
 }

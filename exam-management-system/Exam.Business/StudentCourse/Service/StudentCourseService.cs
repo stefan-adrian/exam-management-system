@@ -26,7 +26,7 @@ namespace Exam.Business.StudentCourse.Service
             this.courseMapper = courseMapper ?? throw new ArgumentNullException();
         }
 
-        public async Task<StudentCourseDetailsDto> AddCourse(Guid id, StudentCourseCreationDto studentCourseCreationDto)
+        public async Task AddCourse(Guid id, StudentCourseCreationDto studentCourseCreationDto)
         {
             var student = await this.readRepository.GetAll<Domain.Entities.Student>().Where(s => s.Id == id)
                 .Include(s => s.StudentCourses).ThenInclude(sc => sc.Course).FirstOrDefaultAsync();
@@ -55,7 +55,6 @@ namespace Exam.Business.StudentCourse.Service
             var studentCourse = this.studentCourseMapper.Map(id, studentCourseCreationDto);
             await this.writeRepository.AddNewAsync(studentCourse);
             await this.writeRepository.SaveAsync();
-            return this.studentCourseMapper.Map(studentCourse);
         }
 
         public async Task<List<CourseDto>> GetCourses(Guid id)
