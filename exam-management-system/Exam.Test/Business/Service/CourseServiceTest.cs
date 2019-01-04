@@ -10,6 +10,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using FluentAssertions;
 using MockQueryable.NSubstitute;
+using Exam.Business.Student;
 
 namespace Exam.Test.Business.Service
 {
@@ -25,6 +26,7 @@ namespace Exam.Test.Business.Service
         private Mock<IWriteRepository> _mockWriteRepository;
         private Mock<ICourseMapper> _mockCourseMapper;
         private Mock<IProfessorService> _mockProfessorService;
+        private Mock<IStudentService> _mockStudentService;
         // injectMocks
         private CourseService _courseService;
 
@@ -40,8 +42,9 @@ namespace Exam.Test.Business.Service
             this._mockWriteRepository = new Mock<IWriteRepository>();
             this._mockCourseMapper = new Mock<ICourseMapper>();
             _mockProfessorService = new Mock<IProfessorService>();
+            _mockStudentService = new Mock<IStudentService>();
             _courseService = new CourseService(_mockReadRepository.Object, _mockWriteRepository.Object,
-                _mockCourseMapper.Object, _mockProfessorService.Object);
+                _mockCourseMapper.Object, _mockProfessorService.Object, _mockStudentService.Object);
         }
 
         [TestMethod]

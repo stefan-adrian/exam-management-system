@@ -27,6 +27,16 @@ namespace Exam.Business.Student
                 .Select(student => studentMapper.Map(student)).ToListAsync();
         }
 
+        public async Task<Domain.Entities.Student> GetStudentById(Guid id)
+        {
+            var student = await readRepository.GetByIdAsync<Domain.Entities.Student>(id);
+            if (student == null)
+            {
+                throw new StudentNotFoundException(id);
+            }
+            return student;
+        }
+
         public async Task<StudentDetailsDto> GetById(Guid id)
         {
             var student = await readRepository.GetByIdAsync<Domain.Entities.Student>(id);
