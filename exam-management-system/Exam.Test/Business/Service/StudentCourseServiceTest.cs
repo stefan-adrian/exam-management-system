@@ -1,9 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Exam.Business.Course;
+using Exam.Business.Course.Exception;
+using Exam.Business.Student.Exception;
 using Exam.Business.StudentCourse;
+using Exam.Business.StudentCourse.Exception;
 using Exam.Business.StudentCourse.Service;
 using Exam.Domain.Entities;
 using Exam.Domain.Interfaces;
@@ -77,8 +79,8 @@ namespace Exam.Test.Business.Service
         {
             // Arrange
             var expectedStudents = new List<Student> {_student};
-            var mockStudentQuerable = expectedStudents.AsQueryable().BuildMock();
-            _mockReadRepository.Setup(repo => repo.GetAll<Student>()).Returns(mockStudentQuerable);
+            var mockStudentQueryable = expectedStudents.AsQueryable().BuildMock();
+            _mockReadRepository.Setup(repo => repo.GetAll<Student>()).Returns(mockStudentQueryable);
             _mockReadRepository.Setup(repo => repo.GetByIdAsync<Course>(_course.Id))
                 .ReturnsAsync(_course);
             _mockStudentCourseMapper.Setup(mapper => mapper.Map(_student.Id, _studentCourseCreationDto)).Returns(_studentCourse1);
@@ -92,18 +94,78 @@ namespace Exam.Test.Business.Service
         }
 
         [TestMethod]
-        public void GetCourses_ShouldReturnAllCoursesThatStudentHasApplied()
+        [ExpectedException(typeof(StudentNotFoundException))]
+        public async Task AddCourse_ShouldThrowStudentNotFoundException_WhenStudentIsNull()
+        {
+            // Arrange
+            var expectedStudents = new List<Student>();
+            var mockStudentQueryable = expectedStudents.AsQueryable().BuildMock();
+            _mockReadRepository.Setup(repo => repo.GetAll<Student>()).Returns(mockStudentQueryable);
+            // Act
+            var actualStudentCourse = await _studentCourseService.AddCourse(_student.Id, _studentCourseCreationDto);
+            // Assert
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(CourseNotFoundException))]
+        public async Task AddCourse_ShouldThrowCourseNotFoundException_WhenCourseIsNull()
+        {
+            // Arrange
+            var expectedStudents = new List<Student> { _student };
+            var mockStudentQueryable = expectedStudents.AsQueryable().BuildMock();
+            _mockReadRepository.Setup(repo => repo.GetAll<Student>()).Returns(mockStudentQueryable);
+            Course nullCourse = null;
+            _mockReadRepository.Setup(repo => repo.GetByIdAsync<Course>(_course.Id))
+                .ReturnsAsync(nullCourse);
+            // Act
+            var actualStudentCourse = await _studentCourseService.AddCourse(_student.Id, _studentCourseCreationDto);
+            // Assert
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(StudentAlreadyAppliedException))]
+        public async Task AddCourse_ShouldThrowStudentAlreadyAppliedException_WhenStudentAlreadyAppliedToCourse()
+        {
+            // Arrange
+            var expectedStudents = new List<Student> { _student };
+            var mockStudentQueryable = expectedStudents.AsQueryable().BuildMock();
+            _mockReadRepository.Setup(repo => repo.GetAll<Student>()).Returns(mockStudentQueryable);
+            _mockReadRepository.Setup(repo => repo.GetByIdAsync<Course>(_course.Id))
+                .ReturnsAsync(_course);
+            _mockStudentCourseMapper.Setup(mapper => mapper.Map(_student.Id, _studentCourseCreationDto)).Throws(new StudentAlreadyAppliedException(_student.Id, _course.Id));
+
+            // Act
+            var actualStudentCourse =
+                await _studentCourseService.AddCourse(_student.Id, _studentCourseCreationDto);
+            // Assert
+        }
+
+        [TestMethod]
+        public async Task GetCourses_ShouldReturnAllCoursesThatStudentHasApplied()
         {
             // Arrange
             var expectedCourseDtoList = new List<CourseDto> { _courseDto };
             var expectedStudents = new List<Student> { _student };
-            var mockStudentsQuerable = expectedStudents.AsQueryable().BuildMock();
-            _mockReadRepository.Setup(repo => repo.GetAll<Student>()).Returns(mockStudentsQuerable);
+            var mockStudentsQueryable = expectedStudents.AsQueryable().BuildMock();
+            _mockReadRepository.Setup(repo => repo.GetAll<Student>()).Returns(mockStudentsQueryable);
             _mockCourseMapper.Setup(mapper => mapper.Map(_student.StudentCourses.ToList())).Returns(expectedCourseDtoList);
             // Act
-            var result = this._studentCourseService.GetCourses(_student.Id);
+            var result = await this._studentCourseService.GetCourses(_student.Id);
             // Assert
             result.IsSameOrEqualTo(expectedCourseDtoList);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(StudentNotFoundException))]
+        public async Task GetCourses_ShouldThrowStudentNotFoundException_WhenStudentIsNull()
+        {
+            // Arrange
+            var expectedStudents = new List<Student>();
+            var mockStudentsQueryable = expectedStudents.AsQueryable().BuildMock();
+            _mockReadRepository.Setup(repo => repo.GetAll<Student>()).Returns(mockStudentsQueryable);
+            // Act
+            var result = await this._studentCourseService.GetCourses(_student.Id);
+            // Assert
         }
     }
 }
