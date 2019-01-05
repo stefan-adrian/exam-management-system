@@ -37,7 +37,7 @@ namespace Exam.Domain.Entities
 
             if (string.IsNullOrEmpty(email))
             {
-                throw  new ArgumentException("Email adress must not be null","email");
+                throw  new ArgumentException("Email address must not be null","email");
             }
             Email = email;
 

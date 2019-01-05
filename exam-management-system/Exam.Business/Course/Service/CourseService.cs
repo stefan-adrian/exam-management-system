@@ -33,10 +33,23 @@ namespace Exam.Business.Course
             return await GetAllCourseDtos().ToListAsync();
         }
 
+        private IQueryable<CourseDto> GetAllCourseDtos()
+        {
+            return this.readRepository.GetAll<Domain.Entities.Course>()
+                .Select(course => this.courseMapper.Map(course));
+        }
+
         public async Task<List<CourseDto>> GetAllForProfessor(Guid professorId)
         {
             Domain.Entities.Professor professor = await professorService.GetProfessorById(professorId);
             return await GetAllProfessorCourseDtos(professor).ToListAsync();
+        }
+
+        private IQueryable<CourseDto> GetAllProfessorCourseDtos(Domain.Entities.Professor professor)
+        {
+            return this.readRepository.GetAll<Domain.Entities.Course>()
+                .Where(course => course.Professor == professor)
+                .Select(course => this.courseMapper.Map(course));
         }
 
         public async Task<CourseDto> GetById(Guid id)
@@ -82,20 +95,5 @@ namespace Exam.Business.Course
             this.writeRepository.Delete(course);
             await this.writeRepository.SaveAsync();
         }
-
-        private IQueryable<CourseDto> GetAllCourseDtos()
-        {
-            return this.readRepository.GetAll<Domain.Entities.Course>()
-                .Select(course => this.courseMapper.Map(course));
-        }
-
-        private IQueryable<CourseDto> GetAllProfessorCourseDtos(Domain.Entities.Professor professor)
-        {
-
-            return this.readRepository.GetAll<Domain.Entities.Course>()
-                .Where(course => course.Professor == professor)
-                .Select(course => this.courseMapper.Map(course));
-        }
-
     }
 }

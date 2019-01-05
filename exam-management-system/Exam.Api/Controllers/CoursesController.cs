@@ -25,22 +25,8 @@ namespace Exam.Api.Controllers
             return Ok(courses);
         }
 
-        [HttpGet("professors/{professorId:guid}/courses")]
-        public async Task<IActionResult> GetAllProfessorCourses(Guid professorId)
-        {
-            try
-            {
-                var courses = await courseService.GetAllForProfessor(professorId);
-                return Ok(courses);
-            }
-            catch (ProfessorNotFoundException professorNotFoundException)
-            {
-                return NotFound(professorNotFoundException.Message);
-            }
-        }
-
         [HttpGet("courses/{courseId:guid}", Name = "FindCourseById")]
-        public async Task<IActionResult> FindCourseById(Guid courseId)
+        public async Task<IActionResult> GetById(Guid courseId)
         {
             try
             {
@@ -53,6 +39,13 @@ namespace Exam.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// A professor can add a course.
+        /// </summary>
+        /// <returns>
+        /// The course that has just been created
+        /// </returns>
+        /// <exception cref="ProfessorNotFoundException">Thrown when the professor with that Id does not exist.</exception>
         [HttpPost("professors/{professorId:guid}/courses")]
         public async Task<IActionResult> Create(Guid professorId, [FromBody] CourseCreatingDto courseCreatingDto)
         {
@@ -64,7 +57,7 @@ namespace Exam.Api.Controllers
             try
             {
                 var course = await this.courseService.Create(professorId, courseCreatingDto);
-                return CreatedAtRoute("FindCourseById", new {courseId = course.Id}, course);
+                return CreatedAtRoute("FindCourseById", new { courseId = course.Id }, course);
             }
             catch (ProfessorNotFoundException professorNotFoundException)
             {
@@ -102,6 +95,27 @@ namespace Exam.Api.Controllers
             catch (CourseNotFoundException courseNotFoundException)
             {
                 return NotFound(courseNotFoundException.Message);
+            }
+        }
+
+        /// <summary>
+        /// A professor can view the courses he created.
+        /// </summary>
+        /// <returns>
+        /// The course of the professor with that Id
+        /// </returns>
+        /// <exception cref="ProfessorNotFoundException">Thrown when the professor with that Id does not exist.</exception>
+        [HttpGet("professors/{professorId:guid}/courses")]
+        public async Task<IActionResult> GetAllProfessorCourses(Guid professorId)
+        {
+            try
+            {
+                var courses = await courseService.GetAllForProfessor(professorId);
+                return Ok(courses);
+            }
+            catch (ProfessorNotFoundException professorNotFoundException)
+            {
+                return NotFound(professorNotFoundException.Message);
             }
         }
     }

@@ -65,7 +65,6 @@ namespace Exam.Business.StudentCourse.Service
             {
                 throw new StudentNotFoundException(id);
             }
-
             return this.courseMapper.Map(student.StudentCourses.ToList());
         }
     }

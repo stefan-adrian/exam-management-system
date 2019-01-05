@@ -6,7 +6,6 @@ namespace Exam.Business.Course.Exception
     {
         public CourseNotFoundException(Guid id):base("Course with id " + id + " not found!")
         {
-            
         }
     }
 }

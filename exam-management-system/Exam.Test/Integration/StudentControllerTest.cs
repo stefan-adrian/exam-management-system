@@ -25,7 +25,7 @@ namespace Exam.Test.Integration
         private Course course2;
         private StudentDetailsDto studentDetailsDto1;
         private StudentDetailsDto studentDetailsDto2;
-        private StudentCreationDto studentCreationDto;
+        private StudentCreationDto _studentCreationDto;
         private CourseDto courseDetailsDto;
         private StudentCourseCreationDto studentCourseCreationDto;
 
@@ -37,7 +37,7 @@ namespace Exam.Test.Integration
             student2 = StudentTestUtils.GetStudent2();
             studentDetailsDto1 = StudentTestUtils.GetStudentDetailsDto(student1.Id);
             studentDetailsDto2 = StudentTestUtils.GetStudentDetailsDto(student2.Id);
-            studentCreationDto = StudentTestUtils.GetStudentCreationDto();
+            _studentCreationDto = StudentTestUtils.GetStudentCreationDto();
             course1 = CourseTestUtils.GetCourse();
             course2 = CourseTestUtils.GetCourse2();
             courseDetailsDto = CourseTestUtils.GetCourseDetailsDto(course1.Id);
@@ -80,7 +80,7 @@ namespace Exam.Test.Integration
         public async Task PostStudent_ShouldReturnStudentCreatedFromGivenBody()
         {
             //Arrange
-            var contents = new StringContent(JsonConvert.SerializeObject(studentCreationDto), Encoding.UTF8, "application/json");
+            var contents = new StringContent(JsonConvert.SerializeObject(_studentCreationDto), Encoding.UTF8, "application/json");
 
             //Act
             var response = await client.PostAsync("api/students", contents);
@@ -89,7 +89,7 @@ namespace Exam.Test.Integration
             response.EnsureSuccessStatusCode();
             var responseString = await response.Content.ReadAsStringAsync();
             StudentDetailsDto studentsDetailsDtoReturned = JsonConvert.DeserializeObject<StudentDetailsDto>(responseString);
-            studentsDetailsDtoReturned.Should().BeEquivalentTo(studentCreationDto, options =>
+            studentsDetailsDtoReturned.Should().BeEquivalentTo(_studentCreationDto, options =>
                  options.ExcludingMissingMembers());
 
         }
@@ -98,7 +98,7 @@ namespace Exam.Test.Integration
         public async Task PutStudentById_ShouldHaveSuccessStatusCode()
         {
             //Arrange
-            var contents = new StringContent(JsonConvert.SerializeObject(studentCreationDto), Encoding.UTF8, "application/json");
+            var contents = new StringContent(JsonConvert.SerializeObject(_studentCreationDto), Encoding.UTF8, "application/json");
 
             //Act
             var response = await client.PutAsync("api/students/" + student1.Id, contents);

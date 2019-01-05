@@ -29,6 +29,12 @@ namespace Exam.Business.Professor
             return await GetAllProfessorDetailsDtos().ToListAsync();
         }
 
+        private IQueryable<ProfessorDetailsDto> GetAllProfessorDetailsDtos()
+        {
+            return this.readRepository.GetAll<Domain.Entities.Professor>()
+                .Select(professor => this.professorMapper.Map(professor));
+        }
+
         public async Task<Domain.Entities.Professor> GetProfessorById(Guid id)
         {
             var professor = await this.readRepository.GetByIdAsync<Domain.Entities.Professor>(id);
@@ -36,20 +42,13 @@ namespace Exam.Business.Professor
             {
                 throw new ProfessorNotFoundException(id);
             }
-
             return professor;
         }
 
-        public async Task<ProfessorDetailsDto> GetProfessorDetialsDtoById(Guid id)
+        public async Task<ProfessorDetailsDto> GetProfessorDetailsDtoById(Guid id)
         {
             var professor = await GetProfessorById(id);
             return this.professorMapper.Map(professor);
-        }
-
-        private IQueryable<ProfessorDetailsDto> GetAllProfessorDetailsDtos()
-        {
-            return this.readRepository.GetAll<Domain.Entities.Professor>()
-                .Select(professor => this.professorMapper.Map(professor));
         }
 
         public async Task<ProfessorDetailsDto> Create(ProfessorCreatingDto newProfessor)

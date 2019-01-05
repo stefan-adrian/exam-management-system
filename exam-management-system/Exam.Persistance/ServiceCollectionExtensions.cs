@@ -8,8 +8,7 @@ namespace Exam.Persistance
     {
         public static IServiceCollection AddPersistance(this IServiceCollection services, string connectionString)
         {
-            services.AddDbContext<ExamContext>(opt =>
-                opt.UseSqlServer(connectionString));
+            services.AddDbContext<ExamContext>(opt => opt.UseSqlServer(connectionString));
 
             services.AddScoped<IReadRepository>(provider => provider.GetService<ExamContext>());
             services.AddScoped<IWriteRepository>(provider => provider.GetService<ExamContext>());

@@ -10,7 +10,7 @@ namespace Exam.Business.Professor
 
         Task<Domain.Entities.Professor> GetProfessorById(Guid id);
 
-        Task<ProfessorDetailsDto> GetProfessorDetialsDtoById(Guid id);
+        Task<ProfessorDetailsDto> GetProfessorDetailsDtoById(Guid id);
 
         Task<ProfessorDetailsDto> Create(ProfessorCreatingDto newProfessor);
 

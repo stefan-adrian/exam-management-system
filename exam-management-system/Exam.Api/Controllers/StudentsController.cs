@@ -45,7 +45,7 @@ namespace Exam.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateStudent([FromBody] StudentCreationDto studentCreationDto)
+        public async Task<IActionResult> Create([FromBody] StudentCreationDto studentCreationDto)
         {
             if (!ModelState.IsValid)
             {
@@ -90,6 +90,13 @@ namespace Exam.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// A student can see the courses that he is signed up.
+        /// </summary>
+        /// <returns>
+        /// The course of the student
+        /// </returns>
+        /// <exception cref="StudentNotFoundException">Thrown when the student with that id does not exist.</exception>
         [HttpGet("{id:guid}/courses")]
         public async Task<IActionResult> GetCourses(Guid id)
         {
@@ -104,9 +111,15 @@ namespace Exam.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// A student can apply to a course.
+        /// </summary>
+        /// <exception cref="StudentNotFoundException">Thrown when the student with that id does not exist.</exception>
+        /// <exception cref="CourseNotFoundException">Thrown when the course not exist.</exception>
+        /// <exception cref="StudentCannotApplyException">Thrown when the student has a lower YearOfStudy than the course Year.</exception>
+        /// /// <exception cref="StudentAlreadyAppliedException">Thrown when the student has already applied to that course.</exception>
         [HttpPut("{id:guid}/courses")]
-        public async Task<IActionResult> AddCourse(Guid id,
-            [FromBody] StudentCourseCreationDto studentCourseCreationDto)
+        public async Task<IActionResult> AddCourse(Guid id, [FromBody] StudentCourseCreationDto studentCourseCreationDto)
         {
             if (!ModelState.IsValid)
             {

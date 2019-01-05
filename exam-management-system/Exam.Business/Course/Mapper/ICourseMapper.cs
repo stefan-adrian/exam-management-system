@@ -7,11 +7,11 @@ namespace Exam.Business.Course
     {
         CourseDto Map(Domain.Entities.Course course);
 
+        CourseDto Map(Guid courseId, CourseCreatingDto courseCreatingDto);
+
         Domain.Entities.Course Map(CourseCreatingDto courseCreatingDto);
 
         Domain.Entities.Course Map(CourseDto courseDetails, Domain.Entities.Course course);
-
-        CourseDto Map(Guid courseId, CourseCreatingDto courseCreatingDto);
 
         List<CourseDto> Map(List<Domain.Entities.StudentCourse> studentCourses);
     }

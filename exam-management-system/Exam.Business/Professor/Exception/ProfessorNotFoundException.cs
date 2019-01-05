@@ -6,7 +6,6 @@ namespace Exam.Business.Professor.Exception
     {
         public ProfessorNotFoundException(Guid id):base("Professor with id " + id + " not found!")
         {
-            
         }
     }
 }

@@ -10,6 +10,5 @@ namespace Exam.Business.Course
 
         [Required]
         public int Year { get; set; }
-
     }
 }

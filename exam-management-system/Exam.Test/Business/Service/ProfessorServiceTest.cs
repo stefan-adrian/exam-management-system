@@ -89,7 +89,7 @@ namespace Exam.Test.Business.Service
             _mockReadRepository.Setup(repo => repo.GetByIdAsync<Professor>(_professor1.Id)).ReturnsAsync(_professor1);
             _mockProfessorMapper.Setup(mapper => mapper.Map(_professor1)).Returns(_professorDetailsDto1);
             // Act
-            ProfessorDetailsDto actualProfessor = await _professorService.GetProfessorDetialsDtoById(_professor1.Id);
+            ProfessorDetailsDto actualProfessor = await _professorService.GetProfessorDetailsDtoById(_professor1.Id);
             // Assert
             actualProfessor.Should().BeEquivalentTo(_professorDetailsDto1);
         }

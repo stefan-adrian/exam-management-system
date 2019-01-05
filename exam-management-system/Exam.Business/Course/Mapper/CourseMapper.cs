@@ -10,28 +10,26 @@ namespace Exam.Business.Course
 
         public CourseMapper()
         {
-            autoMapper = new MapperConfiguration(cfg => { cfg.CreateMap<CourseDto, Domain.Entities.Course>(); }).CreateMapper();
+            autoMapper = new MapperConfiguration(cfg => { cfg.CreateMap<CourseDto, Domain.Entities.Course>(); })
+                .CreateMapper();
         }
 
         public CourseDto Map(Domain.Entities.Course course)
         {
-            return new CourseDto(course.Id,course.Name,course.Year);
+            return new CourseDto(course.Id, course.Name, course.Year);
         }
 
         public CourseDto Map(Guid courseId, CourseCreatingDto courseCreatingDto)
         {
-            CourseDto courseDto = new CourseDto(courseId, courseCreatingDto.Name, courseCreatingDto.Year)
+            return new CourseDto(courseId, courseCreatingDto.Name, courseCreatingDto.Year)
             {
                 Id = courseId
             };
-
-            return courseDto;
         }
 
         public Domain.Entities.Course Map(CourseCreatingDto courseCreatingDto)
         {
-            Domain.Entities.Course course = new Domain.Entities.Course(courseCreatingDto.Name, courseCreatingDto.Year);
-            return course;
+            return new Domain.Entities.Course(courseCreatingDto.Name, courseCreatingDto.Year);
         }
 
         public Domain.Entities.Course Map(CourseDto courseDto, Domain.Entities.Course course)
@@ -51,5 +49,4 @@ namespace Exam.Business.Course
             return courses;
         }
     }
-
 }

@@ -9,18 +9,8 @@ namespace Exam.Business.Student
 
         public StudentMapper()
         {
-            autoMapper = new MapperConfiguration(cfg => { cfg.CreateMap<StudentDetailsDto, Domain.Entities.Student>(); }).CreateMapper();
-        }
-
-        public Domain.Entities.Student Map(StudentCreationDto studentCreationDto)
-        {
-            return new Domain.Entities.Student(
-                studentCreationDto.RegistrationNumber,
-                studentCreationDto.Email,
-                studentCreationDto.Password,
-                studentCreationDto.FirstName,
-                studentCreationDto.LastName,
-                studentCreationDto.YearOfStudy);
+            autoMapper = new MapperConfiguration(cfg => { cfg.CreateMap<StudentDetailsDto, Domain.Entities.Student>(); })
+                .CreateMapper();
         }
 
         public StudentDetailsDto Map(Domain.Entities.Student student)
@@ -38,7 +28,7 @@ namespace Exam.Business.Student
             return studentDetailsDto;
         }
 
-        public StudentDetailsDto Map(Guid id,StudentCreationDto studentCreationDto)
+        public StudentDetailsDto Map(Guid id, StudentCreationDto studentCreationDto)
         {
             StudentDetailsDto studentDetailsDto = new StudentDetailsDto
             {
@@ -51,6 +41,17 @@ namespace Exam.Business.Student
                 Password = studentCreationDto.Password
             };
             return studentDetailsDto;
+        }
+
+        public Domain.Entities.Student Map(StudentCreationDto studentCreationDto)
+        {
+            return new Domain.Entities.Student(
+                studentCreationDto.RegistrationNumber,
+                studentCreationDto.Email,
+                studentCreationDto.Password,
+                studentCreationDto.FirstName,
+                studentCreationDto.LastName,
+                studentCreationDto.YearOfStudy);
         }
 
         public Domain.Entities.Student Map(StudentDetailsDto studentDetails, Domain.Entities.Student student)
