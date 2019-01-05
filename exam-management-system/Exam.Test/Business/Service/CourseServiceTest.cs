@@ -133,6 +133,25 @@ namespace Exam.Test.Business.Service
                 await _courseService.Delete(_course1.Id);
             }).GetAwaiter().GetResult();
         }
+
+        [TestMethod]
+        public async Task GetAvailableCoursesForStudent_ShouldReturnAllCoursesWithYearLowerOrEqualToStudentYear()
+        {
+            //Arrange
+            Student student = StudentTestUtils.GetStudent();
+            _mockStudentService.Setup(studentService => studentService.GetStudentById(student.Id))
+                .Returns(() => Task.FromResult(student));
+            var expectedCoursesDtoList = new List<CourseDto> { _courseDto1, _courseDto2 };
+            var courseList = new List<Course> { _course1, _course2 };
+            var mockCoursesQueryable = courseList.AsQueryable().BuildMock();
+            _mockReadRepository.Setup(repo => repo.GetAll<Course>()).Returns(mockCoursesQueryable);
+            _mockCourseMapper.Setup(course => course.Map(_course1)).Returns(_courseDto1);
+            _mockCourseMapper.Setup(course => course.Map(_course2)).Returns(_courseDto2);
+            //Act
+            var actualCoursesDtoList = await _courseService.GetAvailableCoursesForStudent(student.Id);
+            //Assert
+            actualCoursesDtoList.Should().BeEquivalentTo(expectedCoursesDtoList);
+        }
     }
 }
 
