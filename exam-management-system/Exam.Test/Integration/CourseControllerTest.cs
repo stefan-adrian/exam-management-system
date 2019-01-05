@@ -83,6 +83,22 @@ namespace Exam.Test.Integration
         }
 
         [TestMethod]
+        public async Task GetStudentAvailableCourses_ShouldReturnAllCoursesWithYearLessOrEqualToStudentYear()
+        {
+            //Arrange
+            List<CourseDto> courseDetailsDtos = new List<CourseDto>();
+            courseDetailsDtos.Add(courseDetailsDto1);
+            courseDetailsDtos.Add(courseDetailsDto2);
+            //Act
+            var response = await client.GetAsync("api/students/" + StudentTestUtils.GetStudent().Id + "/available-courses");
+            //Assert
+            response.EnsureSuccessStatusCode();
+            var responseString = await response.Content.ReadAsStringAsync();
+            List<CourseDto> coursesDetailsDtosReturned = JsonConvert.DeserializeObject<List<CourseDto>>(responseString);
+            coursesDetailsDtosReturned.Should().BeEquivalentTo(courseDetailsDtos);
+        }
+
+        [TestMethod]
         public async Task PostCourse_ShouldReturnCourseCreatedFromGivenBody()
         {
             //Arrange
