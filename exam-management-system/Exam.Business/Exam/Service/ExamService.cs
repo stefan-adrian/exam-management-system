@@ -31,7 +31,6 @@ namespace Exam.Business.Exam.Service
 
         public async Task<ExamDto> GetById(Guid id)
         {
-            //var exam = await readRepository.GetByIdAsync<Domain.Entities.Exam>(id);
             var exam = await this.readRepository.GetAll<Domain.Entities.Exam>().Where(e => e.Id == id)
                 .Include(e => e.Course).FirstOrDefaultAsync();
             if (exam == null)
