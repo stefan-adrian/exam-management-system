@@ -40,9 +40,21 @@ namespace Exam.Business.Exam.Service
             return exam;
         }
 
+        public async Task<Domain.Entities.Exam> GetByIdFetchingCourse(Guid id)
+        {
+            var exam = await this.readRepository.GetAll<Domain.Entities.Exam>().Where(e => e.Id == id)
+              .Include(e => e.Course).FirstOrDefaultAsync();
+            if (exam == null)
+            {
+                throw new ExamNotFoundException(id);
+            }
+
+            return exam;
+        }
+
         public async Task<ExamDto> GetDtoById(Guid id)
         {
-            var exam = await GetById(id);
+            var exam = await GetByIdFetchingCourse(id);
             return examMapper.Map(exam);
         }
 

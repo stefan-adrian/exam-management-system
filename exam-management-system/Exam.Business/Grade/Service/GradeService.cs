@@ -34,6 +34,7 @@ namespace Exam.Business.Grade.Service
             var exam = await examService.GetById(gradeCreationDto.ExamId);
             var student = await studentService.GetStudentById(gradeCreationDto.StudentId);
             Domain.Entities.Grade grade = gradeMapper.Map(gradeCreationDto, student, exam);
+            student.Grades.Add(grade);
             await writeRepository.AddNewAsync(grade);
             await writeRepository.SaveAsync();
             return gradeMapper.Map(grade);
