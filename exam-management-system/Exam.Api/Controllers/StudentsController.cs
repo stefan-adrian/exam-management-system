@@ -35,7 +35,7 @@ namespace Exam.Api.Controllers
         {
             try
             {
-                var student = await studentService.GetById(id);
+                var student = await studentService.GetDetailsDtoById(id);
                 return Ok(student);
             }
             catch (StudentNotFoundException studentNotFoundException)
@@ -51,7 +51,7 @@ namespace Exam.Api.Controllers
             {
                 return BadRequest(ModelState);
             }
-            
+
             var student = await studentService.Create(studentCreationDto);
 
             return CreatedAtRoute("FindStudentById", new { id = student.Id }, student);

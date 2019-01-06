@@ -27,13 +27,19 @@ namespace Exam.Business.Student
                 .Select(student => studentMapper.Map(student)).ToListAsync();
         }
 
-        public async Task<StudentDetailsDto> GetById(Guid id)
+        public async Task<Domain.Entities.Student> GetStudentById(Guid id)
         {
             var student = await readRepository.GetByIdAsync<Domain.Entities.Student>(id);
             if (student == null)
             {
                 throw new StudentNotFoundException(id);
             }
+            return student;
+        }
+
+        public async Task<StudentDetailsDto> GetDetailsDtoById(Guid id)
+        {
+            var student = await GetStudentById(id);
             return studentMapper.Map(student);
         }
 
@@ -49,11 +55,7 @@ namespace Exam.Business.Student
         public async Task<StudentDetailsDto> Update(Guid id, StudentCreationDto studentCreationDto)
         {
             StudentDetailsDto studentDetailsDto = studentMapper.Map(id, studentCreationDto);
-            var student = readRepository.GetByIdAsync<Domain.Entities.Student>(id).Result;
-            if (student == null)
-            {
-                throw new StudentNotFoundException(id);
-            }
+            var student = GetStudentById(id).Result;
             writeRepository.Update(studentMapper.Map(studentDetailsDto, student));
             await writeRepository.SaveAsync();
             return studentDetailsDto;
@@ -62,11 +64,7 @@ namespace Exam.Business.Student
 
         public async Task Delete(Guid id)
         {
-            var student = readRepository.GetByIdAsync<Domain.Entities.Student>(id).Result;
-            if (student == null)
-            {
-                throw new StudentNotFoundException(id);
-            }
+            var student = GetStudentById(id).Result;
             writeRepository.Delete(student);
             await writeRepository.SaveAsync();
         }

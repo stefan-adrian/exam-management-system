@@ -12,5 +12,6 @@ namespace Exam.Business.Course
         Task<CourseDto> Create(Guid professorId, CourseCreatingDto newCourse);
         Task<CourseDto> Update(Guid existingCourseId, CourseCreatingDto courseCreatingDto);
         Task Delete(Guid existingCourseId);
+        Task<List<CourseDto>> GetAvailableCoursesForStudent(Guid studentId);
     }
 }

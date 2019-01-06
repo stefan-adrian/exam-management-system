@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Exam.Business.Course.Exception;
 using Exam.Business.Professor;
+using Exam.Business.Student;
 using Exam.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,13 +20,16 @@ namespace Exam.Business.Course
 
         private readonly IProfessorService professorService;
 
+        private readonly IStudentService studentService;
+
         public CourseService(IReadRepository readRepository, IWriteRepository writeRepository,
-                ICourseMapper courseMapper, IProfessorService professorService)
+                ICourseMapper courseMapper, IProfessorService professorService, IStudentService studentService)
         {
             this.writeRepository = writeRepository ?? throw new ArgumentNullException();
             this.readRepository = readRepository ?? throw new ArgumentNullException();
             this.courseMapper = courseMapper ?? throw new ArgumentNullException();
             this.professorService = professorService ?? throw new ArgumentNullException();
+            this.studentService = studentService ?? throw new ArgumentException();
         }
 
         public async Task<List<CourseDto>> GetAll()
@@ -95,6 +99,14 @@ namespace Exam.Business.Course
             return this.readRepository.GetAll<Domain.Entities.Course>()
                 .Where(course => course.Professor == professor)
                 .Select(course => this.courseMapper.Map(course));
+        }
+
+        public async Task<List<CourseDto>> GetAvailableCoursesForStudent(Guid studentId)
+        {
+            var student = await studentService.GetStudentById(studentId);
+            return await readRepository.GetAll<Domain.Entities.Course>()
+                .Where(c => c.Year <= student.YearOfStudy)
+                .Select(course => courseMapper.Map(course)).ToListAsync();
         }
 
     }
