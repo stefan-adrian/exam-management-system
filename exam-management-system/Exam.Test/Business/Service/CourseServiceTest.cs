@@ -13,6 +13,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using FluentAssertions;
 using MockQueryable.NSubstitute;
+using Exam.Business.Student;
 
 namespace Exam.Test.Business.Service
 {
@@ -28,6 +29,7 @@ namespace Exam.Test.Business.Service
         private Mock<IWriteRepository> _mockWriteRepository;
         private Mock<ICourseMapper> _mockCourseMapper;
         private Mock<IProfessorService> _mockProfessorService;
+        private Mock<IStudentService> _mockStudentService;
         // injectMocks
         private CourseService _courseService;
 
@@ -43,8 +45,9 @@ namespace Exam.Test.Business.Service
             this._mockWriteRepository = new Mock<IWriteRepository>();
             this._mockCourseMapper = new Mock<ICourseMapper>();
             _mockProfessorService = new Mock<IProfessorService>();
+            _mockStudentService = new Mock<IStudentService>();
             _courseService = new CourseService(_mockReadRepository.Object, _mockWriteRepository.Object,
-                _mockCourseMapper.Object, _mockProfessorService.Object);
+                _mockCourseMapper.Object, _mockProfessorService.Object, _mockStudentService.Object);
         }
 
         [TestMethod]
@@ -132,6 +135,25 @@ namespace Exam.Test.Business.Service
             {
                 await _courseService.Delete(_course1.Id);
             }).GetAwaiter().GetResult();
+        }
+
+        [TestMethod]
+        public async Task GetAvailableCoursesForStudent_ShouldReturnAllCoursesWithYearLowerOrEqualToStudentYear()
+        {
+            //Arrange
+            Student student = StudentTestUtils.GetStudent();
+            _mockStudentService.Setup(studentService => studentService.GetStudentById(student.Id))
+                .Returns(() => Task.FromResult(student));
+            var expectedCoursesDtoList = new List<CourseDto> { _courseDto1, _courseDto2 };
+            var courseList = new List<Course> { _course1, _course2 };
+            var mockCoursesQueryable = courseList.AsQueryable().BuildMock();
+            _mockReadRepository.Setup(repo => repo.GetAll<Course>()).Returns(mockCoursesQueryable);
+            _mockCourseMapper.Setup(course => course.Map(_course1)).Returns(_courseDto1);
+            _mockCourseMapper.Setup(course => course.Map(_course2)).Returns(_courseDto2);
+            //Act
+            var actualCoursesDtoList = await _courseService.GetAvailableCoursesForStudent(student.Id);
+            //Assert
+            actualCoursesDtoList.Should().BeEquivalentTo(expectedCoursesDtoList);
         }
 
         [TestMethod]

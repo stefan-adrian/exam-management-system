@@ -9,6 +9,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using FluentAssertions;
 using MockQueryable.NSubstitute;
+using System;
+using Exam.Business.Student.Exception;
 
 namespace Exam.Test.Business.Service
 {
@@ -45,8 +47,8 @@ namespace Exam.Test.Business.Service
         public async Task GetAll_ShouldReturnAllStudents()
         {
             // Arrange
-            var expectedStudentsDtoList = new List<StudentDetailsDto> {_studentDto1, _studentDto2};
-            var studentsList = new List<Student> {_student1, _student2};
+            var expectedStudentsDtoList = new List<StudentDetailsDto> { _studentDto1, _studentDto2 };
+            var studentsList = new List<Student> { _student1, _student2 };
             var mockStudentsQueryable = studentsList.AsQueryable().BuildMock();
             _mockReadRepository.Setup(repo => repo.GetAll<Student>()).Returns(mockStudentsQueryable);
             _mockStudentMapper.Setup(student => student.Map(_student1)).Returns(_studentDto1);
@@ -58,14 +60,37 @@ namespace Exam.Test.Business.Service
         }
 
         [TestMethod]
-        public async Task GetById_ShouldReturnInstanceOfStudentDetailsDto()
+        public async Task GetStudentById_ShouldReturnInstanceOfStudent()
+        {
+            // Arrange
+            _mockReadRepository.Setup(repo => repo.GetByIdAsync<Student>(_student1.Id)).ReturnsAsync(_student1);
+            // Act
+            Student actualStudent = await _studentService.GetStudentById(_student1.Id);
+            // Assert
+            actualStudent.Should().BeEquivalentTo(_student1);
+        }
+
+        [TestMethod]
+        public void GetStudentById_ShouldThrowStudentNotFoundException()
+        {
+            // Arrange
+            Guid mockGuid = new Guid();
+            _mockReadRepository.Setup(repo => repo.GetByIdAsync<Student>(_student1.Id)).Throws(new StudentNotFoundException(mockGuid));
+            // Act
+            Func<Task> act = async () => await _studentService.GetStudentById(mockGuid);
+            // Assert
+            act.Should().Throw<StudentNotFoundException>();
+        }
+
+        [TestMethod]
+        public async Task GetDetailsDtoById_ShouldReturnInstanceOfStudentDetailsDto()
         {
             // Arrange
             _mockReadRepository.Setup(repo => repo.GetByIdAsync<Student>(_student1.Id)).ReturnsAsync(_student1);
             _mockStudentMapper.Setup(mapper => mapper.Map(_student1)).Returns(_studentDto1);
             // Act
-            StudentDetailsDto actualStudent = await _studentService.GetById(_student1.Id);
-            // Assert
+            StudentDetailsDto actualStudent = await _studentService.GetDetailsDtoById(_student1.Id);
+            // AssertB
             actualStudent.Should().BeEquivalentTo(_studentDto1);
         }
 
@@ -86,7 +111,7 @@ namespace Exam.Test.Business.Service
         public async Task Update_ShouldReturnInstanceOfStudentDetailsDto()
         {
             // Arrange
-            _mockStudentMapper.Setup(mapper => mapper.Map(_student1.Id,_studentCreationDto)).Returns(_studentDto1);
+            _mockStudentMapper.Setup(mapper => mapper.Map(_student1.Id, _studentCreationDto)).Returns(_studentDto1);
             _mockReadRepository.Setup(repo => repo.GetByIdAsync<Student>(_student1.Id)).ReturnsAsync(_student1);
             // Act
             StudentDetailsDto actualStudent = await _studentService.Update(_student1.Id, _studentCreationDto);

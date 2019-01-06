@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Exam.Business.Course;
 using Exam.Business.Course.Exception;
 using Exam.Business.Professor.Exception;
+using Exam.Business.Student.Exception;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Exam.Api.Controllers
@@ -39,6 +40,20 @@ namespace Exam.Api.Controllers
             }
         }
 
+        [HttpGet("students/{studentId:guid}/available-courses")]
+        public async Task<IActionResult> GetStudentAvailableCourses(Guid studentId)
+        {
+            try
+            {
+                var courses = await courseService.GetAvailableCoursesForStudent(studentId);
+                return Ok(courses);
+            }
+            catch (StudentNotFoundException studentNotFoundException)
+            {
+                return NotFound(studentNotFoundException.Message);
+            }
+        }
+
         [HttpGet("courses/{courseId:guid}", Name = "FindCourseById")]
         public async Task<IActionResult> FindCourseById(Guid courseId)
         {
@@ -64,7 +79,7 @@ namespace Exam.Api.Controllers
             try
             {
                 var course = await this.courseService.Create(professorId, courseCreatingDto);
-                return CreatedAtRoute("FindCourseById", new {courseId = course.Id}, course);
+                return CreatedAtRoute("FindCourseById", new { courseId = course.Id }, course);
             }
             catch (ProfessorNotFoundException professorNotFoundException)
             {
