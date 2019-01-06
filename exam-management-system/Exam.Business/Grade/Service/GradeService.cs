@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Exam.Business.Course;
@@ -8,6 +9,7 @@ using Exam.Business.Grade.Dto;
 using Exam.Business.Grade.Mapper;
 using Exam.Business.Student;
 using Exam.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Exam.Business.Grade.Service
 {
@@ -38,6 +40,17 @@ namespace Exam.Business.Grade.Service
             await writeRepository.AddNewAsync(grade);
             await writeRepository.SaveAsync();
             return gradeMapper.Map(grade);
+        }
+
+        public async Task<GradeDto> GetStudentExamGrade(Guid studentId, Guid examId)
+        {
+            return await readRepository.GetAll<Domain.Entities.Grade>()
+                .Include(g => g.Student)
+                .Include(g => g.Exam)
+                .Where(g => g.Student.Id == studentId)
+                .Where(g => g.Exam.Id == examId)
+                .Select(g => gradeMapper.Map(g))
+                .FirstOrDefaultAsync();
         }
     }
 }

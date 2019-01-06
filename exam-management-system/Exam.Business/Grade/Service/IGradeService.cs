@@ -9,5 +9,7 @@ namespace Exam.Business.Grade.Service
     public interface IGradeService
     {
         Task<GradeDto> Create(GradeCreationDto gradeCreationDto);
+
+        Task<GradeDto> GetStudentExamGrade(Guid studentId, Guid examId);
     }
 }

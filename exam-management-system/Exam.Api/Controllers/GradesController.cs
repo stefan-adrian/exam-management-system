@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Exam.Api.Controllers
 {
-    [Route("api/grades")]
+    [Route("api")]
     [ApiController]
     public class GradesController : ControllerBase
     {
@@ -19,7 +19,7 @@ namespace Exam.Api.Controllers
             this.gradeService = gradeService;
         }
 
-        [HttpPost]
+        [HttpPost("grades")]
         public async Task<IActionResult> CreateGrade([FromBody] GradeCreationDto gradeCreationDto)
         {
             if (!ModelState.IsValid)
@@ -30,6 +30,15 @@ namespace Exam.Api.Controllers
             var grade = await gradeService.Create(gradeCreationDto);
 
             return Ok(grade);
+        }
+
+        [HttpGet("students/{studentId:guid}/exams/{examId:guid}/grade")]
+        public async Task<IActionResult> GetStudentExamGrade(Guid studentId, Guid examId)
+        {
+
+            var grade = await gradeService.GetStudentExamGrade(studentId, examId);
+            return Ok(grade);
+
         }
 
     }
