@@ -97,5 +97,16 @@ namespace Exam.Business.Course
                 .Select(course => this.courseMapper.Map(course));
         }
 
+        public async Task<Domain.Entities.Course> GetCourseById(Guid id)
+        {
+            var course = await this.readRepository.GetByIdAsync<Domain.Entities.Course>(id);
+            if (course == null)
+            {
+                throw new CourseNotFoundException(id);
+            }
+
+            return course;
+        }
+
     }
 }

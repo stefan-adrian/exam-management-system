@@ -55,10 +55,10 @@ namespace Exam.Test.Integration
             response.EnsureSuccessStatusCode();
             var responseString = await response.Content.ReadAsStringAsync();
             ExamDto examDtoReturned = JsonConvert.DeserializeObject<ExamDto>(responseString);
-            /*examDtoReturned.Should().BeEquivalentTo(examCreatingDto, options =>
-                options.ExcludingMissingMembers());*/
-            examDtoReturned.Should().Match<ExamDto>((obj) =>
-                obj.Date == this.examDto.Date);
+            examDtoReturned.Should().BeEquivalentTo(examCreatingDto, options =>
+                options.ExcludingMissingMembers());
+//            examDtoReturned.Should().Match<ExamDto>((obj) =>
+//                obj.Date == this.examDto.Date);
 
         }
     }

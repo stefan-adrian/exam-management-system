@@ -67,10 +67,8 @@ namespace Exam.Test.Business.Service
         public async Task Create_ShouldReturnInstanceOfCourseDetailsDto()
         {
             // Arrange
-            CourseDto courseDto = CourseTestUtils.GetCourseDetailsDto(CourseTestUtils.GetCourse().Id);
-            _mockCourseService.Setup(service => service.GetById(_examCreatingDto.CourseId)).ReturnsAsync(courseDto);
+            _mockCourseService.Setup(service => service.GetCourseById(_examCreatingDto.CourseId)).ReturnsAsync(CourseTestUtils.GetCourse());
             _mockExamMapper.Setup(mapper => mapper.Map(_examCreatingDto, CourseTestUtils.GetCourse())).Returns(_exam);
-            _mockCourseMapper.Setup(mapper => mapper.Map(courseDto)).Returns(CourseTestUtils.GetCourse());
             _mockWriteRepository.Setup(repo => repo.AddNewAsync<Domain.Entities.Exam>(_exam)).Returns(() => Task.FromResult(_exam));
             _mockExamMapper.Setup(mapper => mapper.Map(_exam)).Returns(_examDto);
             // Act

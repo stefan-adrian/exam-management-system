@@ -42,8 +42,7 @@ namespace Exam.Business.Exam.Service
 
         public async Task<ExamDto> Create(ExamCreatingDto examCreatingDto)
         {
-            var courseDto = await courseService.GetById(examCreatingDto.CourseId);
-            var course = courseMapper.Map(courseDto);
+            var course = await courseService.GetCourseById(examCreatingDto.CourseId);
             Domain.Entities.Exam exam = examMapper.Map(examCreatingDto, course);
             await writeRepository.AddNewAsync(exam);
             await writeRepository.SaveAsync();
