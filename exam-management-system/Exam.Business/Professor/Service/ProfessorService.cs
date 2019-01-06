@@ -63,11 +63,7 @@ namespace Exam.Business.Professor
         public async Task<ProfessorDetailsDto> Update(Guid existingProfessorId, ProfessorCreatingDto professorCreatingDto)
         {
             ProfessorDetailsDto professorDetailsDto = this.professorMapper.Map(existingProfessorId, professorCreatingDto);
-            var professor = this.readRepository.GetByIdAsync<Domain.Entities.Professor>(existingProfessorId).Result;
-            if (professor == null)
-            {
-                throw new ProfessorNotFoundException(existingProfessorId);
-            }
+            var professor = GetProfessorById(existingProfessorId).Result;
             this.writeRepository.Update(this.professorMapper.Map(professorDetailsDto, professor));
             await this.writeRepository.SaveAsync();
             return professorDetailsDto;
@@ -75,11 +71,7 @@ namespace Exam.Business.Professor
 
         public async Task Delete(Guid existingProfessorId)
         {
-            var professor = this.readRepository.GetByIdAsync<Domain.Entities.Professor>(existingProfessorId).Result;
-            if (professor == null)
-            {
-                throw new ProfessorNotFoundException(existingProfessorId);
-            }
+            var professor = GetProfessorById(existingProfessorId).Result;
             this.writeRepository.Delete(professor);
             await this.writeRepository.SaveAsync();
         }

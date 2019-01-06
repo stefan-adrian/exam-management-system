@@ -55,11 +55,7 @@ namespace Exam.Business.Student
         public async Task<StudentDetailsDto> Update(Guid id, StudentCreationDto studentCreationDto)
         {
             StudentDetailsDto studentDetailsDto = studentMapper.Map(id, studentCreationDto);
-            var student = readRepository.GetByIdAsync<Domain.Entities.Student>(id).Result;
-            if (student == null)
-            {
-                throw new StudentNotFoundException(id);
-            }
+            var student = GetStudentById(id).Result;
             writeRepository.Update(studentMapper.Map(studentDetailsDto, student));
             await writeRepository.SaveAsync();
             return studentDetailsDto;
@@ -68,11 +64,7 @@ namespace Exam.Business.Student
 
         public async Task Delete(Guid id)
         {
-            var student = readRepository.GetByIdAsync<Domain.Entities.Student>(id).Result;
-            if (student == null)
-            {
-                throw new StudentNotFoundException(id);
-            }
+            var student = GetStudentById(id).Result;
             writeRepository.Delete(student);
             await writeRepository.SaveAsync();
         }
