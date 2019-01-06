@@ -13,5 +13,6 @@ namespace Exam.Business.Course
         Task<CourseDto> Update(Guid existingCourseId, CourseCreatingDto courseCreatingDto);
         Task Delete(Guid existingCourseId);
         Task<List<CourseDto>> GetAvailableCoursesForStudent(Guid studentId);
+        Task<Domain.Entities.Course> GetCourseById(Guid id);
     }
 }

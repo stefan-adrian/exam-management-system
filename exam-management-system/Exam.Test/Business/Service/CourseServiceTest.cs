@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Exam.Business.Course;
+using Exam.Business.Course.Exception;
 using Exam.Business.Professor;
+using Exam.Business.Professor.Exception;
 using Exam.Domain.Entities;
 using Exam.Domain.Interfaces;
 using Exam.Test.TestUtils;
@@ -151,6 +154,18 @@ namespace Exam.Test.Business.Service
             var actualCoursesDtoList = await _courseService.GetAvailableCoursesForStudent(student.Id);
             //Assert
             actualCoursesDtoList.Should().BeEquivalentTo(expectedCoursesDtoList);
+        }
+
+        [TestMethod]
+        public void GetCourseById_ShouldThrowCourseNotFoundException()
+        {
+            // Arrange
+            Guid mockGuid = new Guid();
+            _mockReadRepository.Setup(repo => repo.GetByIdAsync<Course>(_course2.Id)).Throws(new CourseNotFoundException(mockGuid));
+            // Act
+            Func<Task> act = async () => await _courseService.GetCourseById(mockGuid);
+            // Assert
+            act.Should().Throw<CourseNotFoundException>();
         }
     }
 }
