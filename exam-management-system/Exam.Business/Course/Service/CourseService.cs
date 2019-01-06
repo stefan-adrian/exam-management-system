@@ -62,11 +62,7 @@ namespace Exam.Business.Course
         public async Task<CourseDto> Update(Guid existingCourseId, CourseCreatingDto courseCreatingDto)
         {
             CourseDto courseDto = this.courseMapper.Map(existingCourseId, courseCreatingDto);
-            var course = this.readRepository.GetByIdAsync<Domain.Entities.Course>(existingCourseId).Result;
-            if (course == null)
-            {
-                throw new CourseNotFoundException(existingCourseId);
-            }
+            var course = GetCourseById(existingCourseId).Result;
             this.writeRepository.Update(this.courseMapper.Map(courseDto, course));
             await this.writeRepository.SaveAsync();
             return courseDto;
@@ -74,11 +70,7 @@ namespace Exam.Business.Course
 
         public async Task Delete(Guid existingCourseId)
         {
-            var course = this.readRepository.GetByIdAsync<Domain.Entities.Course>(existingCourseId).Result;
-            if (course == null)
-            {
-                throw new CourseNotFoundException(existingCourseId);
-            }
+            var course = GetCourseById(existingCourseId).Result;
             this.writeRepository.Delete(course);
             await this.writeRepository.SaveAsync();
         }
