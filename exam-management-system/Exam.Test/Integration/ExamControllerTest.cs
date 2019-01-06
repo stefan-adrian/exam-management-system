@@ -57,9 +57,6 @@ namespace Exam.Test.Integration
             ExamDto examDtoReturned = JsonConvert.DeserializeObject<ExamDto>(responseString);
             examDtoReturned.Should().BeEquivalentTo(examCreatingDto, options =>
                 options.ExcludingMissingMembers());
-//            examDtoReturned.Should().Match<ExamDto>((obj) =>
-//                obj.Date == this.examDto.Date);
-
         }
     }
 }

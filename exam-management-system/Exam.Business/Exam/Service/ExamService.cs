@@ -18,15 +18,13 @@ namespace Exam.Business.Exam.Service
         private readonly IWriteRepository writeRepository;
         private readonly IExamMapper examMapper;
         private readonly ICourseService courseService;
-        private readonly ICourseMapper courseMapper;
 
-        public ExamService(IReadRepository readRepository, IWriteRepository writeRepository, IExamMapper examMapper, ICourseService courseService, ICourseMapper courseMapper)
+        public ExamService(IReadRepository readRepository, IWriteRepository writeRepository, IExamMapper examMapper, ICourseService courseService)
         {
             this.writeRepository = writeRepository ?? throw new ArgumentNullException();
             this.readRepository = readRepository ?? throw new ArgumentNullException();
             this.examMapper = examMapper ?? throw new ArgumentNullException();
             this.courseService = courseService ?? throw new ArgumentNullException();
-            this.courseMapper = courseMapper ?? throw new ArgumentNullException();
         }
 
         public async Task<ExamDto> GetById(Guid id)

@@ -14,7 +14,5 @@ namespace Exam.Business.Course
         CourseDto Map(Guid courseId, CourseCreatingDto courseCreatingDto);
 
         List<CourseDto> Map(List<Domain.Entities.StudentCourse> studentCourses);
-
-        Domain.Entities.Course Map(CourseDto courseDto);
     }
 }

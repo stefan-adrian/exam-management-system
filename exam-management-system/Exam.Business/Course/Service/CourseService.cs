@@ -41,11 +41,7 @@ namespace Exam.Business.Course
 
         public async Task<CourseDto> GetById(Guid id)
         {
-            var course = await this.readRepository.GetByIdAsync<Domain.Entities.Course>(id);
-            if (course == null)
-            {
-                throw new CourseNotFoundException(id);
-            }
+            var course = await GetCourseById(id);
             return this.courseMapper.Map(course);
         }
 

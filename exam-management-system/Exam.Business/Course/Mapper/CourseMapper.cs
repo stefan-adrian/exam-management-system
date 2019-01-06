@@ -50,11 +50,6 @@ namespace Exam.Business.Course
 
             return courses;
         }
-
-        public Domain.Entities.Course Map(CourseDto courseDto)
-        {
-            return new Domain.Entities.Course(courseDto.Name, courseDto.Year);
-        }
     }
 
 }

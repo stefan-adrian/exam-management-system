@@ -28,7 +28,6 @@ namespace Exam.Api.Controllers
             try
             {
                 var exam = await this.examService.GetById(id);
-                var datee = exam.Date;
                 return Ok(exam);
             }
             catch (ExamNotFoundException examNotFoundException)
