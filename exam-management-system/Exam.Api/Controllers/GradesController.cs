@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Exam.Business.Exam.Exception;
 using Exam.Business.Grade.Dto;
+using Exam.Business.Grade.Exception;
 using Exam.Business.Grade.Service;
+using Exam.Business.Student.Exception;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Exam.Api.Controllers
@@ -27,18 +30,34 @@ namespace Exam.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var grade = await gradeService.Create(gradeCreationDto);
+            try
+            {
+                var grade = await gradeService.Create(gradeCreationDto);
+                return Ok(grade);
+            }
+            catch (ExamNotFoundException examNotFoundException)
+            {
+                return NotFound(examNotFoundException.Message);
+            }
+            catch (StudentNotFoundException studentNotFoundException)
+            {
+                return NotFound(studentNotFoundException.Message);
+            }
 
-            return Ok(grade);
         }
 
         [HttpGet("students/{studentId:guid}/exams/{examId:guid}/grade")]
         public async Task<IActionResult> GetStudentExamGrade(Guid studentId, Guid examId)
         {
-
-            var grade = await gradeService.GetStudentExamGrade(studentId, examId);
-            return Ok(grade);
-
+            try
+            {
+                var grade = await gradeService.GetStudentExamGrade(studentId, examId);
+                return Ok(grade);
+            }
+            catch (GradeNotFoundException gradeNotFoundException)
+            {
+                return NotFound(gradeNotFoundException.Message);
+            }
         }
 
     }

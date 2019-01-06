@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Exam.Business.Course;
 using Exam.Business.Exam.Service;
 using Exam.Business.Grade.Dto;
+using Exam.Business.Grade.Exception;
 using Exam.Business.Grade.Mapper;
 using Exam.Business.Student;
 using Exam.Domain.Interfaces;
@@ -44,13 +45,18 @@ namespace Exam.Business.Grade.Service
 
         public async Task<GradeDto> GetStudentExamGrade(Guid studentId, Guid examId)
         {
-            return await readRepository.GetAll<Domain.Entities.Grade>()
+            var grade = await readRepository.GetAll<Domain.Entities.Grade>()
                 .Include(g => g.Student)
                 .Include(g => g.Exam)
                 .Where(g => g.Student.Id == studentId)
                 .Where(g => g.Exam.Id == examId)
-                .Select(g => gradeMapper.Map(g))
                 .FirstOrDefaultAsync();
+            if (grade == null)
+            {
+                throw new GradeNotFoundException(studentId, examId);
+            }
+
+            return gradeMapper.Map(grade);
         }
     }
 }
