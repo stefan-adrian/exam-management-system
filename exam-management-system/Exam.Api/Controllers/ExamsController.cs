@@ -27,7 +27,7 @@ namespace Exam.Api.Controllers
         {
             try
             {
-                var exam = await this.examService.GetById(id);
+                var exam = await this.examService.GetDtoById(id);
                 return Ok(exam);
             }
             catch (ExamNotFoundException examNotFoundException)

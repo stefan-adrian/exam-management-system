@@ -59,7 +59,7 @@ namespace Exam.Test.Business.Service
             _mockReadRepository.Setup(repo => repo.GetAll<Domain.Entities.Exam>()).Returns(mockExamsQueryable);
             _mockExamMapper.Setup(mapper => mapper.Map(_exam)).Returns(_examDto);
             // Act
-            ExamDto actualExam = await this._examService.GetById(_exam.Id);
+            ExamDto actualExam = await this._examService.GetDtoById(_exam.Id);
             // Assert
             actualExam.Should().BeEquivalentTo(_examDto);
         }

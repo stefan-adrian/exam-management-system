@@ -27,7 +27,7 @@ namespace Exam.Business.Exam.Service
             this.courseService = courseService ?? throw new ArgumentNullException();
         }
 
-        public async Task<ExamDto> GetById(Guid id)
+        public async Task<Domain.Entities.Exam> GetById(Guid id)
         {
             var exam = await this.readRepository.GetAll<Domain.Entities.Exam>().Where(e => e.Id == id)
                 .Include(e => e.Course).FirstOrDefaultAsync();
@@ -35,6 +35,13 @@ namespace Exam.Business.Exam.Service
             {
                 throw new ExamNotFoundException(id);
             }
+
+            return exam;
+        }
+
+        public async Task<ExamDto> GetDtoById(Guid id)
+        {
+            var exam = await GetById(id);
             return examMapper.Map(exam);
         }
 
