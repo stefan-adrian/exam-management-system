@@ -40,6 +40,12 @@ namespace Exam.Business.Classroom
 
         public async Task<ClassroomDetailsDto> Create(ClassroomCreatingDto classroomCreatingDto)
         {
+            var classrooms = await this.GetAll();
+            if (classrooms.Any(c => string.Equals(c.Location, classroomCreatingDto.Location, StringComparison.OrdinalIgnoreCase)))
+            {
+                throw new ClassroomLocationAlreadyExistsException(classroomCreatingDto.Location);
+            }
+
             var classroom = this.classroomMapper.Map(classroomCreatingDto);
             await this.writeRepository.AddNewAsync(classroom);
             await this.writeRepository.SaveAsync();
