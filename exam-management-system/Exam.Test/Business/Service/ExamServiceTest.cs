@@ -59,7 +59,7 @@ namespace Exam.Test.Business.Service
             _mockReadRepository.Setup(repo => repo.GetAll<Domain.Entities.Exam>()).Returns(mockExamsQueryable);
             _mockExamMapper.Setup(mapper => mapper.Map(_exam)).Returns(_examDto);
             // Act
-            ExamDto actualExam = await this._examService.GetById(_exam.Id);
+            ExamDto actualExam = await this._examService.GetDtoById(_exam.Id);
             // Assert
             actualExam.Should().BeEquivalentTo(_examDto);
         }
@@ -79,7 +79,7 @@ namespace Exam.Test.Business.Service
         }
 
         [TestMethod]
-        public void GetExamById_ShouldThrowExamNotFoundException()
+        public void GetExamByIdFetchingCourse_ShouldThrowExamNotFoundException()
         {
             // Arrange
             Guid mockGuid = new Guid();
@@ -87,9 +87,32 @@ namespace Exam.Test.Business.Service
             var mockExamsQueryable = expectedExams.AsQueryable().BuildMock();
             _mockReadRepository.Setup(repo => repo.GetAll<Domain.Entities.Exam>()).Throws(new ExamNotFoundException(mockGuid));
             // Act
+            Func<Task> act = async () => await _examService.GetByIdFetchingCourse(mockGuid);
+            // Assert
+            act.Should().Throw<ExamNotFoundException>();
+        }
+
+        [TestMethod]
+        public void GetExamById_ShouldThrowExamNotFoundException()
+        {
+            // Arrange
+            Guid mockGuid = new Guid();
+            _mockReadRepository.Setup(repo => repo.GetByIdAsync<Domain.Entities.Exam>(mockGuid)).Throws(new ExamNotFoundException(mockGuid));
+            // Act
             Func<Task> act = async () => await _examService.GetById(mockGuid);
             // Assert
             act.Should().Throw<ExamNotFoundException>();
+        }
+
+        [TestMethod]
+        public async Task GetExamById_ShouldReturnExamWithThatId()
+        {
+            // Arrange
+            _mockReadRepository.Setup(repo => repo.GetByIdAsync<Domain.Entities.Exam>(_exam.Id)).ReturnsAsync(_exam);
+            // Act
+            Domain.Entities.Exam actualExam = await this._examService.GetById(_exam.Id);
+            // Assert
+            actualExam.Should().BeEquivalentTo(_exam);
         }
     }
 }

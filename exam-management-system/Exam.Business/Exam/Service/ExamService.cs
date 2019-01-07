@@ -27,14 +27,32 @@ namespace Exam.Business.Exam.Service
             this.courseService = courseService ?? throw new ArgumentNullException();
         }
 
-        public async Task<ExamDto> GetById(Guid id)
+        public async Task<Domain.Entities.Exam> GetById(Guid id)
         {
-            var exam = await this.readRepository.GetAll<Domain.Entities.Exam>().Where(e => e.Id == id)
-                .Include(e => e.Course).FirstOrDefaultAsync();
+            var exam = await this.readRepository.GetByIdAsync<Domain.Entities.Exam>(id);
             if (exam == null)
             {
                 throw new ExamNotFoundException(id);
             }
+
+            return exam;
+        }
+
+        public async Task<Domain.Entities.Exam> GetByIdFetchingCourse(Guid id)
+        {
+            var exam = await this.readRepository.GetAll<Domain.Entities.Exam>().Where(e => e.Id == id)
+              .Include(e => e.Course).FirstOrDefaultAsync();
+            if (exam == null)
+            {
+                throw new ExamNotFoundException(id);
+            }
+
+            return exam;
+        }
+
+        public async Task<ExamDto> GetDtoById(Guid id)
+        {
+            var exam = await GetByIdFetchingCourse(id);
             return examMapper.Map(exam);
         }
 
