@@ -32,7 +32,7 @@ namespace Exam.Business.Classroom
             var classroom = await this.readRepository.GetByIdAsync<Domain.Entities.Classroom>(id);
             if (classroom == null)
             {
-                new ClassroomNotFoundException(id);
+                throw new ClassroomNotFoundException(id);
             }
 
             return this.classroomMapper.Map(classroom);
