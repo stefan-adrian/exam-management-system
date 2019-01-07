@@ -15,7 +15,7 @@ namespace Exam.Business.Grade.Mapper
 
         public GradeDto Map(Domain.Entities.Grade grade)
         {
-            return new GradeDto(grade.Value, grade.Pages, grade.Date, grade.Student.Id, grade.Exam.Id);
+            return new GradeDto(grade.Id, grade.Value, grade.Pages, grade.Date, grade.Student.Id, grade.Exam.Id);
         }
     }
 }

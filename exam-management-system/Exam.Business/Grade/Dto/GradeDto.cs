@@ -6,6 +6,8 @@ namespace Exam.Business.Grade.Dto
 {
     public class GradeDto
     {
+        public Guid Id { get; set; }
+
         public double Value { get; set; }
 
         public int Pages { get; set; }
@@ -16,8 +18,9 @@ namespace Exam.Business.Grade.Dto
 
         public Guid ExamId { get; set; }
 
-        public GradeDto(double value, int pages, DateTime date, Guid studentId, Guid examId)
+        public GradeDto(Guid id, double value, int pages, DateTime date, Guid studentId, Guid examId)
         {
+            Id = id;
             Value = value;
             Pages = pages;
             Date = date;

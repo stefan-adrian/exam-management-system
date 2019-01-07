@@ -15,5 +15,12 @@ namespace Exam.Business.Grade.Dto
 
         [Required]
         public Guid ExamId { get; set; }
+
+        public GradeCreationDto(int pages, Guid studentId, Guid examId)
+        {
+            Pages = pages;
+            StudentId = studentId;
+            ExamId = examId;
+        }
     }
 }
