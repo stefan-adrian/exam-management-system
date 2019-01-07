@@ -18,6 +18,7 @@ namespace Exam.Test.Integration
             await examContext.AddNewAsync(ProfessorTestUtils.GetProfessor2());
             await examContext.AddNewAsync(StudentCourseTestUtils.GetStudentCourse(student.Id, course.Id));
             await examContext.AddNewAsync(ExamTestUtils.GetExam());
+            await examContext.AddNewAsync(ClassroomTestUtils.GetClassroom());
             await examContext.SaveAsync();
         }
     }
