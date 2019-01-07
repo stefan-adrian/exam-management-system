@@ -2,6 +2,8 @@
 using Exam.Business.Course;
 using Exam.Business.Exam.Mapper;
 using Exam.Business.Exam.Service;
+using Exam.Business.Grade.Mapper;
+using Exam.Business.Grade.Service;
 using Exam.Business.Student;
 using Exam.Business.StudentCourse;
 using Exam.Business.StudentCourse.Service;
@@ -23,6 +25,8 @@ namespace Exam.Business
             services.AddScoped<IStudentCourseMapper, StudentCourseMapper>();
             services.AddScoped<IExamService, ExamService>();
             services.AddScoped<IExamMapper, ExamMapper>();
+            services.AddScoped<IGradeService, GradeService>();
+            services.AddScoped<IGradeMapper, GradeMapper>();
 
             return services;
         }

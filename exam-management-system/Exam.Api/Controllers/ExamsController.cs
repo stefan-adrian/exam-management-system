@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Exam.Business.Course.Exception;
+using Microsoft.AspNetCore.Http;
+using Exam.Business.Exam;
 using Exam.Business.Exam.Exception;
 using Microsoft.AspNetCore.Mvc;
 using Exam.Business.Exam.Service;
@@ -26,7 +30,7 @@ namespace Exam.Api.Controllers
         {
             try
             {
-                var exam = await this.examService.GetById(id);
+                var exam = await this.examService.GetDtoById(id);
                 return Ok(exam);
             }
             catch (ExamNotFoundException examNotFoundException)
@@ -43,9 +47,16 @@ namespace Exam.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var exam = await examService.Create(examCreatingDto);
+            try
+            {
+                var exam = await examService.Create(examCreatingDto);
 
-            return CreatedAtRoute("FindExamById", new {id = exam.Id}, exam);
+                return CreatedAtRoute("FindExamById", new {id = exam.Id}, exam);
+            }
+            catch (CourseNotFoundException courseNotFoundException)
+            {
+                return NotFound(courseNotFoundException.Message);
+            }
         }
 
         [HttpGet("students/{studentId:guid}/courses/{courseId:guid}/exams")]
