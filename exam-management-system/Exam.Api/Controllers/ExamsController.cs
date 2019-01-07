@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Exam.Business.Course.Exception;
-using Microsoft.AspNetCore.Http;
-using Exam.Business.Exam;
 using Exam.Business.Exam.Exception;
 using Microsoft.AspNetCore.Mvc;
 using Exam.Business.Exam.Service;
 using Exam.Business.Exam.Dto;
-using Exam.Business.Professor.Exception;
 using Exam.Business.Student.Exception;
 
 namespace Exam.Api.Controllers
