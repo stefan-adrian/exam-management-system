@@ -2,14 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Exam.Business.ClassroomAllocation;
 using Exam.Business.Course;
 using Exam.Business.Exam.Dto;
 using Exam.Business.Exam.Exception;
 using Exam.Business.Exam.Mapper;
 using Exam.Business.Exam.Service;
+using Exam.Business.Grade.Dto;
+using Exam.Business.Grade.Mapper;
 using Exam.Business.Student;
+using Exam.Business.Student.Dto;
 using Exam.Business.StudentCourse.Exception;
 using Exam.Business.StudentCourse.Service;
+using Exam.Domain.Entities;
 using Exam.Domain.Interfaces;
 using Exam.Test.TestUtils;
 using FluentAssertions;
@@ -33,6 +38,10 @@ namespace Exam.Test.Business.Service
         private Mock<IExamMapper> _mockExamMapper;
         private Mock<IStudentCourseService> _mockStudentCourseService;
         private Mock<IStudentService> _mockStudentService;
+        private Mock<IClassroomAllocationService> _mockClassroomAllocationService;
+        private Mock<IClassroomAllocationMapper> _mockClassroomAllocationMapper;
+        private Mock<IGradeMapper> _mockGradeMapper;
+        private Mock<IStudentMapper> _mockStudentMapper;
 
         // injectMocks
         private ExamService _examService;
@@ -49,9 +58,15 @@ namespace Exam.Test.Business.Service
             this._mockExamMapper = new Mock<IExamMapper>();
             this._mockStudentCourseService = new Mock<IStudentCourseService>();
             this._mockStudentService = new Mock<IStudentService>();
+            this._mockClassroomAllocationService = new Mock<IClassroomAllocationService>();
+            this._mockClassroomAllocationMapper = new Mock<IClassroomAllocationMapper>();
+            this._mockStudentMapper = new Mock<IStudentMapper>();
+            this._mockGradeMapper = new Mock<IGradeMapper>();
             _examService = new ExamService(_mockReadRepository.Object, _mockWriteRepository.Object,
                 _mockExamMapper.Object, _mockCourseService.Object,
-                _mockStudentCourseService.Object, _mockStudentService.Object);
+                _mockStudentCourseService.Object, _mockStudentService.Object,
+                _mockClassroomAllocationService.Object, _mockClassroomAllocationMapper.Object,
+                _mockGradeMapper.Object, _mockStudentMapper.Object);
         }
 
         [TestMethod]
@@ -76,6 +91,10 @@ namespace Exam.Test.Business.Service
             _mockExamMapper.Setup(mapper => mapper.Map(_examCreatingDto, CourseTestUtils.GetCourse())).Returns(_exam);
             _mockWriteRepository.Setup(repo => repo.AddNewAsync<Domain.Entities.Exam>(_exam)).Returns(() => Task.FromResult(_exam));
             _mockExamMapper.Setup(mapper => mapper.Map(_exam)).Returns(_examDto);
+
+            var classroomAllocation = new List<ClassroomAllocationCreatingDto> { };
+            _mockClassroomAllocationMapper.Setup(mapper => mapper.Map(_examCreatingDto, _exam.Id)).Returns(classroomAllocation);
+            
             // Act
             ExamDto actualExam = await this._examService.Create(_examCreatingDto);
             // Assert
@@ -154,6 +173,26 @@ namespace Exam.Test.Business.Service
             Func<Task> act = async () => await _examService.GetAllExamsFromCourseForStudent(course.Id, student.Id);
             // Assert
             act.Should().Throw<StudentNotAppliedToCourse>(student.Id.ToString(), course.Id.ToString());
+        }
+
+        [TestMethod]
+        public async Task GetCheckedInStudent_ShouldReturnStudentsThatCheckedInAtExam()
+        {
+            // Arrange
+            Grade grade = GradeTestUtils.GetInitialStateGrade();
+            var grades = new List<Grade> { grade };
+            GradeDto gradeDto = GradeTestUtils.GetInitialGradeDto(grade.Id);
+            Student student = StudentTestUtils.GetStudent();
+            _mockReadRepository.Setup(repo => repo.GetAll<Grade>()).Returns(grades.AsQueryable().BuildMock);
+            _mockGradeMapper.Setup(mapper => mapper.Map(grade)).Returns(gradeDto);
+            _mockStudentMapper.Setup(mapper => mapper.Map(student, gradeDto))
+                .Returns(StudentTestUtils.GetStudentFetchingGradeDto(student.Id, gradeDto));
+            var expectedResult = new List<StudentFetchingGradeDto>
+                { StudentTestUtils.GetStudentFetchingGradeDto(student.Id, gradeDto) };
+            // Act
+            var result = await _examService.GetCheckedInStudents(_exam.Id);
+            // Assert
+            result.Should().BeEquivalentTo(expectedResult);
         }
     }
 }

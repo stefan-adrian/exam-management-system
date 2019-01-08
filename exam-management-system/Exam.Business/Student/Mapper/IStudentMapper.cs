@@ -1,4 +1,6 @@
 ﻿using System;
+using Exam.Business.Grade.Dto;
+using Exam.Business.Student.Dto;
 
 namespace Exam.Business.Student
 {
@@ -11,5 +13,7 @@ namespace Exam.Business.Student
         StudentDetailsDto Map(Guid id, StudentCreationDto studentCreationDto);
 
         Domain.Entities.Student Map(StudentDetailsDto studentDetails, Domain.Entities.Student student);
+
+        StudentFetchingGradeDto Map(Domain.Entities.Student student, GradeDto gradeDto);
     }
 }

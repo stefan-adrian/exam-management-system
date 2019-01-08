@@ -1,5 +1,7 @@
 ﻿using System;
 using AutoMapper;
+using Exam.Business.Grade.Dto;
+using Exam.Business.Student.Dto;
 
 namespace Exam.Business.Student
 {
@@ -57,6 +59,21 @@ namespace Exam.Business.Student
         {
             autoMapper.Map(studentDetails, student);
             return student;
+        }
+
+        public StudentFetchingGradeDto Map(Domain.Entities.Student student, GradeDto gradeDto)
+        {
+            return new StudentFetchingGradeDto
+            {
+                Id = student.Id,
+                FirstName = student.FirstName,
+                LastName = student.LastName,
+                Email = student.Email,
+                RegistrationNumber = student.RegistrationNumber,
+                YearOfStudy = student.YearOfStudy,
+                Password = student.Password,
+                Grade = gradeDto
+            };
         }
     }
 }

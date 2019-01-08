@@ -1,4 +1,6 @@
-﻿using Exam.Business.Professor;
+﻿using Exam.Business.Classroom;
+using Exam.Business.ClassroomAllocation;
+using Exam.Business.Professor;
 using Exam.Business.Course;
 using Exam.Business.Exam.Mapper;
 using Exam.Business.Exam.Service;
@@ -25,6 +27,10 @@ namespace Exam.Business
             services.AddScoped<IStudentCourseMapper, StudentCourseMapper>();
             services.AddScoped<IExamService, ExamService>();
             services.AddScoped<IExamMapper, ExamMapper>();
+            services.AddScoped<IClassroomService, ClassroomService>();
+            services.AddScoped<IClassroomMapper, ClassroomMapper>();
+            services.AddScoped<IClassroomAllocationService, ClassroomAllocationService>();
+            services.AddScoped<IClassroomAllocationMapper, ClassroomAllocationMapper>();
             services.AddScoped<IGradeService, GradeService>();
             services.AddScoped<IGradeMapper, GradeMapper>();
 

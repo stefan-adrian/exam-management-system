@@ -1,4 +1,5 @@
-﻿using Exam.Business.Student;
+﻿using System;
+using Exam.Business.Student;
 using Exam.Domain.Entities;
 using Exam.Test.TestUtils;
 using FluentAssertions;
@@ -74,6 +75,17 @@ namespace Exam.Test.Business.Mapper
             var result = this._studentMapper.Map(this._studentDetailsDto, student);
             // Assert
             result.Should().BeEquivalentTo(this._student);
+        }
+
+        [TestMethod]
+        public void Map_ShouldReturnStudentFetchingGradeDto_WhenArgumentsAreStudentAndGradeDto()
+        {
+            // Arrange
+            var gradeDto = GradeTestUtils.GetInitialGradeDto(Guid.NewGuid());
+            // Act
+            var result = _studentMapper.Map(_student, gradeDto);
+            // Assert
+            result.Should().BeEquivalentTo(StudentTestUtils.GetStudentFetchingGradeDto(_student.Id, gradeDto));
         }
     }
 }

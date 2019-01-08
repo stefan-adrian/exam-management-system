@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Exam.Business.Exam.Dto;
+using Exam.Business.Student.Dto;
 
 namespace Exam.Business.Exam.Service
 {
@@ -14,5 +15,7 @@ namespace Exam.Business.Exam.Service
         Task<ExamDto> Create(ExamCreatingDto examCreatingDto);
 
         Task<List<ExamDto>> GetAllExamsFromCourseForStudent(Guid courseId, Guid studentId);
+
+        Task<List<StudentFetchingGradeDto>> GetCheckedInStudents(Guid examId);
     }
 }

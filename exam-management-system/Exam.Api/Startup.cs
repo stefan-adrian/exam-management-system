@@ -1,5 +1,6 @@
 ﻿using System.Buffers;
 using Exam.Business;
+using Exam.Business.Classroom.Validator;
 using Exam.Business.Course.Validator;
 using Exam.Business.Grade.Validator;
 using Exam.Business.Professor.Validator;
@@ -48,6 +49,7 @@ namespace Exam.Api
                     validators.RegisterValidatorsFromAssemblyContaining<CourseCreatingDtoValidator>();
                     validators.RegisterValidatorsFromAssemblyContaining<StudentCourseCreationDtoValidator>();
                     validators.RegisterValidatorsFromAssemblyContaining<GradeCreationDtoValidator>();
+                    validators.RegisterValidatorsFromAssemblyContaining<ClassroomCreatingDtoValidator>();
                 });
             services.AddCors();
 
