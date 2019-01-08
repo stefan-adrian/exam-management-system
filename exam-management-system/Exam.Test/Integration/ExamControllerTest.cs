@@ -1,9 +1,9 @@
-﻿using System.Net.Http;
+﻿using System.Collections.Generic;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Exam.Api;
 using Exam.Business.Exam.Dto;
-using Exam.Domain.Entities;
 using Exam.Test.TestUtils;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -46,7 +46,8 @@ namespace Exam.Test.Integration
         public async Task PostExam_ShouldReturnExamDtoFromGivenBody()
         {
             //Arrange
-            var contents = new StringContent(JsonConvert.SerializeObject(examCreatingDto), Encoding.UTF8, "application/json");
+            var contents = new StringContent(JsonConvert.SerializeObject(examCreatingDto), Encoding.UTF8,
+                "application/json");
 
             //Act
             var response = await client.PostAsync("api/exams", contents);
@@ -57,6 +58,22 @@ namespace Exam.Test.Integration
             ExamDto examDtoReturned = JsonConvert.DeserializeObject<ExamDto>(responseString);
             examDtoReturned.Should().BeEquivalentTo(examCreatingDto, options =>
                 options.ExcludingMissingMembers());
+        }
+
+        [TestMethod]
+        public async Task GetAllExamsFromCourseForStudent_ShouldReturnExamsForStudentWithThatId()
+        {
+            //Arrange
+            List<ExamDto> examDtosExpected = new List<ExamDto> {ExamTestUtils.GetExamDto(exam.Id)};
+            //Act
+            var response = await client.GetAsync("api/students/" + StudentTestUtils.GetStudent().Id
+                                                                 + "/courses/" + CourseTestUtils.GetCourse().Id
+                                                                 + "/exams");
+            //Assert
+            response.EnsureSuccessStatusCode();
+            var responseString = await response.Content.ReadAsStringAsync();
+            List<ExamDto> examsDetailsDtosActual = JsonConvert.DeserializeObject<List<ExamDto>>(responseString);
+            examsDetailsDtosActual.Should().BeEquivalentTo(examDtosExpected);
         }
     }
 }

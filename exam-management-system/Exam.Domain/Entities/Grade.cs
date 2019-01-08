@@ -9,7 +9,9 @@ namespace Exam.Domain.Entities
 
         }
 
-        public int Value { get; private set; }
+        public double Value { get; private set; }
+
+        public int Pages { get; private set; }
 
         public DateTime Date { get; private set; }
 
@@ -17,10 +19,9 @@ namespace Exam.Domain.Entities
 
         public Exam Exam { get; private set; }
 
-        public Grade(int value, DateTime date, Student student, Exam exam) : base(Guid.NewGuid())
+        public Grade(int pages, Student student, Exam exam) : base(Guid.NewGuid())
         {
-            Value = value;
-            Date = date;
+            Pages = pages;
             Student = student;
             Exam = exam;
         }

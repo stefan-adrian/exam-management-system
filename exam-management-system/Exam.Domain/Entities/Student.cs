@@ -8,6 +8,7 @@ namespace Exam.Domain.Entities
         private Student()
         {
             // EF
+            Grades = new List<Grade>();
         }
 
         public string RegistrationNumber { get; private set; }
@@ -66,6 +67,8 @@ namespace Exam.Domain.Entities
             YearOfStudy = yearOfStudy;
 
             StudentCourses = new List<StudentCourse>();
+
+            Grades = new List<Grade>();
         }
     }
 }
