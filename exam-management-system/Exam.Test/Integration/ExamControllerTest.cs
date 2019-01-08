@@ -3,7 +3,10 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Exam.Api;
+using Exam.Business.ClassroomAllocation;
 using Exam.Business.Exam.Dto;
+using Exam.Business.Student.Dto;
+using Exam.Domain.Entities;
 using Exam.Test.TestUtils;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -74,6 +77,39 @@ namespace Exam.Test.Integration
             var responseString = await response.Content.ReadAsStringAsync();
             List<ExamDto> examsDetailsDtosActual = JsonConvert.DeserializeObject<List<ExamDto>>(responseString);
             examsDetailsDtosActual.Should().BeEquivalentTo(examDtosExpected);
+        }
+
+        [TestMethod]
+        public async Task GetClassroomAllocation_ShouldReturnAllClassroomAllocationsForAnExam()
+        {
+            // Arrange
+            var expectedClassroomAllocation = new List<ClassroomAllocationDetailsDto>
+                {ClassroomAllocationTestUtils.GetClassroomAllocationDetailsDto(ClassroomAllocationTestUtils.GetClassroomAllocation().Id)};
+            // Act
+            var response = await client.GetAsync("api/exams/" + exam.Id + "/classroomAllocation");
+            // Assert
+            response.EnsureSuccessStatusCode();
+            var responseString = await response.Content.ReadAsStringAsync();
+            List<ClassroomAllocationDetailsDto> actualClassroomAllocations = JsonConvert.DeserializeObject<List<ClassroomAllocationDetailsDto>>(responseString);
+            actualClassroomAllocations.Should().BeEquivalentTo(expectedClassroomAllocation);
+        }
+
+        [TestMethod]
+        public async Task GetCheckedInStudent_ShouldReturnAllStudentThatCheckedInAtExam()
+        {
+            // Arrange
+            var expectedStudents = new List<StudentFetchingGradeDto>
+            {
+                StudentTestUtils.GetStudentFetchingGradeDto(StudentTestUtils.GetStudent().Id,
+                    GradeTestUtils.GetInitialGradeDto(GradeTestUtils.GetInitialStateGrade().Id))
+            };
+            // Act
+            var response = await client.GetAsync("api/exams/" + exam.Id + "/checked-in-students");
+            // Assert
+            response.EnsureSuccessStatusCode();
+            var responseString = await response.Content.ReadAsStringAsync();
+            List<StudentFetchingGradeDto> actualStudents = JsonConvert.DeserializeObject<List<StudentFetchingGradeDto>>(responseString);
+            actualStudents.Should().BeEquivalentTo(expectedStudents, options => options.Excluding(s => s.Grade.Date));
         }
 
         [TestMethod]

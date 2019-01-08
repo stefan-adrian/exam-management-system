@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Exam.Business.ClassroomAllocation;
 using Exam.Business.Course.Exception;
 using Exam.Business.Exam.Exception;
 using Microsoft.AspNetCore.Mvc;
 using Exam.Business.Exam.Service;
 using Exam.Business.Exam.Dto;
-using Exam.Business.Professor.Exception;
 using Exam.Business.Student.Exception;
 
 namespace Exam.Api.Controllers
@@ -15,10 +15,12 @@ namespace Exam.Api.Controllers
     public class ExamsController : ControllerBase
     {
         private readonly IExamService examService;
+        private readonly IClassroomAllocationService classroomAllocationService;
 
-        public ExamsController(IExamService examService)
+        public ExamsController(IExamService examService, IClassroomAllocationService classroomAllocationService)
         {
             this.examService = examService ?? throw new ArgumentNullException();
+            this.classroomAllocationService = classroomAllocationService ?? throw new ArgumentNullException();
         }
 
         [HttpGet("exams/{id:guid}", Name = "FindExamById")]
@@ -55,6 +57,20 @@ namespace Exam.Api.Controllers
             }
         }
 
+        [HttpGet("exams/{id:Guid}/classroomAllocation")]
+        public async Task<IActionResult> GetClassroomAllocation(Guid id)
+        {
+            try
+            {
+                var result = await this.classroomAllocationService.GetByExam(id);
+                return Ok(result);
+            }
+            catch (ExamNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+        }
+
         [HttpGet("students/{studentId:guid}/courses/{courseId:guid}/exams")]
         public async Task<IActionResult> GetAllExamsFromCourseForStudent(Guid courseId, Guid studentId)
         {
@@ -65,6 +81,20 @@ namespace Exam.Api.Controllers
             }
             catch (Exception exception) when (exception is CourseNotFoundException ||
                                               exception is StudentNotFoundException)
+            {
+                return NotFound(exception.Message);
+            }
+        }
+
+        [HttpGet("exams/{examId:guid}/checked-in-students")]
+        public async Task<IActionResult> GetCheckedInStudentsFotExam(Guid examId)
+        {
+            try
+            {
+                var students = await examService.GetCheckedInStudents(examId);
+                return Ok(students);
+            }
+            catch (ExamNotFoundException exception)
             {
                 return NotFound(exception.Message);
             }

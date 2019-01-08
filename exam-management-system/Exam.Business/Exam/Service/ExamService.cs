@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Exam.Business.ClassroomAllocation;
 using Exam.Business.Course;
-using Exam.Business.Course.Exception;
 using Exam.Business.Exam.Dto;
 using Exam.Business.Exam.Exception;
 using Exam.Business.Exam.Mapper;
-using Exam.Business.Professor;
+using Exam.Business.Grade.Dto;
+using Exam.Business.Grade.Mapper;
 using Exam.Business.Student;
+using Exam.Business.Student.Dto;
 using Exam.Business.StudentCourse.Exception;
 using Exam.Business.StudentCourse.Service;
 using Exam.Domain.Interfaces;
@@ -24,19 +26,31 @@ namespace Exam.Business.Exam.Service
         private readonly ICourseService courseService;
         private readonly IStudentCourseService studentCourseService;
         private readonly IStudentService studentService;
+        private readonly IClassroomAllocationService classroomAllocationService;
+        private readonly IClassroomAllocationMapper classroomAllocationMapper;
+        private readonly IGradeMapper gradeMapper;
+        private readonly IStudentMapper studentMapper;
 
         public ExamService(IReadRepository readRepository, IWriteRepository writeRepository,
             IExamMapper examMapper,
             ICourseService courseService,
             IStudentCourseService studentCourseService,
-            IStudentService studentService)
+            IStudentService studentService,
+            IClassroomAllocationService classroomAllocationService,
+            IClassroomAllocationMapper classroomAllocationMapper,
+            IGradeMapper gradeMapper,
+            IStudentMapper studentMapper)
         {
             this.writeRepository = writeRepository ?? throw new ArgumentNullException();
             this.readRepository = readRepository ?? throw new ArgumentNullException();
             this.examMapper = examMapper ?? throw new ArgumentNullException();
             this.courseService = courseService ?? throw new ArgumentNullException();
+            this.classroomAllocationMapper = classroomAllocationMapper ?? throw new ArgumentNullException();
+            this.classroomAllocationService = classroomAllocationService ?? throw new ArgumentNullException();
             this.studentCourseService = studentCourseService ?? throw new ArgumentNullException();
             this.studentService = studentService ?? throw new ArgumentNullException();
+            this.gradeMapper = gradeMapper ?? throw new ArgumentNullException();
+            this.studentMapper = studentMapper ?? throw new ArgumentNullException();
         }
 
         public async Task<Domain.Entities.Exam> GetById(Guid id)
@@ -73,6 +87,14 @@ namespace Exam.Business.Exam.Service
             Domain.Entities.Exam exam = examMapper.Map(examCreatingDto, course);
             await writeRepository.AddNewAsync(exam);
             await writeRepository.SaveAsync();
+
+            var classroomAllocations = classroomAllocationMapper.Map(examCreatingDto, exam.Id);
+
+            foreach (var ca in classroomAllocations)
+            {
+                await classroomAllocationService.Create(ca);
+            }
+
             return examMapper.Map(exam);
         }
 
@@ -95,6 +117,14 @@ namespace Exam.Business.Exam.Service
             }
 
             return await readRepository.GetAll<Domain.Entities.Exam>().Include(e => e.Course).Where(e => e.Course == course).Select(exam => examMapper.Map(exam)).ToListAsync();
+        }
+
+        public async Task<List<StudentFetchingGradeDto>> GetCheckedInStudents(Guid examId)
+        {
+            var grades = await this.readRepository.GetAll<Domain.Entities.Grade>().Include(g => g.Student)
+                .Include(g => g.Exam).Where(g => g.Exam.Id == examId).ToListAsync();
+
+            return grades.Select(g => studentMapper.Map(g.Student, gradeMapper.Map(g))).ToList();
         }
 
         public async Task<List<ExamDto>> GetAllExamsForACourse(Guid courseId)
