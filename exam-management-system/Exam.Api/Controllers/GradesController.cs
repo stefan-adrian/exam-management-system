@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Exam.Business.Exam.Exception;
 using Exam.Business.Grade.Dto;

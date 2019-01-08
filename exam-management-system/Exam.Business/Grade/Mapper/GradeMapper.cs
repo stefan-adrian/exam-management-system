@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using AutoMapper;
-using Exam.Business.Course;
 using Exam.Business.Grade.Dto;
 
 namespace Exam.Business.Grade.Mapper

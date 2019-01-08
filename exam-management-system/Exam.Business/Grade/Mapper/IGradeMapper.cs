@@ -1,7 +1,5 @@
 ﻿using Exam.Business.Grade.Dto;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Exam.Business.Grade.Mapper
 {

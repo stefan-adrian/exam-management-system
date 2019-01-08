@@ -1,8 +1,5 @@
 ﻿using Exam.Business.Grade.Dto;
 using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Exam.Business.Grade.Validator
 {

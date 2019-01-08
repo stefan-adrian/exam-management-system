@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Exam.Business.Grade.Dto;
+﻿using Exam.Business.Grade.Dto;
 using FluentValidation;
 
 namespace Exam.Business.Grade.Validator

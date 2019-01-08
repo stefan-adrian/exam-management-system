@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Exam.Business.Exam.Dto;
+﻿using Exam.Business.Exam.Dto;
 
 namespace Exam.Business.Exam.Mapper
 {
