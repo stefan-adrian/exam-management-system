@@ -5,9 +5,7 @@ using Exam.Business.Student;
 using Exam.Domain.Entities;
 using Exam.Domain.Interfaces;
 using Moq;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using Exam.Business.Grade.Service;
 using Exam.Test.TestUtils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -15,7 +13,6 @@ using System.Linq;
 using MockQueryable.NSubstitute;
 using FluentAssertions;
 using System.Threading.Tasks;
-using NSubstitute.ReturnsExtensions;
 
 namespace Exam.Test.Business.Service
 {
@@ -25,6 +22,7 @@ namespace Exam.Test.Business.Service
         private Grade grade;
         private GradeDto gradeDto;
         private GradeCreationDto gradeCreationDto;
+        private GradeEditingDto gradeEditingDto;
 
         //mocks
         private Mock<IReadRepository> _mockReadRepository;
@@ -42,6 +40,7 @@ namespace Exam.Test.Business.Service
             this.grade = GradeTestUtils.GetInitialStateGrade();
             this.gradeDto = GradeTestUtils.GetInitialGradeDto(grade.Id);
             this.gradeCreationDto = GradeTestUtils.GetGradeCreationDto();
+            this.gradeEditingDto = GradeTestUtils.GetGradeEditingDto();
             this._mockReadRepository = new Mock<IReadRepository>();
             this._mockWriteRepository = new Mock<IWriteRepository>();
             this._mockGradeMapper = new Mock<IGradeMapper>();
@@ -63,6 +62,18 @@ namespace Exam.Test.Business.Service
             _mockGradeMapper.Setup(mapper => mapper.Map(grade)).Returns(gradeDto);
             // Act
             GradeDto actualGrade = await this._gradeService.Create(gradeCreationDto);
+            // Assert
+            actualGrade.Should().BeEquivalentTo(gradeDto);
+        }
+
+        [TestMethod]
+        public async Task Update_ShouldReturnInstanceOfGradeDto()
+        {
+            // Arrange
+            _mockGradeMapper.Setup(mapper => mapper.Map(grade.Id, gradeEditingDto )).Returns(gradeDto);
+            _mockReadRepository.Setup(repo => repo.GetByIdAsync<Grade>(grade.Id)).ReturnsAsync(grade);
+            // Act
+            GradeDto actualGrade = await _gradeService.Update(grade.Id, gradeEditingDto);
             // Assert
             actualGrade.Should().BeEquivalentTo(gradeDto);
         }

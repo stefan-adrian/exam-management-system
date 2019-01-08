@@ -1,7 +1,5 @@
 ﻿using Exam.Business.Grade.Dto;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Exam.Business.Grade.Service
@@ -11,5 +9,9 @@ namespace Exam.Business.Grade.Service
         Task<GradeDto> Create(GradeCreationDto gradeCreationDto);
 
         Task<GradeDto> GetStudentExamGrade(Guid studentId, Guid examId);
+
+        Task<GradeDto> Update(Guid existingGradeId, GradeEditingDto gradeEditingDto);
+
+        Task<Domain.Entities.Grade> GetGradeById(Guid id);
     }
 }
