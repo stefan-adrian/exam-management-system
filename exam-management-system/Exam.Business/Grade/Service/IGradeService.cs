@@ -11,6 +11,10 @@ namespace Exam.Business.Grade.Service
 
         Task<GradeDto> GetStudentExamGrade(Guid studentId, Guid examId);
 
+        Task<GradeDto> Update(Guid existingGradeId, GradeEditingDto gradeEditingDto);
+
+        Task<Domain.Entities.Grade> GetGradeById(Guid id);
+
         Task<List<GradeDto>> GetAllGradesByExam(Guid examId);
     }
 }

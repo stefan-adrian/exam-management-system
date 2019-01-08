@@ -43,6 +43,25 @@ namespace Exam.Api.Controllers
             }
         }
 
+        [HttpPut("grades/{gradeId:guid}")]
+        public async Task<IActionResult> UpdateGrade(Guid gradeId, GradeEditingDto gradeEditingDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var existingGrade = await this.gradeService.Update(gradeId, gradeEditingDto);
+                return NoContent();
+            }
+            catch (GradeNotFoundException gradeNotFoundException)
+            {
+                return NotFound(gradeNotFoundException.Message);
+            }
+        }
+
         [HttpGet("students/{studentId:guid}/exams/{examId:guid}/grade")]
         public async Task<IActionResult> GetStudentExamGrade(Guid studentId, Guid examId)
         {

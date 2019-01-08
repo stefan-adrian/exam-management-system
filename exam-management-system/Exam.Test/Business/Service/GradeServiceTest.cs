@@ -22,6 +22,7 @@ namespace Exam.Test.Business.Service
         private Grade initialStateGrade;
         private GradeDto initialStateGradeDto;
         private GradeCreationDto gradeCreationDto;
+        private GradeEditingDto gradeEditingDto;
 
         //mocks
         private Mock<IReadRepository> _mockReadRepository;
@@ -39,6 +40,7 @@ namespace Exam.Test.Business.Service
             this.initialStateGrade = GradeTestUtils.GetInitialStateGrade();
             this.initialStateGradeDto = GradeTestUtils.GetInitialGradeDto(initialStateGrade.Id);
             this.gradeCreationDto = GradeTestUtils.GetGradeCreationDto();
+            this.gradeEditingDto = GradeTestUtils.GetGradeEditingDto();
             this._mockReadRepository = new Mock<IReadRepository>();
             this._mockWriteRepository = new Mock<IWriteRepository>();
             this._mockGradeMapper = new Mock<IGradeMapper>();
@@ -62,6 +64,18 @@ namespace Exam.Test.Business.Service
             _mockGradeMapper.Setup(mapper => mapper.Map(initialStateGrade)).Returns(initialStateGradeDto);
             // Act
             GradeDto actualGrade = await this._gradeService.Create(gradeCreationDto);
+            // Assert
+            actualGrade.Should().BeEquivalentTo(initialStateGradeDto);
+        }
+
+        [TestMethod]
+        public async Task Update_ShouldReturnInstanceOfGradeDto()
+        {
+            // Arrange
+            _mockGradeMapper.Setup(mapper => mapper.Map(initialStateGrade.Id, gradeEditingDto )).Returns(initialStateGradeDto);
+            _mockReadRepository.Setup(repo => repo.GetByIdAsync<Grade>(initialStateGrade.Id)).ReturnsAsync(initialStateGrade);
+            // Act
+            GradeDto actualGrade = await _gradeService.Update(initialStateGrade.Id, gradeEditingDto);
             // Assert
             actualGrade.Should().BeEquivalentTo(initialStateGradeDto);
         }

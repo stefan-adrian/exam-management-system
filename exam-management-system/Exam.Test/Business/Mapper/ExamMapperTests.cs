@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Exam.Business.Course;
-using Exam.Business.Exam.Dto;
+﻿using Exam.Business.Exam.Dto;
 using Exam.Business.Exam.Mapper;
-using Exam.Domain.Entities;
 using Exam.Test.TestUtils;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

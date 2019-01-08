@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
-using Exam.Business.Course;
 using Exam.Business.Exam.Dto;
-using Exam.Domain.Entities;
 
 namespace Exam.Test.TestUtils
 {
@@ -35,7 +32,8 @@ namespace Exam.Test.TestUtils
             return new ExamCreatingDto
             {
                 CourseId = CourseTestUtils.GetCourse().Id,
-                Date = MyDateTime
+                Date = MyDateTime,
+                Classrooms = new List<Guid>()
             };
         }
     }
