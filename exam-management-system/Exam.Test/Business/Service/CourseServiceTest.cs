@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Exam.Business.Course;
 using Exam.Business.Course.Exception;
 using Exam.Business.Professor;
-using Exam.Business.Professor.Exception;
 using Exam.Domain.Entities;
 using Exam.Domain.Interfaces;
 using Exam.Test.TestUtils;

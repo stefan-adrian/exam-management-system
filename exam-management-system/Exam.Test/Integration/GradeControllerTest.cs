@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Exam.Api;
@@ -21,6 +19,7 @@ namespace Exam.Test.Integration
         private Grade grade;
         private GradeDto gradeDto;
         private GradeCreationDto gradeCreationDto;
+        private GradeEditingDto gradeEditingDto;
 
         [TestInitialize]
         public void Setup()
@@ -29,6 +28,7 @@ namespace Exam.Test.Integration
             this.grade = GradeTestUtils.GetInitialStateGrade();
             this.gradeDto = GradeTestUtils.GetInitialGradeDto(grade.Id);
             this.gradeCreationDto = GradeTestUtils.GetGradeCreationDto();
+            this.gradeEditingDto = GradeTestUtils.GetGradeEditingDto();
         }
 
         [TestMethod]
@@ -60,6 +60,19 @@ namespace Exam.Test.Integration
             GradeDto gradeDtoReturned = JsonConvert.DeserializeObject<GradeDto>(responseString);
             gradeDtoReturned.Should().BeEquivalentTo(gradeDtoReturned, options =>
                 options.Excluding(g => g.Id).Excluding(g => g.Date).Excluding(g => g.Value));
+        }
+
+        [TestMethod]
+        public async Task PutGradeById_ShouldHaveSuccessStatusCode()
+        {
+            //Arrange
+            var contents = new StringContent(JsonConvert.SerializeObject(gradeEditingDto), Encoding.UTF8, "application/json");
+
+            //Act
+            var response = await client.PutAsync("api/grades/" + grade.Id, contents);
+
+            //Assert
+            response.EnsureSuccessStatusCode();
         }
     }
 }
