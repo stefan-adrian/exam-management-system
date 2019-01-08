@@ -22,7 +22,7 @@ namespace Exam.Test.TestUtils
 
         public static GradeDto GetInitialGradeDto(Guid id)
         {
-            return new GradeDto(id, 0, 10, DateTime.Now, StudentTestUtils.GetStudent().Id, ExamTestUtils.GetExam().Id);
+            return new GradeDto(id, 0, 10, DateTime.Now,false, StudentTestUtils.GetStudent().Id, ExamTestUtils.GetExam().Id);
         }
 
         public static GradeCreationDto GetGradeCreationDto()

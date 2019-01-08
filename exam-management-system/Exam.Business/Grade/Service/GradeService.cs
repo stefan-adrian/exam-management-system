@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Exam.Business.Course;
+using Exam.Business.Course.Exception;
 using Exam.Business.Exam.Service;
 using Exam.Business.Grade.Dto;
 using Exam.Business.Grade.Exception;
@@ -43,6 +44,15 @@ namespace Exam.Business.Grade.Service
             return gradeMapper.Map(grade);
         }
 
+        public async Task<GradeDto> Update(Guid existingGradeId, GradeEditingDto gradeEditingDto)
+        {
+            GradeDto gradeDto = this.gradeMapper.Map(existingGradeId, gradeEditingDto);
+            var grade = GetGradeById(existingGradeId).Result;
+            this.writeRepository.Update(this.gradeMapper.Map(gradeDto,grade));
+            await this.writeRepository.SaveAsync();
+            return gradeDto;
+        }
+
         public async Task<GradeDto> GetStudentExamGrade(Guid studentId, Guid examId)
         {
             var grade = await readRepository.GetAll<Domain.Entities.Grade>()
@@ -57,6 +67,17 @@ namespace Exam.Business.Grade.Service
             }
 
             return gradeMapper.Map(grade);
+        }
+
+        public async Task<Domain.Entities.Grade> GetGradeById(Guid id)
+        {
+            var grade = await this.readRepository.GetByIdAsync<Domain.Entities.Grade>(id);
+            if (grade == null)
+            {
+                throw new CourseNotFoundException(id);
+            }
+
+            return grade;
         }
     }
 }

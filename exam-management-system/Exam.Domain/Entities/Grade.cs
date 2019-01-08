@@ -15,6 +15,8 @@ namespace Exam.Domain.Entities
 
         public DateTime Date { get; private set; }
 
+        public bool Agree { get; private set; }
+
         public Student Student { get; private set; }
 
         public Exam Exam { get; private set; }
@@ -22,6 +24,7 @@ namespace Exam.Domain.Entities
         public Grade(int pages, Student student, Exam exam) : base(Guid.NewGuid())
         {
             Pages = pages;
+            Agree = false;
             Student = student;
             Exam = exam;
         }

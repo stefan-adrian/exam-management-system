@@ -11,5 +11,9 @@ namespace Exam.Business.Grade.Service
         Task<GradeDto> Create(GradeCreationDto gradeCreationDto);
 
         Task<GradeDto> GetStudentExamGrade(Guid studentId, Guid examId);
+
+        Task<GradeDto> Update(Guid existingGradeId, GradeEditingDto gradeEditingDto);
+
+        Task<Domain.Entities.Grade> GetGradeById(Guid id);
     }
 }

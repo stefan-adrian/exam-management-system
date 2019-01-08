@@ -4,9 +4,8 @@ using System.Text;
 
 namespace Exam.Business.Grade.Dto
 {
-    public class GradeDto
+    public class GradeEditingDto
     {
-        public Guid Id { get; set; }
 
         public double Value { get; set; }
 
@@ -20,9 +19,8 @@ namespace Exam.Business.Grade.Dto
 
         public Guid ExamId { get; set; }
 
-        public GradeDto(Guid id, double value, int pages, DateTime date, bool agree, Guid studentId, Guid examId)
+        public GradeEditingDto(double value, int pages, DateTime date, bool agree, Guid studentId, Guid examId)
         {
-            Id = id;
             Value = value;
             Pages = pages;
             Date = date;
