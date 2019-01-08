@@ -10,6 +10,7 @@ using Exam.Business.Exam.Mapper;
 using Exam.Business.Grade.Dto;
 using Exam.Business.Grade.Mapper;
 using Exam.Business.Student;
+using Exam.Business.Student.Dto;
 using Exam.Business.StudentCourse.Exception;
 using Exam.Business.StudentCourse.Service;
 using Exam.Domain.Interfaces;
@@ -118,12 +119,12 @@ namespace Exam.Business.Exam.Service
             return await readRepository.GetAll<Domain.Entities.Exam>().Include(e => e.Course).Where(e => e.Course == course).Select(exam => examMapper.Map(exam)).ToListAsync();
         }
 
-        public async Task<List<GradeFetchingStudentDto>> GetCheckedInStudents(Guid examId)
+        public async Task<List<StudentFetchingGradeDto>> GetCheckedInStudents(Guid examId)
         {
             var grades = await this.readRepository.GetAll<Domain.Entities.Grade>().Include(g => g.Student)
                 .Include(g => g.Exam).Where(g => g.Exam.Id == examId).ToListAsync();
 
-            return grades.Select(g => gradeMapper.Map(g, studentMapper.Map(g.Student))).ToList();
+            return grades.Select(g => studentMapper.Map(g.Student, gradeMapper.Map(g))).ToList();
         }
     }
 }
