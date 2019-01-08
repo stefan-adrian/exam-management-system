@@ -126,5 +126,19 @@ namespace Exam.Business.Exam.Service
 
             return grades.Select(g => studentMapper.Map(g.Student, gradeMapper.Map(g))).ToList();
         }
+
+        public async Task<List<ExamDto>> GetAllExamsForACourse(Guid courseId)
+        {
+            var exams = new List<ExamDto>();
+            var course = await this.readRepository.GetAll<Domain.Entities.Course>().Where(c => c.Id == courseId)
+                .Include(c => c.Exams).FirstOrDefaultAsync();
+
+            foreach (var exam in course.Exams)
+            {
+                exams.Add(examMapper.Map(exam));
+            }
+
+            return exams;
+        }
     }
 }

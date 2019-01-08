@@ -111,5 +111,18 @@ namespace Exam.Test.Integration
             List<StudentFetchingGradeDto> actualStudents = JsonConvert.DeserializeObject<List<StudentFetchingGradeDto>>(responseString);
             actualStudents.Should().BeEquivalentTo(expectedStudents, options => options.Excluding(s => s.Grade.Date));
         }
+
+        [TestMethod]
+        public async Task getAllExamsForACourse_ShouldReturnExamsForThatCourse()
+        {
+            List<ExamDto> examDtosExpected = new List<ExamDto> { ExamTestUtils.GetExamDto(exam.Id) };
+            var response = await client.GetAsync( "api/courses/" + CourseTestUtils.GetCourse().Id
+                                                                 + "/exams");
+            //Assert
+            response.EnsureSuccessStatusCode();
+            var responseString = await response.Content.ReadAsStringAsync();
+            List<ExamDto> examsDetailsDtosActual = JsonConvert.DeserializeObject<List<ExamDto>>(responseString);
+            examsDetailsDtosActual.Should().BeEquivalentTo(examDtosExpected);
+        }
     }
 }

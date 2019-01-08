@@ -57,5 +57,12 @@ namespace Exam.Domain.Entities
             }
             Year = year;
         }
+
+        public Course(string name, int year, List<Exam> exams) : base(Guid.NewGuid())
+        {
+            Name = name;
+            Year = year;
+            Exams = exams;
+        }
     }
 }
