@@ -10,7 +10,7 @@ namespace Exam.Business.Grade.Mapper
         public Domain.Entities.Grade Map(GradeCreationDto gradeCreationDto,
             Domain.Entities.Student student, Domain.Entities.Exam exam)
         {
-            return new Domain.Entities.Grade(gradeCreationDto.Pages, student, exam);
+            return new Domain.Entities.Grade(student, exam);
         }
 
         public GradeDto Map(Domain.Entities.Grade grade)

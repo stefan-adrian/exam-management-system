@@ -9,7 +9,5 @@ namespace Exam.Business.ClassroomAllocation
         Task<List<ClassroomAllocationDetailsDto>> GetByExam(Guid examId);
 
         Task<ClassroomAllocationDetailsDto> Create(ClassroomAllocationCreatingDto classroomAllocationCreatingDto);
-
-        Task CheckIn(Guid classroomAllocationId, Guid studentId);
     }
 }

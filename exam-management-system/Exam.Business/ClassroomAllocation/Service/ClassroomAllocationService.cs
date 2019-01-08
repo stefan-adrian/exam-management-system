@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Exam.Business.Classroom.Exception;
-using Exam.Business.ClassroomAllocation.Exception;
 using Exam.Business.Exam.Exception;
-using Exam.Business.Student.Exception;
+using Exam.Business.Student;
 using Exam.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,8 +19,8 @@ namespace Exam.Business.ClassroomAllocation
         public ClassroomAllocationService(IClassroomAllocationMapper classroomAllocationMapper, IReadRepository readRepository, IWriteRepository writeRepository)
         {
             this.classroomAllocationMapper = classroomAllocationMapper ?? throw new ArgumentNullException();
-            this.readRepository = readRepository ?? throw new ArgumentNullException(); ;
-            this.writeRepository = writeRepository ?? throw new ArgumentNullException(); ;
+            this.readRepository = readRepository ?? throw new ArgumentNullException();
+            this.writeRepository = writeRepository ?? throw new ArgumentNullException();
         }
 
         public async Task<ClassroomAllocationDetailsDto> Create(ClassroomAllocationCreatingDto classroomAllocationCreatingDto)
@@ -55,26 +54,6 @@ namespace Exam.Business.ClassroomAllocation
                 .FirstOrDefaultAsync();
 
             return exam.ClassroomAllocation.Select(c => classroomAllocationMapper.Map(c)).ToList();
-        }
-
-        public async Task CheckIn(Guid classroomAllocationId, Guid studentId)
-        {
-            var classroomAllocation = await readRepository.GetByIdAsync<Domain.Entities.ClassroomAllocation>(classroomAllocationId);
-
-            if (classroomAllocation == null)
-            {
-                throw new ClassroomAllocationNotFound(classroomAllocationId);
-            }
-
-            var student = await readRepository.GetByIdAsync<Domain.Entities.Student>(studentId);
-
-            if (student == null)
-            {
-                throw new StudentNotFoundException(studentId);
-            }
-
-            classroomAllocation.CheckedInStudents.Add(student);
-            await writeRepository.SaveAsync();
         }
     }
 }

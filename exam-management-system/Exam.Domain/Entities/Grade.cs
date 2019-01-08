@@ -19,9 +19,8 @@ namespace Exam.Domain.Entities
 
         public Exam Exam { get; private set; }
 
-        public Grade(int pages, Student student, Exam exam) : base(Guid.NewGuid())
+        public Grade(Student student, Exam exam) : base(Guid.NewGuid())
         {
-            Pages = pages;
             Student = student;
             Exam = exam;
         }

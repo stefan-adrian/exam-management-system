@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Exam.Business.ClassroomAllocation;
-using Microsoft.AspNetCore.Http;
-using Exam.Business.Exam;
 using Exam.Business.Course.Exception;
 using Exam.Business.Exam.Exception;
 using Microsoft.AspNetCore.Mvc;
