@@ -11,5 +11,7 @@ namespace Exam.Business.Grade.Service
         Task<GradeDto> Create(GradeCreationDto gradeCreationDto);
 
         Task<GradeDto> GetStudentExamGrade(Guid studentId, Guid examId);
+
+        Task<List<GradeDto>> GetAllGradesByExam(Guid examId);
     }
 }

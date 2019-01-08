@@ -58,5 +58,19 @@ namespace Exam.Business.Grade.Service
 
             return gradeMapper.Map(grade);
         }
+
+        public async Task<List<GradeDto>> GetAllGradesByExam(Guid examId)
+        {
+            var exam = await examService.GetById(examId);
+            var TOLERANCE = 0.1;
+            // the grade must be greater than 0 in order to be marked as set
+            var grades = await readRepository.GetAll<Domain.Entities.Grade>()
+                .Include(g => g.Student)
+                .Include(g => g.Exam)
+                .Where(g => g.Exam.Id == exam.Id && Math.Abs(g.Value) > TOLERANCE)
+                .Select(g => gradeMapper.Map(g))
+                .ToListAsync();
+            return grades;
+        }
     }
 }
