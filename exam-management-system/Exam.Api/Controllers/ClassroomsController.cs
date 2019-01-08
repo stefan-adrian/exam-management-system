@@ -25,11 +25,11 @@ namespace Exam.Api.Controllers
         }
 
         [HttpGet("{classroomId:Guid}", Name = "FindClassroomById")]
-        public async Task<IActionResult> GetById(Guid id)
+        public async Task<IActionResult> GetById(Guid classroomId)
         {
             try
             {
-                var classroom = await this.classroomService.GetDetailsDtoById(id);
+                var classroom = await this.classroomService.GetDetailsDtoById(classroomId);
                 return Ok(classroom);
             }
             catch (ClassroomNotFoundException exception)
