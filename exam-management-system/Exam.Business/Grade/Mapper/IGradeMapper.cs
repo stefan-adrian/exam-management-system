@@ -11,5 +11,7 @@ namespace Exam.Business.Grade.Mapper
             Domain.Entities.Exam exam);
 
         GradeDto Map(Domain.Entities.Grade grade);
+
+        Domain.Entities.Grade Map(GradeDto gradeDto, Domain.Entities.Grade grade);
     }
 }

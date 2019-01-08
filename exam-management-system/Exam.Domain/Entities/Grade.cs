@@ -25,5 +25,14 @@ namespace Exam.Domain.Entities
             Student = student;
             Exam = exam;
         }
+
+        public Grade(int value, int pages, DateTime date, Student student, Exam exam) : base(Guid.NewGuid())
+        {
+            Value = value;
+            Pages = pages;
+            Date = date;
+            Student = student;
+            Exam = exam;
+        }
     }
 }

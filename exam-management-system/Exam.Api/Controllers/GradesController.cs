@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Exam.Business.Exam.Exception;
 using Exam.Business.Grade.Dto;
@@ -43,7 +41,6 @@ namespace Exam.Api.Controllers
             {
                 return NotFound(studentNotFoundException.Message);
             }
-
         }
 
         [HttpGet("students/{studentId:guid}/exams/{examId:guid}/grade")]
@@ -60,7 +57,7 @@ namespace Exam.Api.Controllers
             }
         }
 
-        [HttpGet("exam/{examId:guid}/grades")]
+        [HttpGet("exams/{examId:guid}/grades")]
         public async Task<IActionResult> GetAllGradesByExam(Guid examId)
         {
             try
@@ -73,6 +70,5 @@ namespace Exam.Api.Controllers
                 return NotFound(examNotFoundException.Message);
             }
         }
-
     }
 }
