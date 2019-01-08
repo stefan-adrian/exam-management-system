@@ -7,6 +7,7 @@ namespace Exam.Business.Grade.Dto
 {
     public class GradeCreationDto
     {
+        public int Pages { get; set; }
 
         [Required]
         public Guid StudentId { get; set; }

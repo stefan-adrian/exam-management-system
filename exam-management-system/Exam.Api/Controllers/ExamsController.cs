@@ -85,5 +85,19 @@ namespace Exam.Api.Controllers
                 return NotFound(exception.Message);
             }
         }
+
+        [HttpGet("exams/{examId:guid}/checked-in-students")]
+        public async Task<IActionResult> GetCheckedInStudentsFotExam(Guid examId)
+        {
+            try
+            {
+                var students = await examService.GetCheckedInStudents(examId);
+                return Ok(students);
+            }
+            catch (ExamNotFoundException exception)
+            {
+                return NotFound(exception.Message);
+            }
+        }
     }
 }

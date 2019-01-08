@@ -25,6 +25,7 @@ namespace Exam.Business.Exam.Service
         private readonly IStudentService studentService;
         private readonly IClassroomAllocationService classroomAllocationService;
         private readonly IClassroomAllocationMapper classroomAllocationMapper;
+        private readonly IStudentMapper studentMapper;
 
         public ExamService(IReadRepository readRepository, IWriteRepository writeRepository,
             IExamMapper examMapper,
@@ -32,7 +33,8 @@ namespace Exam.Business.Exam.Service
             IStudentCourseService studentCourseService,
             IStudentService studentService,
             IClassroomAllocationService classroomAllocationService,
-            IClassroomAllocationMapper classroomAllocationMapper)
+            IClassroomAllocationMapper classroomAllocationMapper,
+            IStudentMapper studentMapper)
         {
             this.writeRepository = writeRepository ?? throw new ArgumentNullException();
             this.readRepository = readRepository ?? throw new ArgumentNullException();
@@ -42,6 +44,7 @@ namespace Exam.Business.Exam.Service
             this.classroomAllocationService = classroomAllocationService ?? throw new ArgumentNullException();
             this.studentCourseService = studentCourseService ?? throw new ArgumentNullException();
             this.studentService = studentService ?? throw new ArgumentNullException();
+            this.studentMapper = studentMapper ?? throw new ArgumentNullException();
         }
 
         public async Task<Domain.Entities.Exam> GetById(Guid id)
@@ -108,6 +111,14 @@ namespace Exam.Business.Exam.Service
             }
 
             return await readRepository.GetAll<Domain.Entities.Exam>().Include(e => e.Course).Where(e => e.Course == course).Select(exam => examMapper.Map(exam)).ToListAsync();
+        }
+
+        public async Task<List<StudentDetailsDto>> GetCheckedInStudents(Guid examId)
+        {
+            var grades = await this.readRepository.GetAll<Domain.Entities.Grade>().Include(g => g.Student)
+                .Include(g => g.Exam).Where(g => g.Exam.Id == examId).ToListAsync();
+
+            return grades.Select(g => studentMapper.Map(g.Student)).ToList();
         }
     }
 }
