@@ -21,7 +21,6 @@ using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MockQueryable.NSubstitute;
 using Moq;
-using NSubstitute;
 
 namespace Exam.Test.Business.Service
 {
