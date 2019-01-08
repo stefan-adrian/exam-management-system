@@ -1,7 +1,5 @@
 ﻿using Exam.Business.Grade.Dto;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Exam.Business.Student;
 
 namespace Exam.Business.Grade.Mapper
 {
@@ -11,5 +9,7 @@ namespace Exam.Business.Grade.Mapper
             Domain.Entities.Exam exam);
 
         GradeDto Map(Domain.Entities.Grade grade);
+
+        GradeFetchingStudentDto Map(Domain.Entities.Grade grade, StudentDetailsDto student);
     }
 }

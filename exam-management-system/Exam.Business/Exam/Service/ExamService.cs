@@ -7,6 +7,8 @@ using Exam.Business.Course;
 using Exam.Business.Exam.Dto;
 using Exam.Business.Exam.Exception;
 using Exam.Business.Exam.Mapper;
+using Exam.Business.Grade.Dto;
+using Exam.Business.Grade.Mapper;
 using Exam.Business.Student;
 using Exam.Business.StudentCourse.Exception;
 using Exam.Business.StudentCourse.Service;
@@ -25,6 +27,7 @@ namespace Exam.Business.Exam.Service
         private readonly IStudentService studentService;
         private readonly IClassroomAllocationService classroomAllocationService;
         private readonly IClassroomAllocationMapper classroomAllocationMapper;
+        private readonly IGradeMapper gradeMapper;
         private readonly IStudentMapper studentMapper;
 
         public ExamService(IReadRepository readRepository, IWriteRepository writeRepository,
@@ -34,6 +37,7 @@ namespace Exam.Business.Exam.Service
             IStudentService studentService,
             IClassroomAllocationService classroomAllocationService,
             IClassroomAllocationMapper classroomAllocationMapper,
+            IGradeMapper gradeMapper,
             IStudentMapper studentMapper)
         {
             this.writeRepository = writeRepository ?? throw new ArgumentNullException();
@@ -44,6 +48,7 @@ namespace Exam.Business.Exam.Service
             this.classroomAllocationService = classroomAllocationService ?? throw new ArgumentNullException();
             this.studentCourseService = studentCourseService ?? throw new ArgumentNullException();
             this.studentService = studentService ?? throw new ArgumentNullException();
+            this.gradeMapper = gradeMapper ?? throw new ArgumentNullException();
             this.studentMapper = studentMapper ?? throw new ArgumentNullException();
         }
 
@@ -113,12 +118,12 @@ namespace Exam.Business.Exam.Service
             return await readRepository.GetAll<Domain.Entities.Exam>().Include(e => e.Course).Where(e => e.Course == course).Select(exam => examMapper.Map(exam)).ToListAsync();
         }
 
-        public async Task<List<StudentDetailsDto>> GetCheckedInStudents(Guid examId)
+        public async Task<List<GradeFetchingStudentDto>> GetCheckedInStudents(Guid examId)
         {
             var grades = await this.readRepository.GetAll<Domain.Entities.Grade>().Include(g => g.Student)
                 .Include(g => g.Exam).Where(g => g.Exam.Id == examId).ToListAsync();
 
-            return grades.Select(g => studentMapper.Map(g.Student)).ToList();
+            return grades.Select(g => gradeMapper.Map(g, studentMapper.Map(g.Student))).ToList();
         }
     }
 }
