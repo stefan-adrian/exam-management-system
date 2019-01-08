@@ -14,7 +14,7 @@ namespace Exam.Test.TestUtils
         {
             if (initialStateGrade == null)
             {
-                initialStateGrade = new Grade(10, StudentTestUtils.GetStudent(), ExamTestUtils.GetExam());
+                initialStateGrade = new Grade(StudentTestUtils.GetStudent(), ExamTestUtils.GetExam());
             }
 
             return initialStateGrade;
@@ -27,7 +27,7 @@ namespace Exam.Test.TestUtils
 
         public static GradeCreationDto GetGradeCreationDto()
         {
-            return new GradeCreationDto(10, StudentTestUtils.GetStudent().Id, ExamTestUtils.GetExam().Id);
+            return new GradeCreationDto(StudentTestUtils.GetStudent().Id, ExamTestUtils.GetExam().Id);
         }
 
     }

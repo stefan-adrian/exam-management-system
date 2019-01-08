@@ -10,7 +10,6 @@ namespace Exam.Business.Grade.Validator
     {
         public GradeCreationDtoValidator()
         {
-            RuleFor(gradeCreationDto => gradeCreationDto.Pages).NotEmpty().GreaterThanOrEqualTo(1).LessThanOrEqualTo(30);
             RuleFor(gradeCreationDto => gradeCreationDto.StudentId).NotEmpty();
             RuleFor(gradeCreationDto => gradeCreationDto.ExamId).NotEmpty();
         }
