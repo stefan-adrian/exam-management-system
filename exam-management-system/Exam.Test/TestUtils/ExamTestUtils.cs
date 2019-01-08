@@ -35,7 +35,8 @@ namespace Exam.Test.TestUtils
             return new ExamCreatingDto
             {
                 CourseId = CourseTestUtils.GetCourse().Id,
-                Date = MyDateTime
+                Date = MyDateTime,
+                Classrooms = new List<Guid>()
             };
         }
     }

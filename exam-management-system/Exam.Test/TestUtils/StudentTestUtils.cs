@@ -1,5 +1,7 @@
 ﻿using System;
+using Exam.Business.Grade.Dto;
 using Exam.Business.Student;
+using Exam.Business.Student.Dto;
 using Exam.Domain.Entities;
 
 namespace Exam.Test.TestUtils
@@ -53,6 +55,21 @@ namespace Exam.Test.TestUtils
                 Password = "password",
                 RegistrationNumber = "registrationNumber",
                 YearOfStudy = 1
+            };
+        }
+
+        public static StudentFetchingGradeDto GetStudentFetchingGradeDto(Guid id, GradeDto grade)
+        {
+            return new StudentFetchingGradeDto
+            {
+                Id = id,
+                Email = "email@email.ro",
+                FirstName = "FirstName",
+                LastName = "LastName",
+                Password = "password",
+                RegistrationNumber = "registrationNumber",
+                YearOfStudy = 1,
+                Grade = grade
             };
         }
     }
