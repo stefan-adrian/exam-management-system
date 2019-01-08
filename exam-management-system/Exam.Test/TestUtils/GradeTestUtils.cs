@@ -8,6 +8,7 @@ namespace Exam.Test.TestUtils
     {
         private static Grade initialStateGrade = null;
         public static DateTime data = DateTime.Now;
+        private static Grade gradeWithValue = null;
 
         public static Grade GetInitialStateGrade()
         {
@@ -15,7 +16,6 @@ namespace Exam.Test.TestUtils
             {
                 initialStateGrade = new Grade(StudentTestUtils.GetStudent(), ExamTestUtils.GetExam());
             }
-
             return initialStateGrade;
         }
 
@@ -34,5 +34,18 @@ namespace Exam.Test.TestUtils
             return new GradeEditingDto(0,0,data,false,StudentTestUtils.GetStudent().Id,ExamTestUtils.GetExam().Id);
         }
 
+        public static Grade GetGradeWithValue()
+        {
+            if (gradeWithValue == null)
+            {
+                gradeWithValue = new Grade(9, 10, DateTime.Now, StudentTestUtils.GetStudent2(), ExamTestUtils.GetExam());
+            }
+            return gradeWithValue;
+        }
+
+        public static GradeDto GetGradeWithValueDto(Guid id, DateTime date)
+        {
+            return new GradeDto(id, 9, 10, date, false, StudentTestUtils.GetStudent2().Id, ExamTestUtils.GetExam().Id);
+        }
     }
 }

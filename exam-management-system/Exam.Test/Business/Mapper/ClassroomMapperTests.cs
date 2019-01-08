@@ -1,5 +1,4 @@
-﻿using System;
-using Exam.Business.Classroom;
+﻿using Exam.Business.Classroom;
 using Exam.Domain.Entities;
 using Exam.Test.TestUtils;
 using FluentAssertions;

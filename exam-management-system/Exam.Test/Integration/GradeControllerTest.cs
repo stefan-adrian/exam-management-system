@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System.Collections.Generic;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Exam.Api;
@@ -35,7 +36,8 @@ namespace Exam.Test.Integration
         public async Task GetStudentExamGrade_ShouldReturnGradeDtoWithGivenId()
         {
             //Act
-            var response = await client.GetAsync("api/students/" + grade.Student.Id+"/exams/"+grade.Exam.Id+"/grade");
+            var response =
+                await client.GetAsync("api/students/" + grade.Student.Id + "/exams/" + grade.Exam.Id + "/grade");
 
             //Assert
             response.EnsureSuccessStatusCode();
@@ -49,7 +51,8 @@ namespace Exam.Test.Integration
         public async Task PostGrade_ShouldReturnGradeDtoFromGivenBody()
         {
             //Arrange
-            var contents = new StringContent(JsonConvert.SerializeObject(gradeCreationDto), Encoding.UTF8, "application/json");
+            var contents = new StringContent(JsonConvert.SerializeObject(gradeCreationDto), Encoding.UTF8,
+                "application/json");
 
             //Act
             var response = await client.PostAsync("api/grades", contents);
@@ -73,6 +76,24 @@ namespace Exam.Test.Integration
 
             //Assert
             response.EnsureSuccessStatusCode();
+        }
+
+        [TestMethod]
+        public async Task GetAllGradesByExam_ShouldReturnGradesForExamWithThatId()
+        {
+            //Arrange
+            var gradeWithValue = GradeTestUtils.GetGradeWithValue();
+            List<GradeDto> gradeDtosExpected = new List<GradeDto>
+                {GradeTestUtils.GetGradeWithValueDto(gradeWithValue.Id, gradeWithValue.Date)};
+
+            //Act
+            var response = await client.GetAsync("api/exams/" + gradeWithValue.Exam.Id + "/grades");
+
+            //Assert
+            response.EnsureSuccessStatusCode();
+            var responseString = await response.Content.ReadAsStringAsync();
+            List<GradeDto> gradeDtosActual = JsonConvert.DeserializeObject<List<GradeDto>>(responseString);
+            gradeDtosActual.Should().BeEquivalentTo(gradeDtosExpected);
         }
     }
 }

@@ -41,7 +41,6 @@ namespace Exam.Api.Controllers
             {
                 return NotFound(studentNotFoundException.Message);
             }
-
         }
 
         [HttpPut("grades/{gradeId:guid}")]
@@ -77,5 +76,18 @@ namespace Exam.Api.Controllers
             }
         }
 
+        [HttpGet("exams/{examId:guid}/grades")]
+        public async Task<IActionResult> GetAllGradesByExam(Guid examId)
+        {
+            try
+            {
+                var grades = await gradeService.GetAllGradesByExam(examId);
+                return Ok(grades);
+            }
+            catch (ExamNotFoundException examNotFoundException)
+            {
+                return NotFound(examNotFoundException.Message);
+            }
+        }
     }
 }

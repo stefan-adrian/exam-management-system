@@ -21,6 +21,7 @@ namespace Exam.Test.Integration
             await examContext.AddNewAsync(ClassroomTestUtils.GetClassroom());
             await examContext.AddNewAsync(GradeTestUtils.GetInitialStateGrade());
             await examContext.AddNewAsync(ClassroomAllocationTestUtils.GetClassroomAllocation());
+            await examContext.AddNewAsync(GradeTestUtils.GetGradeWithValue());
             await examContext.SaveAsync();
         }
     }
