@@ -17,5 +17,7 @@ namespace Exam.Business.Exam.Service
         Task<List<ExamDto>> GetAllExamsFromCourseForStudent(Guid courseId, Guid studentId);
 
         Task<List<StudentFetchingGradeDto>> GetCheckedInStudents(Guid examId);
+
+        Task<List<ExamDto>> GetAllExamsForACourse(Guid courseId);
     }
 }

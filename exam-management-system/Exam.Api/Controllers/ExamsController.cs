@@ -99,5 +99,19 @@ namespace Exam.Api.Controllers
                 return NotFound(exception.Message);
             }
         }
+
+        [HttpGet("courses/{courseId:guid}/exams")]
+        public async Task<IActionResult> GetAllExamsOfACourse(Guid courseId)
+        {
+            try
+            {
+                var exams = await examService.GetAllExamsForACourse(courseId);
+                return Ok(exams);
+            }
+            catch (CourseNotFoundException courseNotFoundException)
+            {
+                return NotFound(courseNotFoundException.Message);
+            }
+        }
     }
 }
