@@ -14,12 +14,13 @@ namespace Exam.Domain.Entities
 
         public Classroom Classroom { get; private set; }
 
-        public List<ClassroomAllocation> ClassroomAllocations { get; private set; }
+        public ICollection<Student> CheckedInStudents { get; private set; }
 
         public ClassroomAllocation(Exam exam, Classroom classroom) : base(Guid.NewGuid())
         {
             Exam = exam;
             Classroom = classroom;
+            CheckedInStudents = new List<Student>();
         }
     }
 }

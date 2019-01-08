@@ -10,9 +10,9 @@ namespace Exam.Business.Classroom
 {
     public class ClassroomService : IClassroomService
     {
-        private IWriteRepository writeRepository;
-        private IReadRepository readRepository;
-        private IClassroomMapper classroomMapper;
+        private readonly IWriteRepository writeRepository;
+        private readonly IReadRepository readRepository;
+        private readonly IClassroomMapper classroomMapper;
 
         public ClassroomService(IWriteRepository writeRepository, IReadRepository readRepository, IClassroomMapper classroomMapper)
         {
