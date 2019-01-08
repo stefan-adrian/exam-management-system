@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Collections.Generic;
+using Exam.Business.Exam.Dto;
 
 namespace Exam.Business.ClassroomAllocation
 {
@@ -13,9 +15,21 @@ namespace Exam.Business.ClassroomAllocation
         {
             return new ClassroomAllocationDetailsDto
             {
+                Id = classroomAllocation.Id,
                 ClassroomId = classroomAllocation.Classroom.Id,
                 ExamId = classroomAllocation.Exam.Id
             };
+        }
+
+        public List<ClassroomAllocationCreatingDto> Map(ExamCreatingDto examCreatingDto, Guid examId)
+        {
+            var classroomAllocations = new List<ClassroomAllocationCreatingDto>();
+            examCreatingDto.Classrooms.ForEach(classroom => classroomAllocations.Add(new ClassroomAllocationCreatingDto
+            {
+                ClassroomId = classroom,
+                ExamId = examId
+            }));
+            return classroomAllocations;
         }
     }
 }

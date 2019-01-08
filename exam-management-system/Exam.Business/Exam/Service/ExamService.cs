@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Exam.Business.ClassroomAllocation;
 using Exam.Business.Course;
 using Exam.Business.Exam.Dto;
 using Exam.Business.Exam.Exception;
@@ -18,13 +19,17 @@ namespace Exam.Business.Exam.Service
         private readonly IWriteRepository writeRepository;
         private readonly IExamMapper examMapper;
         private readonly ICourseService courseService;
+        private readonly IClassroomAllocationService classroomAllocationService;
+        private readonly IClassroomAllocationMapper classroomAllocationMapper;
 
-        public ExamService(IReadRepository readRepository, IWriteRepository writeRepository, IExamMapper examMapper, ICourseService courseService)
+        public ExamService(IReadRepository readRepository, IWriteRepository writeRepository, IExamMapper examMapper, ICourseService courseService, IClassroomAllocationService classroomAllocationService, IClassroomAllocationMapper classroomAllocationMapper)
         {
             this.writeRepository = writeRepository ?? throw new ArgumentNullException();
             this.readRepository = readRepository ?? throw new ArgumentNullException();
             this.examMapper = examMapper ?? throw new ArgumentNullException();
             this.courseService = courseService ?? throw new ArgumentNullException();
+            this.classroomAllocationMapper = classroomAllocationMapper ?? throw new ArgumentNullException();
+            this.classroomAllocationService = classroomAllocationService ?? throw new ArgumentNullException();
         }
 
         public async Task<ExamDto> GetById(Guid id)
@@ -44,6 +49,14 @@ namespace Exam.Business.Exam.Service
             Domain.Entities.Exam exam = examMapper.Map(examCreatingDto, course);
             await writeRepository.AddNewAsync(exam);
             await writeRepository.SaveAsync();
+
+            var classroomAllocations = classroomAllocationMapper.Map(examCreatingDto, exam.Id);
+
+            foreach (var ca in classroomAllocations)
+            {
+                await classroomAllocationService.Create(ca);
+            }
+
             return examMapper.Map(exam);
         }
     }

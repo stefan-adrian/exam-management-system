@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Exam.Business.Classroom.Exception;
 using Exam.Business.ClassroomAllocation.Exception;
 using Exam.Business.Exam.Exception;
 using Exam.Business.Student.Exception;
 using Exam.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Exam.Business.ClassroomAllocation
 {
@@ -39,13 +42,19 @@ namespace Exam.Business.ClassroomAllocation
 
             var classroomAllocation = classroomAllocationMapper.Map(exam, classroom);
             await writeRepository.AddNewAsync(classroomAllocation);
+            exam.ClassroomAllocation.Add(classroomAllocation);
             await writeRepository.SaveAsync();
             return classroomAllocationMapper.Map(classroomAllocation);
         }
 
-        public Task<ClassroomAllocationDetailsDto> GetByExam(Guid examId)
+        public async Task<List<ClassroomAllocationDetailsDto>> GetByExam(Guid examId)
         {
-            throw new NotImplementedException();
+            var exam = await readRepository.GetAll<Domain.Entities.Exam>().Where(e => e.Id == examId)
+                .Include(e => e.ClassroomAllocation).ThenInclude(ca => ca.Classroom)
+                .Include(e => e.ClassroomAllocation).ThenInclude(ca => ca.Exam)
+                .FirstOrDefaultAsync();
+
+            return exam.ClassroomAllocation.Select(c => classroomAllocationMapper.Map(c)).ToList();
         }
 
         public async Task CheckIn(Guid classroomAllocationId, Guid studentId)
