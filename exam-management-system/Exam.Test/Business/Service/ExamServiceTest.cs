@@ -10,6 +10,7 @@ using Exam.Business.Exam.Service;
 using Exam.Business.Student;
 using Exam.Business.StudentCourse.Exception;
 using Exam.Business.StudentCourse.Service;
+using Exam.Domain.Entities;
 using Exam.Domain.Interfaces;
 using Exam.Test.TestUtils;
 using FluentAssertions;
@@ -155,6 +156,20 @@ namespace Exam.Test.Business.Service
             Func<Task> act = async () => await _examService.GetAllExamsFromCourseForStudent(course.Id, student.Id);
             // Assert
             act.Should().Throw<StudentNotAppliedToCourse>(student.Id.ToString(), course.Id.ToString());
+        }
+
+        [TestMethod]
+        public async Task getAllExamsForACourse_ShouldReturnListOfExamDto()
+        {
+            var course = new Course(_exam.Course.Name, _exam.Course.Year, new List<Domain.Entities.Exam> {_exam});
+            var courses = new List<Course> {course};
+            var exams = new List<ExamDto> { _examDto};
+            var mockExamsQueryable = courses.AsQueryable().BuildMock();
+            _mockReadRepository.Setup(repo => repo.GetAll<Domain.Entities.Course>()).Returns(mockExamsQueryable);
+            _mockExamMapper.Setup(mapper => mapper.Map(_exam)).Returns(_examDto);
+            var actualExamsDtoList = await _examService.GetAllExamsForACourse(course.Id);
+            // Assert
+            actualExamsDtoList.Should().BeEquivalentTo(exams);
         }
     }
 }

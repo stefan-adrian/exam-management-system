@@ -15,5 +15,7 @@ namespace Exam.Business.Exam.Service
         Task<ExamDto> Create(ExamCreatingDto examCreatingDto);
 
         Task<List<ExamDto>> GetAllExamsFromCourseForStudent(Guid courseId, Guid studentId);
+
+        Task<List<ExamDto>> GetAllExamsForACourse(Guid courseId);
     }
 }

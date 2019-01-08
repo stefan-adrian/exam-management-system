@@ -5,6 +5,7 @@ using Exam.Business.Exam.Exception;
 using Microsoft.AspNetCore.Mvc;
 using Exam.Business.Exam.Service;
 using Exam.Business.Exam.Dto;
+using Exam.Business.Professor.Exception;
 using Exam.Business.Student.Exception;
 
 namespace Exam.Api.Controllers
@@ -66,6 +67,20 @@ namespace Exam.Api.Controllers
                                               exception is StudentNotFoundException)
             {
                 return NotFound(exception.Message);
+            }
+        }
+
+        [HttpGet("courses/{courseId:guid}/exams")]
+        public async Task<IActionResult> GetAllExamsOfACourse(Guid courseId)
+        {
+            try
+            {
+                var exams = await examService.GetAllExamsForACourse(courseId);
+                return Ok(exams);
+            }
+            catch (CourseNotFoundException courseNotFoundException)
+            {
+                return NotFound(courseNotFoundException.Message);
             }
         }
     }

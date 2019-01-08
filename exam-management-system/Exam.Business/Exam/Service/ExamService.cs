@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Exam.Business.Course;
+using Exam.Business.Course.Exception;
 using Exam.Business.Exam.Dto;
 using Exam.Business.Exam.Exception;
 using Exam.Business.Exam.Mapper;
+using Exam.Business.Professor;
 using Exam.Business.Student;
 using Exam.Business.StudentCourse.Exception;
 using Exam.Business.StudentCourse.Service;
@@ -93,6 +95,20 @@ namespace Exam.Business.Exam.Service
             }
 
             return await readRepository.GetAll<Domain.Entities.Exam>().Include(e => e.Course).Where(e => e.Course == course).Select(exam => examMapper.Map(exam)).ToListAsync();
+        }
+
+        public async Task<List<ExamDto>> GetAllExamsForACourse(Guid courseId)
+        {
+            var exams = new List<ExamDto>();
+            var course = await this.readRepository.GetAll<Domain.Entities.Course>().Where(c => c.Id == courseId)
+                .Include(c => c.Exams).FirstOrDefaultAsync();
+
+            foreach (var exam in course.Exams)
+            {
+                exams.Add(examMapper.Map(exam));
+            }
+
+            return exams;
         }
     }
 }
