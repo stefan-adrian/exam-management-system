@@ -38,14 +38,14 @@ namespace Exam.Test.TestUtils
         {
             if (gradeWithValue == null)
             {
-                gradeWithValue = new Grade(9, 10, DateTime.Now, StudentTestUtils.GetStudent(), ExamTestUtils.GetExam());
+                gradeWithValue = new Grade(9, 10, DateTime.Now, StudentTestUtils.GetStudent2(), ExamTestUtils.GetExam());
             }
             return gradeWithValue;
         }
 
         public static GradeDto GetGradeWithValueDto(Guid id, DateTime date)
         {
-            return new GradeDto(id, 9, 10, date, false, StudentTestUtils.GetStudent().Id, ExamTestUtils.GetExam().Id);
+            return new GradeDto(id, 9, 10, date, false, StudentTestUtils.GetStudent2().Id, ExamTestUtils.GetExam().Id);
         }
     }
 }

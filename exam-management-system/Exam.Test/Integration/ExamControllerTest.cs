@@ -101,7 +101,9 @@ namespace Exam.Test.Integration
             var expectedStudents = new List<StudentFetchingGradeDto>
             {
                 StudentTestUtils.GetStudentFetchingGradeDto(StudentTestUtils.GetStudent().Id,
-                    GradeTestUtils.GetInitialGradeDto(GradeTestUtils.GetInitialStateGrade().Id))
+                    GradeTestUtils.GetInitialGradeDto(GradeTestUtils.GetInitialStateGrade().Id)),
+                StudentTestUtils.GetStudentFetchingGradeDto(StudentTestUtils.GetStudent2().Id,
+                GradeTestUtils.GetGradeWithValueDto(GradeTestUtils.GetGradeWithValue().Id, GradeTestUtils.GetGradeWithValue().Date))
             };
             // Act
             var response = await client.GetAsync("api/exams/" + exam.Id + "/checked-in-students");
