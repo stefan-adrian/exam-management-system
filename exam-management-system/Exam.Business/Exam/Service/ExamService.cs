@@ -7,7 +7,6 @@ using Exam.Business.Course;
 using Exam.Business.Exam.Dto;
 using Exam.Business.Exam.Exception;
 using Exam.Business.Exam.Mapper;
-using Exam.Business.Grade.Dto;
 using Exam.Business.Grade.Mapper;
 using Exam.Business.Student;
 using Exam.Business.Student.Dto;
@@ -121,6 +120,13 @@ namespace Exam.Business.Exam.Service
 
         public async Task<List<StudentFetchingGradeDto>> GetCheckedInStudents(Guid examId)
         {
+            var exam = await this.readRepository.GetByIdAsync<Domain.Entities.Exam>(examId);
+
+            if (exam == null)
+            {
+                throw new ExamNotFoundException(examId);
+            }
+
             var grades = await this.readRepository.GetAll<Domain.Entities.Grade>().Include(g => g.Student)
                 .Include(g => g.Exam).Where(g => g.Exam.Id == examId).ToListAsync();
 

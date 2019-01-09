@@ -6,7 +6,6 @@ using Exam.Api;
 using Exam.Business.ClassroomAllocation;
 using Exam.Business.Exam.Dto;
 using Exam.Business.Student.Dto;
-using Exam.Domain.Entities;
 using Exam.Test.TestUtils;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

@@ -183,6 +183,7 @@ namespace Exam.Test.Business.Service
             var grades = new List<Grade> { grade };
             GradeDto gradeDto = GradeTestUtils.GetInitialGradeDto(grade.Id);
             Student student = StudentTestUtils.GetStudent();
+            _mockReadRepository.Setup(repo => repo.GetByIdAsync<Domain.Entities.Exam>(_exam.Id)).ReturnsAsync(_exam);
             _mockReadRepository.Setup(repo => repo.GetAll<Grade>()).Returns(grades.AsQueryable().BuildMock);
             _mockGradeMapper.Setup(mapper => mapper.Map(grade)).Returns(gradeDto);
             _mockStudentMapper.Setup(mapper => mapper.Map(student, gradeDto))

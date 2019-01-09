@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Exam.Business.Classroom.Exception;
 using Exam.Business.Exam.Exception;
-using Exam.Business.Student;
 using Exam.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
