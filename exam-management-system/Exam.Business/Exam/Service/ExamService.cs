@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Exam.Business.ClassroomAllocation;
 using Exam.Business.Course;
+using Exam.Business.Email;
+using Exam.Business.Email.EmailFormat;
 using Exam.Business.Exam.Dto;
 using Exam.Business.Exam.Exception;
 using Exam.Business.Exam.Mapper;
@@ -29,6 +31,7 @@ namespace Exam.Business.Exam.Service
         private readonly IClassroomAllocationMapper classroomAllocationMapper;
         private readonly IGradeMapper gradeMapper;
         private readonly IStudentMapper studentMapper;
+        private readonly IEmailService emailService;
 
         public ExamService(IReadRepository readRepository, IWriteRepository writeRepository,
             IExamMapper examMapper,
@@ -38,7 +41,8 @@ namespace Exam.Business.Exam.Service
             IClassroomAllocationService classroomAllocationService,
             IClassroomAllocationMapper classroomAllocationMapper,
             IGradeMapper gradeMapper,
-            IStudentMapper studentMapper)
+            IStudentMapper studentMapper,
+            IEmailService emailService)
         {
             this.writeRepository = writeRepository ?? throw new ArgumentNullException();
             this.readRepository = readRepository ?? throw new ArgumentNullException();
@@ -50,6 +54,7 @@ namespace Exam.Business.Exam.Service
             this.studentService = studentService ?? throw new ArgumentNullException();
             this.gradeMapper = gradeMapper ?? throw new ArgumentNullException();
             this.studentMapper = studentMapper ?? throw new ArgumentNullException();
+            this.emailService = emailService ?? throw new ArgumentNullException();
         }
 
         public async Task<Domain.Entities.Exam> GetById(Guid id)
@@ -93,6 +98,18 @@ namespace Exam.Business.Exam.Service
             {
                 await classroomAllocationService.Create(ca);
             }
+
+            var examFetched = await readRepository.GetAll<Domain.Entities.Exam>().Where(e => e.Id == exam.Id)
+                .Include(e => e.Course)
+                .Include(e => e.ClassroomAllocation).ThenInclude(ca => ca.Classroom).FirstOrDefaultAsync();
+            var students = await readRepository.GetAll<Domain.Entities.Student>().Include(s => s.StudentCourses)
+                .Where(s => s.StudentCourses.Any(sc => sc.CourseId == examCreatingDto.CourseId))
+                .ToListAsync();
+            foreach (var student in students)
+            {
+                emailService.SendEmail(new ExamCreatedEmail(student.Email, examFetched));
+            }
+            
 
             return examMapper.Map(exam);
         }

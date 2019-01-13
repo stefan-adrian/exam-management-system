@@ -2,6 +2,7 @@
 using Exam.Business.ClassroomAllocation;
 using Exam.Business.Professor;
 using Exam.Business.Course;
+using Exam.Business.Email;
 using Exam.Business.Exam.Mapper;
 using Exam.Business.Exam.Service;
 using Exam.Business.Grade.Mapper;
@@ -33,6 +34,7 @@ namespace Exam.Business
             services.AddScoped<IClassroomAllocationMapper, ClassroomAllocationMapper>();
             services.AddScoped<IGradeService, GradeService>();
             services.AddScoped<IGradeMapper, GradeMapper>();
+            services.AddScoped<IEmailService, EmailService>();
 
             return services;
         }
