@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Exam.Business.Email.EmailFormat
+﻿namespace Exam.Business.Email
 {
-    public class ExamCreatedEmail : IEmailFormat
+    public class ExamCreatedEmail : IGenericEmail
     {
         public string Message { get; private set; }
 

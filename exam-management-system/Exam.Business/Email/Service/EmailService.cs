@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Threading;
-using Exam.Business.Email.EmailFormat;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Gmail.v1;
 using Google.Apis.Services;
@@ -39,7 +38,7 @@ namespace Exam.Business.Email
             });
         }
 
-        public void SendEmail(IEmailFormat email)
+        public void SendEmail(IGenericEmail email)
         {
             var message = new Google.Apis.Gmail.v1.Data.Message();
             message.Raw = ConvertBase64UrlEncode(email.GetEmail());

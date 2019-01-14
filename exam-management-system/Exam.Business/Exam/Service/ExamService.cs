@@ -99,19 +99,13 @@ namespace Exam.Business.Exam.Service
                 await classroomAllocationService.Create(ca);
             }
 
-            var examFetched = await readRepository.GetAll<Domain.Entities.Exam>().Where(e => e.Id == exam.Id)
-                .Include(e => e.Course)
-                .Include(e => e.ClassroomAllocation).ThenInclude(ca => ca.Classroom).FirstOrDefaultAsync();
-            var students = await readRepository.GetAll<Domain.Entities.Student>().Include(s => s.StudentCourses)
-                .Where(s => s.StudentCourses.Any(sc => sc.CourseId == examCreatingDto.CourseId))
-                .ToListAsync();
-            foreach (var student in students)
+            try
             {
-                emailService.SendEmail(new ExamCreatedEmail(student.Email, examFetched));
+                await this.SendExamCreatedEmail(exam.Id);
             }
-            
+            catch (System.Exception e) { }
 
-            return examMapper.Map(exam);
+        return examMapper.Map(exam);
         }
 
         public async Task<List<ExamDto>> GetAllExamsFromCourseForStudent(Guid courseId, Guid studentId)
@@ -162,6 +156,33 @@ namespace Exam.Business.Exam.Service
             }
 
             return exams;
+        }
+
+        private async Task SendExamCreatedEmail(Guid examId)
+        {
+            var examFetched = await readRepository.GetAll<Domain.Entities.Exam>().Where(e => e.Id == examId)
+                .Include(e => e.Course)
+                .Include(e => e.ClassroomAllocation).ThenInclude(ca => ca.Classroom).FirstOrDefaultAsync();
+            var students = await readRepository.GetAll<Domain.Entities.Student>().Include(s => s.StudentCourses)
+                .Where(s => s.StudentCourses.Any(sc => sc.CourseId == examFetched.Course.Id))
+                .ToListAsync();
+            foreach (var student in students)
+            {
+                emailService.SendEmail(new ExamCreatedEmail(student.Email, examFetched));
+            }
+        }
+
+        private async Task SendBaremAddedEmail(Guid examId)
+        {
+            var exam = await readRepository.GetAll<Domain.Entities.Exam>().Where(e => e.Id == examId)
+                .Include(e => e.Course).FirstOrDefaultAsync();
+            var students = await readRepository.GetAll<Domain.Entities.Student>().Include(s => s.StudentCourses)
+                .Where(s => s.StudentCourses.Any(sc => sc.CourseId == exam.Course.Id))
+                .ToListAsync();
+            foreach (var student in students)
+            {
+                emailService.SendEmail(new BaremAddedEmail(student.Email, exam));
+            }
         }
     }
 }
