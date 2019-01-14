@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Exam.Business.Course.Exception;
 using Exam.Business.Email;
+using Exam.Business.Email.EmailFormat;
 using Exam.Business.Exam.Service;
 using Exam.Business.Grade.Dto;
 using Exam.Business.Grade.Exception;
@@ -52,6 +53,11 @@ namespace Exam.Business.Grade.Service
             if (!grade.Value.Equals(gradeEditingDto.Value))
             {
                 await this.SendGradeAddedEmail(existingGradeId);
+            }
+
+            if (grade.Agree == null && gradeEditingDto.Agree == false)
+            {
+                await this.SendStudentDoesNotAgreeEmail(existingGradeId);
             }
             this.writeRepository.Update(this.gradeMapper.Map(gradeDto,grade));
             await this.writeRepository.SaveAsync();
@@ -105,8 +111,49 @@ namespace Exam.Business.Grade.Service
                 .Include(g => g.Student)
                 .Include(g => g.Exam).ThenInclude(e => e.Course)
                 .FirstOrDefaultAsync();
+            try
+            {
+                emailService.SendEmail(new GradeAddedEmail(grade));
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine(e.StackTrace);
+            }
+        }
 
-            emailService.SendEmail(new GradeAddedEmail(grade));
+        private async Task SendStudentDoesNotAgreeEmail(Guid gradeId)
+        {
+            var grade = await this.readRepository.GetAll<Domain.Entities.Grade>().Where(g => g.Id == gradeId)
+                .Include(g => g.Student)
+                .Include(g => g.Exam).ThenInclude(e => e.Course).ThenInclude(c => c.Professor)
+                .FirstOrDefaultAsync();
+
+            try
+            {
+                emailService.SendEmail(new StudentDoesNotAgreeEmail(grade));
+
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine(e.StackTrace);
+            }
+        }
+
+        private async Task SendExamImagesAddedEmail(Guid gradeId)
+        {
+            var grade = await this.readRepository.GetAll<Domain.Entities.Grade>().Where(g => g.Id == gradeId)
+                .Include(g => g.Student)
+                .Include(g => g.Exam).ThenInclude(e => e.Course)
+                .FirstOrDefaultAsync();
+
+            try
+            {
+                emailService.SendEmail(new ExamPhotosAddedEmail(grade));
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine(e.StackTrace);   
+            }
         }
     }
 }

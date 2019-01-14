@@ -13,6 +13,7 @@ using System.Linq;
 using MockQueryable.NSubstitute;
 using FluentAssertions;
 using System.Threading.Tasks;
+using Exam.Business.Email;
 
 namespace Exam.Test.Business.Service
 {
@@ -30,6 +31,7 @@ namespace Exam.Test.Business.Service
         private Mock<IGradeMapper> _mockGradeMapper;
         private Mock<IStudentService> _mockStudentService;
         private Mock<IExamService> _mockExamService;
+        private Mock<IEmailService> _mockEmailService;
 
         //inject mocks
         private GradeService _gradeService;
@@ -46,9 +48,10 @@ namespace Exam.Test.Business.Service
             this._mockGradeMapper = new Mock<IGradeMapper>();
             this._mockStudentService = new Mock<IStudentService>();
             this._mockExamService = new Mock<IExamService>();
+            this._mockEmailService = new Mock<IEmailService>();
 
             _gradeService = new GradeService(_mockReadRepository.Object, _mockWriteRepository.Object,
-                _mockGradeMapper.Object, _mockStudentService.Object, _mockExamService.Object);
+                _mockGradeMapper.Object, _mockStudentService.Object, _mockExamService.Object, _mockEmailService.Object);
         }
 
         [TestMethod]

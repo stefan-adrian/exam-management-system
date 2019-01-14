@@ -98,12 +98,7 @@ namespace Exam.Business.Exam.Service
             {
                 await classroomAllocationService.Create(ca);
             }
-
-            try
-            {
-                await this.SendExamCreatedEmail(exam.Id);
-            }
-            catch (System.Exception e) { }
+            await this.SendExamCreatedEmail(exam.Id);
 
         return examMapper.Map(exam);
         }
@@ -168,7 +163,14 @@ namespace Exam.Business.Exam.Service
                 .ToListAsync();
             foreach (var student in students)
             {
-                emailService.SendEmail(new ExamCreatedEmail(student.Email, examFetched));
+                try
+                {
+                    emailService.SendEmail(new ExamCreatedEmail(student.Email, examFetched));
+                }
+                catch (System.Exception e)
+                {
+                    Console.WriteLine(e.StackTrace);
+                }
             }
         }
 
@@ -181,7 +183,14 @@ namespace Exam.Business.Exam.Service
                 .ToListAsync();
             foreach (var student in students)
             {
-                emailService.SendEmail(new BaremAddedEmail(student.Email, exam));
+                try
+                {
+                    emailService.SendEmail(new BaremAddedEmail(student.Email, exam));
+                }
+                catch (System.Exception e)
+                {
+                    Console.WriteLine(e.StackTrace);
+                }
             }
         }
     }

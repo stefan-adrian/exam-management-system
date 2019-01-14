@@ -17,25 +17,32 @@ namespace Exam.Business.Email
 
         public EmailService()
         {
-            using (var stream = new FileStream("credentials.json", FileMode.Open, FileAccess.Read))
+            try
             {
-                // The file token.json stores the user's access and refresh tokens, and is created
-                // automatically when the authorization flow completes for the first time.
-                string credPath = "token.json";
-                this.credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
-                    GoogleClientSecrets.Load(stream).Secrets,
-                    Scopes,
-                    "user",
-                    CancellationToken.None,
-                    new FileDataStore(credPath, true)).Result;
-            }
+                using (var stream = new FileStream("credentials.json", FileMode.Open, FileAccess.Read))
+                {
+                    // The file token.json stores the user's access and refresh tokens, and is created
+                    // automatically when the authorization flow completes for the first time.
+                    string credPath = "token.json";
+                    this.credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
+                        GoogleClientSecrets.Load(stream).Secrets,
+                        Scopes,
+                        "user",
+                        CancellationToken.None,
+                        new FileDataStore(credPath, true)).Result;
+                }
 
-            // Create Gmail API Service
-            gmailService = new GmailService(new BaseClientService.Initializer()
+                // Create Gmail API Service
+                gmailService = new GmailService(new BaseClientService.Initializer()
+                {
+                    HttpClientInitializer = credential,
+                    ApplicationName = ApplicationName
+                });
+            }
+            catch (System.Exception e)
             {
-                HttpClientInitializer = credential,
-                ApplicationName = ApplicationName
-            });
+                Console.WriteLine(e.StackTrace);
+            }
         }
 
         public void SendEmail(IGenericEmail email)
