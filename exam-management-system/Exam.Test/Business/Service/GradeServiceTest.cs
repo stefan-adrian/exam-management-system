@@ -58,6 +58,7 @@ namespace Exam.Test.Business.Service
         public async Task Create_ShouldReturnInstanceOfGradeDto()
         {
             // Arrange
+            var expectedGrades = new List<Grade> { initialStateGrade };
             _mockExamService.Setup(service => service.GetById(gradeCreationDto.ExamId)).ReturnsAsync(initialStateGrade.Exam);
             _mockStudentService.Setup(service => service.GetStudentById(gradeCreationDto.StudentId))
                 .ReturnsAsync(initialStateGrade.Student);
@@ -65,6 +66,9 @@ namespace Exam.Test.Business.Service
             _mockWriteRepository.Setup(repo => repo.AddNewAsync<Domain.Entities.Grade>(initialStateGrade))
                 .Returns(() => Task.FromResult(initialStateGrade));
             _mockGradeMapper.Setup(mapper => mapper.Map(initialStateGrade)).Returns(initialStateGradeDto);
+            _mockReadRepository.Setup(repo => repo.GetAll<Grade>()).Returns(expectedGrades.AsQueryable().BuildMock());
+            IGenericEmail email = null;
+            _mockEmailService.Setup(service => service.SendEmail(email)).Verifiable();
             // Act
             GradeDto actualGrade = await this._gradeService.Create(gradeCreationDto);
             // Assert

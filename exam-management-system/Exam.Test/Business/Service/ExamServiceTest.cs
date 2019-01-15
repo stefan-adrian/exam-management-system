@@ -99,7 +99,8 @@ namespace Exam.Test.Business.Service
             var expectedExams = new List<Domain.Entities.Exam> {_exam};
             _mockReadRepository.Setup(repo => repo.GetAll<Student>()).Returns(expectedStudents.AsQueryable().BuildMock());
             _mockReadRepository.Setup(repo => repo.GetAll<Domain.Entities.Exam>()).Returns(expectedExams.AsQueryable().BuildMock());
-            _mockEmailService.Setup(service => service.SendEmail(new ExamCreatedEmail("", _exam)));
+            IGenericEmail email = null;
+            _mockEmailService.Setup(service => service.SendEmail(email)).Verifiable();
 
             var classroomAllocation = new List<ClassroomAllocationCreatingDto> { };
             _mockClassroomAllocationMapper.Setup(mapper => mapper.Map(_examCreatingDto, _exam.Id)).Returns(classroomAllocation);

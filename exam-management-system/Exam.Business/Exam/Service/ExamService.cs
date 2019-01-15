@@ -100,7 +100,7 @@ namespace Exam.Business.Exam.Service
             }
             await this.SendExamCreatedEmail(exam.Id);
 
-        return examMapper.Map(exam);
+            return examMapper.Map(exam);
         }
 
         public async Task<List<ExamDto>> GetAllExamsFromCourseForStudent(Guid courseId, Guid studentId)
