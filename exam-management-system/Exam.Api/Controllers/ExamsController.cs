@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net.Mime;
+using System.Text;
 using System.Threading.Tasks;
 using Exam.Business.ClassroomAllocation;
 using Exam.Business.Course.Exception;
@@ -7,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Exam.Business.Exam.Service;
 using Exam.Business.Exam.Dto;
 using Exam.Business.Student.Exception;
+using Microsoft.AspNetCore.Http;
 
 namespace Exam.Api.Controllers
 {
@@ -112,6 +117,17 @@ namespace Exam.Api.Controllers
             {
                 return NotFound(courseNotFoundException.Message);
             }
+        }
+
+        [HttpPost("exam/{examId:guid}/barem")]
+        public async Task<IActionResult> AddBarem(Guid examId, [FromForm]IFormFileCollection files)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            return Ok(files);
         }
     }
 }
