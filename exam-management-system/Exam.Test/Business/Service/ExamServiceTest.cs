@@ -22,6 +22,7 @@ using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MockQueryable.NSubstitute;
 using Moq;
+using NSubstitute;
 
 namespace Exam.Test.Business.Service
 {
@@ -94,6 +95,11 @@ namespace Exam.Test.Business.Service
             _mockExamMapper.Setup(mapper => mapper.Map(_examCreatingDto, CourseTestUtils.GetCourse())).Returns(_exam);
             _mockWriteRepository.Setup(repo => repo.AddNewAsync<Domain.Entities.Exam>(_exam)).Returns(() => Task.FromResult(_exam));
             _mockExamMapper.Setup(mapper => mapper.Map(_exam)).Returns(_examDto);
+            var expectedStudents = new List<Student> {StudentTestUtils.GetStudent()};
+            var expectedExams = new List<Domain.Entities.Exam> {_exam};
+            _mockReadRepository.Setup(repo => repo.GetAll<Student>()).Returns(expectedStudents.AsQueryable().BuildMock());
+            _mockReadRepository.Setup(repo => repo.GetAll<Domain.Entities.Exam>()).Returns(expectedExams.AsQueryable().BuildMock());
+            _mockEmailService.Setup(service => service.SendEmail(new ExamCreatedEmail("", _exam)));
 
             var classroomAllocation = new List<ClassroomAllocationCreatingDto> { };
             _mockClassroomAllocationMapper.Setup(mapper => mapper.Map(_examCreatingDto, _exam.Id)).Returns(classroomAllocation);
