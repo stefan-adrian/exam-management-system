@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Exam.Business.Course.Exception;
+using Exam.Business.Email;
+using Exam.Business.Email.EmailFormat;
 using Exam.Business.Exam.Service;
 using Exam.Business.Grade.Dto;
 using Exam.Business.Grade.Exception;
@@ -20,15 +22,17 @@ namespace Exam.Business.Grade.Service
         private readonly IGradeMapper gradeMapper;
         private readonly IStudentService studentService;
         private readonly IExamService examService;
+        private readonly IEmailService emailService;
 
         public GradeService(IReadRepository readRepository, IWriteRepository writeRepository,
-            IGradeMapper gradeMapper, IStudentService studentService, IExamService examService)
+            IGradeMapper gradeMapper, IStudentService studentService, IExamService examService, IEmailService emailService)
         {
             this.readRepository = readRepository;
             this.writeRepository = writeRepository;
             this.gradeMapper = gradeMapper;
             this.studentService = studentService;
             this.examService = examService;
+            this.emailService = emailService;
         }
 
         public async Task<GradeDto> Create(GradeCreationDto gradeCreationDto)
@@ -46,6 +50,15 @@ namespace Exam.Business.Grade.Service
         {
             GradeDto gradeDto = this.gradeMapper.Map(existingGradeId, gradeEditingDto);
             var grade = GetGradeById(existingGradeId).Result;
+            if (!grade.Value.Equals(gradeEditingDto.Value))
+            {
+                await this.SendGradeAddedEmail(existingGradeId);
+            }
+
+            if (grade.Agree == null && gradeEditingDto.Agree == false)
+            {
+                await this.SendStudentDoesNotAgreeEmail(existingGradeId);
+            }
             this.writeRepository.Update(this.gradeMapper.Map(gradeDto,grade));
             await this.writeRepository.SaveAsync();
             return gradeDto;
@@ -90,6 +103,57 @@ namespace Exam.Business.Grade.Service
                 .Select(g => gradeMapper.Map(g))
                 .ToListAsync();
             return grades;
+        }
+
+        private async Task SendGradeAddedEmail(Guid gradeId)
+        {
+            var grade = await this.readRepository.GetAll<Domain.Entities.Grade>().Where(g => g.Id == gradeId)
+                .Include(g => g.Student)
+                .Include(g => g.Exam).ThenInclude(e => e.Course)
+                .FirstOrDefaultAsync();
+            try
+            {
+                emailService.SendEmail(new GradeAddedEmail(grade));
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine(e.StackTrace);
+            }
+        }
+
+        private async Task SendStudentDoesNotAgreeEmail(Guid gradeId)
+        {
+            var grade = await this.readRepository.GetAll<Domain.Entities.Grade>().Where(g => g.Id == gradeId)
+                .Include(g => g.Student)
+                .Include(g => g.Exam).ThenInclude(e => e.Course).ThenInclude(c => c.Professor)
+                .FirstOrDefaultAsync();
+
+            try
+            {
+                emailService.SendEmail(new StudentDoesNotAgreeEmail(grade));
+
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine(e.StackTrace);
+            }
+        }
+
+        private async Task SendExamImagesAddedEmail(Guid gradeId)
+        {
+            var grade = await this.readRepository.GetAll<Domain.Entities.Grade>().Where(g => g.Id == gradeId)
+                .Include(g => g.Student)
+                .Include(g => g.Exam).ThenInclude(e => e.Course)
+                .FirstOrDefaultAsync();
+
+            try
+            {
+                emailService.SendEmail(new ExamPhotosAddedEmail(grade));
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine(e.StackTrace);   
+            }
         }
     }
 }

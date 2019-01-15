@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Exam.Business.ClassroomAllocation;
 using Exam.Business.Course;
+using Exam.Business.Email;
 using Exam.Business.Exam.Dto;
 using Exam.Business.Exam.Exception;
 using Exam.Business.Exam.Mapper;
@@ -21,6 +22,7 @@ using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MockQueryable.NSubstitute;
 using Moq;
+using NSubstitute;
 
 namespace Exam.Test.Business.Service
 {
@@ -42,6 +44,7 @@ namespace Exam.Test.Business.Service
         private Mock<IClassroomAllocationMapper> _mockClassroomAllocationMapper;
         private Mock<IGradeMapper> _mockGradeMapper;
         private Mock<IStudentMapper> _mockStudentMapper;
+        private Mock<IEmailService> _mockEmailService;
 
         // injectMocks
         private ExamService _examService;
@@ -62,11 +65,12 @@ namespace Exam.Test.Business.Service
             this._mockClassroomAllocationMapper = new Mock<IClassroomAllocationMapper>();
             this._mockStudentMapper = new Mock<IStudentMapper>();
             this._mockGradeMapper = new Mock<IGradeMapper>();
+            this._mockEmailService = new Mock<IEmailService>();
             _examService = new ExamService(_mockReadRepository.Object, _mockWriteRepository.Object,
                 _mockExamMapper.Object, _mockCourseService.Object,
                 _mockStudentCourseService.Object, _mockStudentService.Object,
                 _mockClassroomAllocationService.Object, _mockClassroomAllocationMapper.Object,
-                _mockGradeMapper.Object, _mockStudentMapper.Object);
+                _mockGradeMapper.Object, _mockStudentMapper.Object, _mockEmailService.Object);
         }
 
         [TestMethod]
@@ -91,6 +95,12 @@ namespace Exam.Test.Business.Service
             _mockExamMapper.Setup(mapper => mapper.Map(_examCreatingDto, CourseTestUtils.GetCourse())).Returns(_exam);
             _mockWriteRepository.Setup(repo => repo.AddNewAsync<Domain.Entities.Exam>(_exam)).Returns(() => Task.FromResult(_exam));
             _mockExamMapper.Setup(mapper => mapper.Map(_exam)).Returns(_examDto);
+            var expectedStudents = new List<Student> {StudentTestUtils.GetStudent()};
+            var expectedExams = new List<Domain.Entities.Exam> {_exam};
+            _mockReadRepository.Setup(repo => repo.GetAll<Student>()).Returns(expectedStudents.AsQueryable().BuildMock());
+            _mockReadRepository.Setup(repo => repo.GetAll<Domain.Entities.Exam>()).Returns(expectedExams.AsQueryable().BuildMock());
+            IGenericEmail email = null;
+            _mockEmailService.Setup(service => service.SendEmail(email)).Verifiable();
 
             var classroomAllocation = new List<ClassroomAllocationCreatingDto> { };
             _mockClassroomAllocationMapper.Setup(mapper => mapper.Map(_examCreatingDto, _exam.Id)).Returns(classroomAllocation);

@@ -13,6 +13,7 @@ using System.Linq;
 using MockQueryable.NSubstitute;
 using FluentAssertions;
 using System.Threading.Tasks;
+using Exam.Business.Email;
 
 namespace Exam.Test.Business.Service
 {
@@ -30,6 +31,7 @@ namespace Exam.Test.Business.Service
         private Mock<IGradeMapper> _mockGradeMapper;
         private Mock<IStudentService> _mockStudentService;
         private Mock<IExamService> _mockExamService;
+        private Mock<IEmailService> _mockEmailService;
 
         //inject mocks
         private GradeService _gradeService;
@@ -46,15 +48,17 @@ namespace Exam.Test.Business.Service
             this._mockGradeMapper = new Mock<IGradeMapper>();
             this._mockStudentService = new Mock<IStudentService>();
             this._mockExamService = new Mock<IExamService>();
+            this._mockEmailService = new Mock<IEmailService>();
 
             _gradeService = new GradeService(_mockReadRepository.Object, _mockWriteRepository.Object,
-                _mockGradeMapper.Object, _mockStudentService.Object, _mockExamService.Object);
+                _mockGradeMapper.Object, _mockStudentService.Object, _mockExamService.Object, _mockEmailService.Object);
         }
 
         [TestMethod]
         public async Task Create_ShouldReturnInstanceOfGradeDto()
         {
             // Arrange
+            var expectedGrades = new List<Grade> { initialStateGrade };
             _mockExamService.Setup(service => service.GetById(gradeCreationDto.ExamId)).ReturnsAsync(initialStateGrade.Exam);
             _mockStudentService.Setup(service => service.GetStudentById(gradeCreationDto.StudentId))
                 .ReturnsAsync(initialStateGrade.Student);
@@ -62,6 +66,9 @@ namespace Exam.Test.Business.Service
             _mockWriteRepository.Setup(repo => repo.AddNewAsync<Domain.Entities.Grade>(initialStateGrade))
                 .Returns(() => Task.FromResult(initialStateGrade));
             _mockGradeMapper.Setup(mapper => mapper.Map(initialStateGrade)).Returns(initialStateGradeDto);
+            _mockReadRepository.Setup(repo => repo.GetAll<Grade>()).Returns(expectedGrades.AsQueryable().BuildMock());
+            IGenericEmail email = null;
+            _mockEmailService.Setup(service => service.SendEmail(email)).Verifiable();
             // Act
             GradeDto actualGrade = await this._gradeService.Create(gradeCreationDto);
             // Assert

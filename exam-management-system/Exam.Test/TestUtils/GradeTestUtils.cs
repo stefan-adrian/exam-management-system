@@ -21,7 +21,7 @@ namespace Exam.Test.TestUtils
 
         public static GradeDto GetInitialGradeDto(Guid id)
         {
-            return new GradeDto(id, 0, 0, data, false, StudentTestUtils.GetStudent().Id, ExamTestUtils.GetExam().Id);
+            return new GradeDto(id, 0, 0, data, null, StudentTestUtils.GetStudent().Id, ExamTestUtils.GetExam().Id);
         }
 
         public static GradeCreationDto GetGradeCreationDto()
@@ -31,7 +31,7 @@ namespace Exam.Test.TestUtils
 
         public static GradeEditingDto GetGradeEditingDto()
         {
-            return new GradeEditingDto(0,0,data,false,StudentTestUtils.GetStudent().Id,ExamTestUtils.GetExam().Id);
+            return new GradeEditingDto(0,0,data,null,StudentTestUtils.GetStudent().Id,ExamTestUtils.GetExam().Id);
         }
 
         public static Grade GetGradeWithValue()
@@ -45,7 +45,7 @@ namespace Exam.Test.TestUtils
 
         public static GradeDto GetGradeWithValueDto(Guid id, DateTime date)
         {
-            return new GradeDto(id, 9, 10, date, false, StudentTestUtils.GetStudent2().Id, ExamTestUtils.GetExam().Id);
+            return new GradeDto(id, 9, 10, date, null, StudentTestUtils.GetStudent2().Id, ExamTestUtils.GetExam().Id);
         }
     }
 }

@@ -12,13 +12,13 @@ namespace Exam.Business.Grade.Dto
 
         public DateTime Date { get; set; }
 
-        public bool Agree { get; set; }
+        public bool? Agree { get; set; }
 
         public Guid StudentId { get; set; }
 
         public Guid ExamId { get; set; }
 
-        public GradeDto(Guid id, double value, int pages, DateTime date, bool agree, Guid studentId, Guid examId)
+        public GradeDto(Guid id, double value, int pages, DateTime date, bool? agree, Guid studentId, Guid examId)
         {
             Id = id;
             Value = value;
